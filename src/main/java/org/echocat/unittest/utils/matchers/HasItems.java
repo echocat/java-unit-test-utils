@@ -1,12 +1,15 @@
 package org.echocat.unittest.utils.matchers;
 
+import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class HasItems extends IsEmpty {
+import static org.echocat.unittest.utils.utils.SizeUtils.isEmpty;
+
+public class HasItems extends BaseMatcher<Object> {
 
     @Nonnull
     private static final HasItems INSTANCE = new HasItems();
@@ -32,7 +35,7 @@ public class HasItems extends IsEmpty {
 
     @Override
     public boolean matches(@Nullable Object item) {
-        return !super.matches(item);
+        return !isEmpty(item);
     }
 
     @Override

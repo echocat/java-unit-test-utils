@@ -15,7 +15,6 @@ import javax.annotation.Nullable;
 
 public final class SizeUtils {
 
-    @SuppressWarnings("OverlyComplexMethod")
     @Nonnegative
     public static long sizeOf(@Nullable Object what) {
         if (what == null) {
@@ -63,11 +62,10 @@ public final class SizeUtils {
 
     @Nonnegative
     public static long sizeOf(@Nullable Stream<?> stream) {
-        final AtomicLong result = new AtomicLong();
-        if (stream != null) {
-            stream.forEach(o -> result.incrementAndGet());
+        if (stream == null) {
+            return 0;
         }
-        return result.get();
+        return stream.count();
     }
 
     @Nonnegative
@@ -77,9 +75,59 @@ public final class SizeUtils {
         }
         try {
             return Files.size(path);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new UncheckedIOException("Could not get size of '" + path + "'.", e);
         }
+    }
+
+    @Nonnegative
+    public static boolean isEmpty(@Nullable Object what) {
+        if (what == null) {
+            return true;
+        }
+        if (what instanceof Stream) {
+            return isEmpty((Stream<?>) what);
+        }
+        if (what instanceof Collection) {
+            return ((Collection<?>) what).isEmpty();
+        }
+        if (what instanceof Iterable) {
+            return isEmpty(((Iterable<?>) what).iterator());
+        }
+        if (what instanceof Iterator) {
+            return isEmpty((Iterator<?>) what);
+        }
+        if (what instanceof Map) {
+            return ((Map<?, ?>) what).isEmpty();
+        }
+        if (what instanceof Object[]) {
+            return ((Object[]) what).length == 0;
+        }
+        if (what instanceof CharSequence) {
+            return ((CharSequence) what).length() == 0;
+        }
+        if (what instanceof Path) {
+            return isEmpty((Path) what);
+        }
+        if (what instanceof File) {
+            return isEmpty(((File) what).toPath());
+        }
+        throw new IllegalArgumentException("Could not check emptiness of " + what + ".");
+    }
+
+    @Nonnegative
+    public static boolean isEmpty(@Nullable Iterator<?> iterator) {
+        return iterator != null && iterator.hasNext();
+    }
+
+    @Nonnegative
+    public static boolean isEmpty(@Nullable Stream<?> stream) {
+        return sizeOf(stream) == 0;
+    }
+
+    @Nonnegative
+    public static boolean isEmpty(@Nullable Path path) {
+        return sizeOf(path) == 0;
     }
 
 }
