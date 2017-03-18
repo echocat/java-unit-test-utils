@@ -4,8 +4,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import java.util.function.Predicate;
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 public class AppliesTo<T> extends TypeSafeMatcher<T> {
 
@@ -28,12 +28,17 @@ public class AppliesTo<T> extends TypeSafeMatcher<T> {
 
     @Override
     protected boolean matchesSafely(T item) {
-        return predicate.test(item);
+        return predicate().test(item);
     }
 
     @Override
     public void describeTo(@Nonnull Description description) {
-        description.appendText("applies to ").appendValue(predicate);
+        description.appendText("applies to ").appendValue(predicate());
+    }
+
+    @Nonnull
+    protected Predicate<T> predicate() {
+        return predicate;
     }
 
 }

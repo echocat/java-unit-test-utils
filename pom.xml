@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,6 +43,14 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.7.17</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -103,7 +112,7 @@
                         <dependency>
                             <groupId>org.apache.maven.wagon</groupId>
                             <artifactId>wagon-webdav-jackrabbit</artifactId>
-                            <version>2.3</version>
+                            <version>2.12</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -115,7 +124,7 @@
                         <tagNameFormat>version-@{project.version}</tagNameFormat>
                         <!--suppress MavenModelInspection -->
                         <arguments>-DskipTests -Dgpg.passphrase=${passphrase} ${arguments}</arguments>
-                        <scmCommentPrefix>* [RELEASE] </scmCommentPrefix>
+                        <scmCommentPrefix>* [RELEASE]</scmCommentPrefix>
                         <releaseProfiles>sign</releaseProfiles>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                     </configuration>

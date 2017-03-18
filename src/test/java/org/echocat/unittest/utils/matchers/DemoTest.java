@@ -4,18 +4,15 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.echocat.unittest.utils.matchers.CompareTo.isGreatherThanOrEqualTo;
+import static org.echocat.unittest.utils.matchers.CompareTo.isGreaterThanOrEqualTo;
 import static org.echocat.unittest.utils.matchers.ContainsAtLeastOneElementThat.Iterables.containsAtLeastOneElementThat;
 import static org.echocat.unittest.utils.matchers.ContainsOnlyElementsThat.Iterables.containsOnlyElementsThat;
 import static org.echocat.unittest.utils.matchers.HasItems.hasElements;
-import static org.echocat.unittest.utils.matchers.HasItems.hasItems;
 import static org.echocat.unittest.utils.matchers.IsEqualTo.isEqualTo;
 import static org.echocat.unittest.utils.matchers.IsOneOf.isOneOf;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsExceptionWithMessage;
 import static org.echocat.unittest.utils.matchers.WhereValueOf.whereValueOf;
-import static org.hamcrest.CoreMatchers.both;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
@@ -36,12 +33,12 @@ public class DemoTest {
 
         assertThat(aListOfThings, containsOnlyElementsThat(
                 whereValueOf(Moo::getName, "name", startsWith("My")),
-                whereValueOf(Moo::getAge, "age", isGreatherThanOrEqualTo(40))
+                whereValueOf(Moo::getAge, "age", isGreaterThanOrEqualTo(40))
         ));
 
         assertThat(aListOfThings, containsAtLeastOneElementThat(
                 whereValueOf(Moo::getName, "name", startsWith("My")),
-                whereValueOf(Moo::getAge, "age", isGreatherThanOrEqualTo(45))
+                whereValueOf(Moo::getAge, "age", isGreaterThanOrEqualTo(45))
         ));
 
         assertThat(() -> {
