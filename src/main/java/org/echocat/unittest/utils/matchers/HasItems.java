@@ -42,7 +42,7 @@ public class HasItems extends IsEmpty {
 
     @Override
     public void describeMismatch(@Nullable Object item, @Nonnull Description description) {
-        description.appendText("was ").appendValue("empty");
+        description.appendText("was <empty>");
     }
 
 }

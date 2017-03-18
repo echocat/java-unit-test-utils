@@ -1,5 +1,6 @@
 package org.echocat.unittest.utils.matchers;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import static java.util.Arrays.asList;
 public class DemoTest {
 
     @Test
+    @Ignore
     public void matches() throws Exception {
         assertThat("hello", isEqualTo("hello"));
 
