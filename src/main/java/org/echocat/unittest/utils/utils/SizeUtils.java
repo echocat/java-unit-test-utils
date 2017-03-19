@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class SizeUtils {
@@ -21,7 +22,10 @@ public final class SizeUtils {
             return 0;
         }
         if (what instanceof Stream) {
-            return sizeOf((Stream<?>) what);
+            return ((Stream<?>) what).count();
+        }
+        if (what instanceof Path) {
+            return sizeOf((Path) what);
         }
         if (what instanceof Collection) {
             return ((Collection<?>) what).size();
@@ -41,19 +45,16 @@ public final class SizeUtils {
         if (what instanceof CharSequence) {
             return ((CharSequence) what).length();
         }
-        if (what instanceof Path) {
-            return sizeOf((Path) what);
-        }
         if (what instanceof File) {
             return sizeOf(((File) what).toPath());
         }
-        throw new IllegalArgumentException("Could not get size of " + what + ".");
+        throw new IllegalArgumentException("Could not get size of " + what.getClass().getName() + ".");
     }
 
     @Nonnegative
-    public static long sizeOf(@Nullable Iterator<?> iterator) {
+    private static long sizeOf(@Nonnull Iterator<?> iterator) {
         long result = 0;
-        while (iterator != null && iterator.hasNext()) {
+        while (iterator.hasNext()) {
             iterator.next();
             result++;
         }
@@ -61,22 +62,11 @@ public final class SizeUtils {
     }
 
     @Nonnegative
-    public static long sizeOf(@Nullable Stream<?> stream) {
-        if (stream == null) {
-            return 0;
-        }
-        return stream.count();
-    }
-
-    @Nonnegative
-    public static long sizeOf(@Nullable Path path) {
-        if (path == null) {
-            return 0;
-        }
+    private static long sizeOf(@Nonnull Path path) {
         try {
             return Files.size(path);
         } catch (final IOException e) {
-            throw new UncheckedIOException("Could not get size of '" + path + "'.", e);
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -86,7 +76,10 @@ public final class SizeUtils {
             return true;
         }
         if (what instanceof Stream) {
-            return isEmpty((Stream<?>) what);
+            return ((Stream<?>) what).count() == 0;
+        }
+        if (what instanceof Path) {
+            return isEmpty((Path) what);
         }
         if (what instanceof Collection) {
             return ((Collection<?>) what).isEmpty();
@@ -106,9 +99,6 @@ public final class SizeUtils {
         if (what instanceof CharSequence) {
             return ((CharSequence) what).length() == 0;
         }
-        if (what instanceof Path) {
-            return isEmpty((Path) what);
-        }
         if (what instanceof File) {
             return isEmpty(((File) what).toPath());
         }
@@ -116,17 +106,12 @@ public final class SizeUtils {
     }
 
     @Nonnegative
-    public static boolean isEmpty(@Nullable Iterator<?> iterator) {
-        return iterator != null && iterator.hasNext();
+    private static boolean isEmpty(@Nonnull Iterator<?> iterator) {
+        return !iterator.hasNext();
     }
 
     @Nonnegative
-    public static boolean isEmpty(@Nullable Stream<?> stream) {
-        return sizeOf(stream) == 0;
-    }
-
-    @Nonnegative
-    public static boolean isEmpty(@Nullable Path path) {
+    private static boolean isEmpty(@Nonnull Path path) {
         return sizeOf(path) == 0;
     }
 

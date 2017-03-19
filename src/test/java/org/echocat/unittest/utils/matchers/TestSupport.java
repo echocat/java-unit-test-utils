@@ -5,7 +5,7 @@ import org.hamcrest.StringDescription;
 
 import javax.annotation.Nonnull;
 
-public abstract class TestSupport {
+public abstract class TestSupport extends org.echocat.unittest.utils.TestSupport {
 
     @Nonnull
     protected Description givenDescription() {
