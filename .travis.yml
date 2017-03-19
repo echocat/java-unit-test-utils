@@ -1,4 +1,11 @@
 language: java
+sudo: false
+install:
+  - echo "Skip"
+jdk:
+  - oraclejdk8
+script:
+  - ./mvnw -Dsurefire.useFile=false clean verify
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
