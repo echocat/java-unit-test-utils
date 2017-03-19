@@ -51,7 +51,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    static String toString(@Nullable @WillNotClose Reader what) {
+    private static String toString(@Nullable @WillNotClose Reader what) {
         if (what == null) {
             return "";
         }
@@ -70,12 +70,12 @@ public final class StringUtils {
     }
 
     @Nonnull
-    static String toString(@Nullable @WillNotClose InputStream what) {
+    private static String toString(@Nullable @WillNotClose InputStream what) {
         return toString(what != null ? new InputStreamReader(what, UTF8) : null);
     }
 
     @Nonnull
-    static String toString(@Nullable URL what) {
+    private static String toString(@Nullable URL what) {
         if (what == null) {
             return "";
         }
@@ -87,7 +87,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    static String toString(@Nullable Path what) {
+    private static String toString(@Nullable Path what) {
         if (what == null) {
             return "";
         }
@@ -99,7 +99,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    static String toString(@Nullable File what) {
+    private static String toString(@Nullable File what) {
         if (what == null) {
             return "";
         }
@@ -107,7 +107,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    static String toString(@Nullable char[] what) {
+    private static String toString(@Nullable char[] what) {
         if (what == null) {
             return "";
         }
@@ -115,7 +115,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    static String toString(@Nullable byte[] what) {
+    private static String toString(@Nullable byte[] what) {
         if (what == null) {
             return "";
         }
