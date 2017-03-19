@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.org/echocat/java-unit-test-utils.svg?branch=master)](https://travis-ci.org/echocat/java-unit-test-utils)
 [![codecov](https://codecov.io/gh/echocat/java-unit-test-utils/branch/master/graph/badge.svg)](https://codecov.io/gh/echocat/java-unit-test-utils)
 
-
 # Unit Test utils for Java
 
 **This project is still under heavy development.**
