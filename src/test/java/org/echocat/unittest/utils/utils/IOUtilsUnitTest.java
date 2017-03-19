@@ -8,12 +8,9 @@ import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static java.nio.file.Files.newInputStream;
-import static java.nio.file.Files.readAllBytes;
-import static java.nio.file.Files.size;
+import static java.nio.file.Files.*;
 import static org.echocat.unittest.utils.rules.TestFile.withGeneratedContent;
 import static org.echocat.unittest.utils.utils.IOUtils.copy;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -28,6 +25,11 @@ public class IOUtilsUnitTest {
     public static final TestFile SMALL_CONTENT_FILE = new TestFile("smallContent.bin", withGeneratedContent(SMALL_FILE_SIZE));
     @ClassRule
     public static final TestFile LARGE_CONTENT_FILE = new TestFile("largeContent.bin", withGeneratedContent(LARGE_FILE_SIZE));
+
+    @Test
+    public void constructur() throws Exception {
+        new IOUtils();
+    }
 
     @Test
     public void copyWithSmallContent() throws Exception {

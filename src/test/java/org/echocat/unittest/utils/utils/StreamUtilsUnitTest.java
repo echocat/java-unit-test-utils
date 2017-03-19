@@ -15,6 +15,11 @@ import static org.junit.Assert.assertThat;
 public class StreamUtilsUnitTest {
 
     @Test
+    public void constructur() throws Exception {
+        new StreamUtils();
+    }
+
+    @Test
     public void toStreamOfArray() throws Exception {
         final Integer[] toConvert = givenArrayWithLength4();
 

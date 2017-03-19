@@ -1,18 +1,20 @@
 package org.echocat.unittest.utils.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+import static org.echocat.unittest.utils.utils.IOUtils.BUFFER_SIZE;
 
 public final class SizeUtils {
 
@@ -48,6 +50,18 @@ public final class SizeUtils {
         if (what instanceof File) {
             return sizeOf(((File) what).toPath());
         }
+        if (what instanceof InputStream) {
+            return sizeOf((InputStream) what);
+        }
+        if (what instanceof Reader) {
+            return sizeOf((Reader) what);
+        }
+        if (what instanceof URL) {
+            return sizeOf((URL) what);
+        }
+        if (what instanceof URI) {
+            return sizeOf((URI) what);
+        }
         throw new IllegalArgumentException("Could not get size of " + what.getClass().getName() + ".");
     }
 
@@ -70,6 +84,54 @@ public final class SizeUtils {
         }
     }
 
+    @Nonnegative
+    private static long sizeOf(@Nonnull InputStream is) {
+        long nread = 0L;
+        final byte[] buf = new byte[BUFFER_SIZE];
+        int n;
+        try {
+            while ((n = is.read(buf)) > 0) {
+                nread += n;
+            }
+        } catch (final IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return nread;
+    }
+
+    @Nonnegative
+    private static long sizeOf(@Nonnull Reader reader) {
+        long nread = 0L;
+        final char[] buf = new char[BUFFER_SIZE];
+        int n;
+        try {
+            while ((n = reader.read(buf)) > 0) {
+                nread += n;
+            }
+        } catch (final IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return nread;
+    }
+
+    @Nonnegative
+    private static long sizeOf(@Nonnull URL url) {
+        try (final InputStream is = url.openStream()) {
+            return sizeOf(is);
+        } catch (final IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Nonnegative
+    private static long sizeOf(@Nonnull URI uri) {
+        try {
+            return sizeOf(uri.toURL());
+        } catch (final MalformedURLException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
     public static boolean isNotEmpty(@Nullable Object what) {
         return !isEmpty(what);
     }
@@ -82,7 +144,7 @@ public final class SizeUtils {
             return ((Stream<?>) what).count() == 0;
         }
         if (what instanceof Path) {
-            return isEmpty((Path) what);
+            return sizeOf((Path) what) == 0;
         }
         if (what instanceof Collection) {
             return ((Collection<?>) what).isEmpty();
@@ -103,19 +165,14 @@ public final class SizeUtils {
             return ((CharSequence) what).length() == 0;
         }
         if (what instanceof File) {
-            return isEmpty(((File) what).toPath());
+            return sizeOf(((File) what).toPath()) == 0;
         }
-        throw new IllegalArgumentException("Could not check emptiness of " + what + ".");
+        return sizeOf(what) == 0;
     }
 
     @Nonnegative
     private static boolean isEmpty(@Nonnull Iterator<?> iterator) {
         return !iterator.hasNext();
-    }
-
-    @Nonnegative
-    private static boolean isEmpty(@Nonnull Path path) {
-        return sizeOf(path) == 0;
     }
 
 }
