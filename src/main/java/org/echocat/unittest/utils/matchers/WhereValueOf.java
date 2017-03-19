@@ -4,13 +4,12 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import static org.echocat.unittest.utils.utils.StringUtils.hasContent;
+import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
+import static org.echocat.unittest.utils.utils.SizeUtils.isNotEmpty;
 
 public class WhereValueOf<T, ST> extends BaseMatcher<T> {
 
@@ -56,7 +55,7 @@ public class WhereValueOf<T, ST> extends BaseMatcher<T> {
 
     @Override
     public void describeTo(@Nonnull Description description) {
-        description.appendText("where value of ").appendValue(hasContent(mapperDescription) ? mapperDescription : mapper).appendText(" ");
+        description.appendText("where value of ").appendValue(isNotEmpty(mapperDescription) ? mapperDescription : mapper).appendText(" ");
         subMatcher.describeTo(description);
     }
 

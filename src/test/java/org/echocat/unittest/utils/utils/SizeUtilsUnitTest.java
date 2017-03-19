@@ -1,6 +1,5 @@
 package org.echocat.unittest.utils.utils;
 
-import org.echocat.unittest.utils.TestSupport;
 import org.echocat.unittest.utils.rules.TestDirectory;
 import org.echocat.unittest.utils.rules.TestFile;
 import org.junit.ClassRule;
@@ -10,19 +9,19 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static org.echocat.unittest.utils.TestUtils.*;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
 import static org.echocat.unittest.utils.utils.SizeUtils.isEmpty;
 import static org.echocat.unittest.utils.utils.SizeUtils.sizeOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class SizeUtilsUnitTest extends TestSupport {
+public class SizeUtilsUnitTest {
 
     @ClassRule
     public static final TestFile FILE_OF_LENGTH_4 = new TestFile("fileOfLength4.txt", "0123");
@@ -315,22 +314,22 @@ public class SizeUtilsUnitTest extends TestSupport {
 
 
     @Nonnull
-    protected Path givenPathWithLength4() {
+    protected static Path givenPathWithLength4() {
         return FILE_OF_LENGTH_4;
     }
 
     @Nonnull
-    protected Path givenEmptyPath() {
+    protected static Path givenEmptyPath() {
         return EMPTY_FILE;
     }
 
     @Nonnull
-    protected File givenFileWithLength4() {
+    protected static File givenFileWithLength4() {
         return givenPathWithLength4().toFile();
     }
 
     @Nonnull
-    protected File givenEmptyFile() {
+    protected static File givenEmptyFile() {
         return givenEmptyPath().toFile();
     }
 

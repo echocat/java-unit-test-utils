@@ -1,12 +1,15 @@
 package org.echocat.unittest.utils;
 
+import org.hamcrest.Description;
+import org.hamcrest.StringDescription;
+
 import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Stream;
 
-public abstract class TestSupport {
+public final class TestUtils {
 
-    protected static class IterableImpl<T> implements Iterable<T> {
+    public static class IterableImpl<T> implements Iterable<T> {
 
         private final Iterable<T> delegate;
 
@@ -23,47 +26,52 @@ public abstract class TestSupport {
     }
 
     @Nonnull
-    protected Stream<Integer> givenStreamWithLength4() {
+    public static Description givenDescription() {
+        return new StringDescription();
+    }
+
+    @Nonnull
+    public static Stream<Integer> givenStreamWithLength4() {
         return Stream.of(0, 1, 2, 3);
     }
 
     @Nonnull
-    protected Stream<Integer> givenEmptyStream() {
+    public static Stream<Integer> givenEmptyStream() {
         return Stream.empty();
     }
 
     @Nonnull
-    protected Collection<Integer> givenCollectionOfLength4() {
+    public static Collection<Integer> givenCollectionOfLength4() {
         return Arrays.asList(0, 1, 2, 3);
     }
 
     @Nonnull
-    protected Collection<Integer> givenEmptyCollection() {
+    public static Collection<Integer> givenEmptyCollection() {
         return Collections.emptyList();
     }
 
     @Nonnull
-    protected Iterable<Integer> givenIterableOfLength4() {
+    public static Iterable<Integer> givenIterableOfLength4() {
         return new IterableImpl<>(Arrays.asList(0, 1, 2, 3));
     }
 
     @Nonnull
-    protected Iterable<Integer> givenEmptyIterable() {
+    public static Iterable<Integer> givenEmptyIterable() {
         return new IterableImpl<>(Collections.emptyList());
     }
 
     @Nonnull
-    protected Iterator<Integer> givenIteratorOfLength4() {
+    public static Iterator<Integer> givenIteratorOfLength4() {
         return Arrays.asList(0, 1, 2, 3).iterator();
     }
 
     @Nonnull
-    protected Iterator<Integer> givenEmptyIterator() {
+    public static Iterator<Integer> givenEmptyIterator() {
         return Collections.emptyIterator();
     }
 
     @Nonnull
-    protected Map<Integer, Boolean> givenMapWithLength4() {
+    public static Map<Integer, Boolean> givenMapWithLength4() {
         final Map<Integer, Boolean> toTest = new HashMap<>();
         toTest.put(0, true);
         toTest.put(1, true);
@@ -73,27 +81,27 @@ public abstract class TestSupport {
     }
 
     @Nonnull
-    protected Map<Integer, Boolean> givenEmptyMap() {
+    public static Map<Integer, Boolean> givenEmptyMap() {
         return Collections.emptyMap();
     }
 
     @Nonnull
-    protected Integer[] givenArrayWithLength4() {
+    public static Integer[] givenArrayWithLength4() {
         return new Integer[]{0, 1, 2, 3};
     }
 
     @Nonnull
-    protected Integer[] givenEmptyArray() {
+    public static Integer[] givenEmptyArray() {
         return new Integer[0];
     }
 
     @Nonnull
-    protected CharSequence givenCharSequenceWithLength4() {
+    public static CharSequence givenCharSequenceWithLength4() {
         return "0123";
     }
 
     @Nonnull
-    protected CharSequence givenEmptyCharSequence() {
+    public static CharSequence givenEmptyCharSequence() {
         return "";
     }
 

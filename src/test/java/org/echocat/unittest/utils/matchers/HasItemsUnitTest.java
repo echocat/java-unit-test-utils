@@ -6,12 +6,13 @@ import org.junit.Test;
 
 import javax.annotation.Nonnull;
 
+import static org.echocat.unittest.utils.TestUtils.givenDescription;
 import static org.echocat.unittest.utils.matchers.HasItems.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class HasItemsUnitTest extends TestSupport {
+public class HasItemsUnitTest {
 
     @Test
     public void factoryMethodHasItems() throws Exception {
@@ -63,7 +64,7 @@ public class HasItemsUnitTest extends TestSupport {
     }
 
     @Nonnull
-    protected HasItems givenInstance() {
+    protected static HasItems givenInstance() {
         return new HasItems();
     }
 

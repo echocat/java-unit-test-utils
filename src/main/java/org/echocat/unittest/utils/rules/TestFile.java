@@ -4,6 +4,7 @@ import org.echocat.unittest.utils.nio.WrappedPath;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.InputStream;
@@ -11,6 +12,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Random;
 
 import static java.lang.Thread.currentThread;
 import static java.util.Objects.requireNonNull;
@@ -18,6 +20,8 @@ import static org.echocat.unittest.utils.utils.IOUtils.copy;
 
 public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> implements WrappedPath {
 
+    @Nonnull
+    private static final Random RANDOM = new Random();
     @Nonnull
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
@@ -80,6 +84,21 @@ public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> imple
 
     @Override
     public String toString() {return wrapped().toString();}
+
+    @Nonnull
+    public static ContentProducer withGeneratedContent(@Nonnegative long numberOfBytes) {
+        return os -> {
+            final byte[] buf = new byte[4096];
+            long written = 0L;
+            while (written < numberOfBytes) {
+                RANDOM.nextBytes(buf);
+                final long rest = numberOfBytes - written;
+                final long toWrite = buf.length > rest ? rest : buf.length;
+                os.write(buf, 0, (int) toWrite);
+                written += toWrite;
+            }
+        };
+    }
 
     @Nonnull
     public static ContentProducer fromClasspath(@Nonnull String name, @Nonnull Class<?> ofClass) {

@@ -9,10 +9,12 @@ import java.io.OutputStream;
 
 public final class IOUtils {
 
+    static final int BUFFER_SIZE = 8192;
+
     @Nonnegative
     public static long copy(@Nonnull @WillNotClose InputStream is, @Nonnull @WillNotClose OutputStream os) throws IOException {
         long nread = 0L;
-        final byte[] buf = new byte[8192];
+        final byte[] buf = new byte[BUFFER_SIZE];
         int n;
         while ((n = is.read(buf)) > 0) {
             os.write(buf, 0, n);

@@ -6,13 +6,14 @@ import org.junit.Test;
 
 import javax.annotation.Nonnull;
 
+import static org.echocat.unittest.utils.TestUtils.givenDescription;
 import static org.echocat.unittest.utils.matchers.CompareTo.*;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 @SuppressWarnings({"rawtypes", "ConstantConditions"})
-public class CompareToUnitTest extends TestSupport {
+public class CompareToUnitTest {
 
     @Test
     public void factoryMethodIsGreaterThan() throws Exception {
@@ -164,7 +165,7 @@ public class CompareToUnitTest extends TestSupport {
     }
 
     @Nonnull
-    protected CompareTo<Integer> givenEqualToOneInstance() {
+    protected static CompareTo<Integer> givenEqualToOneInstance() {
         return new CompareTo<>(1, "equals to", ((actual, expected) -> actual.compareTo(expected) == 0));
     }
 

@@ -18,18 +18,6 @@ public final class StringUtils {
 
     public static final Charset UTF8 = Charset.forName("UTF-8");
 
-    public static boolean isEmpty(@Nullable String what) {
-        return what == null || what.isEmpty();
-    }
-
-    public static boolean isNotEmpty(@Nullable String what) {
-        return !isEmpty(what);
-    }
-
-    public static boolean hasContent(@Nullable String what) {
-        return isNotEmpty(what);
-    }
-
     @Nonnull
     public static String toString(@Nullable Object what) {
         if (what == null) {
@@ -63,7 +51,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    public static String toString(@Nullable @WillNotClose Reader what) {
+    static String toString(@Nullable @WillNotClose Reader what) {
         if (what == null) {
             return "";
         }
@@ -82,12 +70,12 @@ public final class StringUtils {
     }
 
     @Nonnull
-    public static String toString(@Nullable @WillNotClose InputStream what) {
+    static String toString(@Nullable @WillNotClose InputStream what) {
         return toString(what != null ? new InputStreamReader(what, UTF8) : null);
     }
 
     @Nonnull
-    public static String toString(@Nullable URL what) {
+    static String toString(@Nullable URL what) {
         if (what == null) {
             return "";
         }
@@ -99,7 +87,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    public static String toString(@Nullable Path what) {
+    static String toString(@Nullable Path what) {
         if (what == null) {
             return "";
         }
@@ -111,7 +99,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    public static String toString(@Nullable File what) {
+    static String toString(@Nullable File what) {
         if (what == null) {
             return "";
         }
@@ -119,7 +107,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    public static String toString(@Nullable char[] what) {
+    static String toString(@Nullable char[] what) {
         if (what == null) {
             return "";
         }
@@ -127,7 +115,7 @@ public final class StringUtils {
     }
 
     @Nonnull
-    public static String toString(@Nullable byte[] what) {
+    static String toString(@Nullable byte[] what) {
         if (what == null) {
             return "";
         }

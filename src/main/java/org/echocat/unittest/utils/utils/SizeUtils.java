@@ -70,7 +70,10 @@ public final class SizeUtils {
         }
     }
 
-    @Nonnegative
+    public static boolean isNotEmpty(@Nullable Object what) {
+        return !isEmpty(what);
+    }
+
     public static boolean isEmpty(@Nullable Object what) {
         if (what == null) {
             return true;

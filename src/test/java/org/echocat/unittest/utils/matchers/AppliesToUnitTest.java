@@ -7,6 +7,7 @@ import org.junit.Test;
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
+import static org.echocat.unittest.utils.TestUtils.givenDescription;
 import static org.echocat.unittest.utils.matchers.AppliesTo.appliesTo;
 import static org.echocat.unittest.utils.matchers.AppliesTo.apply;
 import static org.hamcrest.CoreMatchers.*;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-public class AppliesToUnitTest extends TestSupport {
+public class AppliesToUnitTest {
 
     @Test
     public void factoryMethodAppliesTo() throws Exception {
@@ -67,17 +68,17 @@ public class AppliesToUnitTest extends TestSupport {
     }
 
     @Nonnull
-    protected <T> AppliesTo<T> givenInstanceFor(@Nonnull Predicate<T> predicate) {
+    protected static <T> AppliesTo<T> givenInstanceFor(@Nonnull Predicate<T> predicate) {
         return new AppliesTo<>(predicate);
     }
 
     @Nonnull
-    protected Predicate<Integer> givenTrueAtNumberOnePredicate() {
+    protected static Predicate<Integer> givenTrueAtNumberOnePredicate() {
         return what -> what != null && what == 1;
     }
 
     @Nonnull
-    protected Predicate<Void> givenSomePredicate() {
+    protected static Predicate<Void> givenSomePredicate() {
         //noinspection unchecked
         final Predicate<Void> predicate = mock(Predicate.class);
         doReturn("somePredicate").when(predicate).toString();

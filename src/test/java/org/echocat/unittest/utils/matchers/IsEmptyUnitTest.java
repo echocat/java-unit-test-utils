@@ -6,12 +6,13 @@ import org.junit.Test;
 
 import javax.annotation.Nonnull;
 
+import static org.echocat.unittest.utils.TestUtils.givenDescription;
 import static org.echocat.unittest.utils.matchers.IsEmpty.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class IsEmptyUnitTest extends TestSupport {
+public class IsEmptyUnitTest {
 
     @Test
     public void factoryMethodIsEmpty() throws Exception {
@@ -63,7 +64,7 @@ public class IsEmptyUnitTest extends TestSupport {
     }
 
     @Nonnull
-    protected IsEmpty givenInstance() {
+    protected static IsEmpty givenInstance() {
         return new IsEmpty();
     }
 
