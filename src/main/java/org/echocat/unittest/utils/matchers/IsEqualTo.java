@@ -9,6 +9,9 @@ import javax.annotation.Nullable;
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public class IsEqualTo<T> extends IsEqual<T> {
 
+    @Nullable
+    private final T expected;
+
     @Nonnull
     public static <T> Matcher<T> equalTo(@Nullable final T exepcted) {
         return new IsEqualTo<>(exepcted);
@@ -36,5 +39,11 @@ public class IsEqualTo<T> extends IsEqual<T> {
 
     protected IsEqualTo(@Nullable T expected) {
         super(expected);
+        this.expected = expected;
+    }
+
+    @Nullable
+    protected T expected() {
+        return expected;
     }
 }
