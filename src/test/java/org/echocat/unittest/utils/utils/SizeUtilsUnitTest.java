@@ -8,7 +8,6 @@ import org.junit.Test;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 
 import static org.echocat.unittest.utils.TestUtils.*;
@@ -109,6 +108,62 @@ public class SizeUtilsUnitTest {
     @Test
     public void sizeOfArrayWithLength4() throws Exception {
         final Object toTest = givenArrayWithLength4();
+
+        assertThat(sizeOf(toTest), equalTo(4L));
+    }
+
+    @Test
+    public void sizeOfBooleanArrayWithLength4() throws Exception {
+        final Object toTest = givenBooleanArrayWithLength4();
+
+        assertThat(sizeOf(toTest), equalTo(4L));
+    }
+
+    @Test
+    public void sizeOfByteArrayWithLength4() throws Exception {
+        final Object toTest = givenByteArrayWithLength4();
+
+        assertThat(sizeOf(toTest), equalTo(4L));
+    }
+
+    @Test
+    public void sizeOfCharArrayWithLength4() throws Exception {
+        final Object toTest = givenCharArrayWithLength4();
+
+        assertThat(sizeOf(toTest), equalTo(4L));
+    }
+
+    @Test
+    public void sizeOfShortArrayWithLength4() throws Exception {
+        final Object toTest = givenShortArrayWithLength4();
+
+        assertThat(sizeOf(toTest), equalTo(4L));
+    }
+
+    @Test
+    public void sizeOfIntArrayWithLength4() throws Exception {
+        final Object toTest = givenIntArrayWithLength4();
+
+        assertThat(sizeOf(toTest), equalTo(4L));
+    }
+
+    @Test
+    public void sizeOfLongArrayWithLength4() throws Exception {
+        final Object toTest = givenLongArrayWithLength4();
+
+        assertThat(sizeOf(toTest), equalTo(4L));
+    }
+
+    @Test
+    public void sizeOfFloatArrayWithLength4() throws Exception {
+        final Object toTest = givenFloatArrayWithLength4();
+
+        assertThat(sizeOf(toTest), equalTo(4L));
+    }
+
+    @Test
+    public void sizeOfDoubleArrayWithLength4() throws Exception {
+        final Object toTest = givenDoubleArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }

@@ -95,13 +95,58 @@ public final class TestUtils {
     }
 
     @Nonnull
-    public static Integer[] givenArrayWithLength4() {
-        return new Integer[]{0, 1, 2, 3};
+    public static Object[] givenArrayWithLength3() {
+        return new Object[]{0, 1, 2};
     }
 
     @Nonnull
-    public static Integer[] givenEmptyArray() {
-        return new Integer[0];
+    public static Object[] givenArrayWithLength4() {
+        return new Object[]{0, 1, 2, 3};
+    }
+
+    @Nonnull
+    public static Object[] givenEmptyArray() {
+        return new Object[0];
+    }
+
+    @Nonnull
+    public static boolean[] givenBooleanArrayWithLength4() {
+        return new boolean[4];
+    }
+
+    @Nonnull
+    public static byte[] givenByteArrayWithLength4() {
+        return new byte[4];
+    }
+
+    @Nonnull
+    public static char[] givenCharArrayWithLength4() {
+        return new char[4];
+    }
+
+    @Nonnull
+    public static short[] givenShortArrayWithLength4() {
+        return new short[4];
+    }
+
+    @Nonnull
+    public static int[] givenIntArrayWithLength4() {
+        return new int[4];
+    }
+
+    @Nonnull
+    public static long[] givenLongArrayWithLength4() {
+        return new long[4];
+    }
+
+    @Nonnull
+    public static float[] givenFloatArrayWithLength4() {
+        return new float[4];
+    }
+
+    @Nonnull
+    public static double[] givenDoubleArrayWithLength4() {
+        return new double[4];
     }
 
     @Nonnull

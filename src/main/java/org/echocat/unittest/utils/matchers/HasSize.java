@@ -47,17 +47,22 @@ public class HasSize<T> extends BaseMatcher<T> {
     @Override
     public boolean matches(@Nullable Object item) {
         final long size = itemToSize.computeIfAbsent(item, SizeUtils::sizeOf);
-        return size == expectedSize;
+        return size == expectedSize();
     }
 
     @Override
     public void describeTo(@Nonnull Description description) {
-        description.appendText("has size of ").appendValue(expectedSize);
+        description.appendText("has size of ").appendValue(expectedSize());
     }
 
     @Override
     public void describeMismatch(@Nullable Object item, @Nonnull Description description) {
         description.appendText("was ").appendValue(itemToSize.get(item)).appendText(" with content ").appendValue(item);
+    }
+
+    @Nonnegative
+    protected long expectedSize() {
+        return expectedSize;
     }
 
 }

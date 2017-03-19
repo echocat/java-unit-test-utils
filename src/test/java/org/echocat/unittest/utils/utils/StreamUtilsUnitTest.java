@@ -21,9 +21,9 @@ public class StreamUtilsUnitTest {
 
     @Test
     public void toStreamOfArray() throws Exception {
-        final Integer[] toConvert = givenArrayWithLength4();
+        final Object[] toConvert = givenArrayWithLength4();
 
-        final Stream<Integer> instance = toStream(toConvert);
+        final Stream<Object> instance = toStream(toConvert);
 
         assertThat(instance.collect(toList()), equalTo(asList(toConvert)));
     }

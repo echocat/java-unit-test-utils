@@ -44,6 +44,30 @@ public final class SizeUtils {
         if (what instanceof Object[]) {
             return ((Object[]) what).length;
         }
+        if (what instanceof boolean[]) {
+            return ((boolean[]) what).length;
+        }
+        if (what instanceof byte[]) {
+            return ((byte[]) what).length;
+        }
+        if (what instanceof char[]) {
+            return ((char[]) what).length;
+        }
+        if (what instanceof short[]) {
+            return ((short[]) what).length;
+        }
+        if (what instanceof int[]) {
+            return ((int[]) what).length;
+        }
+        if (what instanceof long[]) {
+            return ((long[]) what).length;
+        }
+        if (what instanceof float[]) {
+            return ((float[]) what).length;
+        }
+        if (what instanceof double[]) {
+            return ((double[]) what).length;
+        }
         if (what instanceof CharSequence) {
             return ((CharSequence) what).length();
         }
@@ -157,12 +181,6 @@ public final class SizeUtils {
         }
         if (what instanceof Map) {
             return ((Map<?, ?>) what).isEmpty();
-        }
-        if (what instanceof Object[]) {
-            return ((Object[]) what).length == 0;
-        }
-        if (what instanceof CharSequence) {
-            return ((CharSequence) what).length() == 0;
         }
         if (what instanceof File) {
             return sizeOf(((File) what).toPath()) == 0;
