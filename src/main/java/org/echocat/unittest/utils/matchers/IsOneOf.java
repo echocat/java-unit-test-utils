@@ -4,11 +4,11 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.util.Arrays.asList;
 
@@ -22,7 +22,7 @@ public class IsOneOf<T> extends BaseMatcher<T> {
         return new IsOneOf<>(expected);
     }
 
-    @SuppressWarnings({"OverloadedVarargsMethod", "unchecked"})
+    @SafeVarargs
     @Nonnull
     public static <T> Matcher<T> isOneOf(@Nonnull final T firstExpected, @Nullable final T... others) {
         final Set<T> them = new HashSet<>();

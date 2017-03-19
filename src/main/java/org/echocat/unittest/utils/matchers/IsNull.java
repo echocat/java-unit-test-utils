@@ -4,9 +4,8 @@ import org.hamcrest.Matcher;
 
 import javax.annotation.Nonnull;
 
-import static org.hamcrest.core.IsNot.not;
+import static org.echocat.unittest.utils.matchers.IsNot.not;
 
-@SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public class IsNull<T> extends org.hamcrest.core.IsNull<T> {
 
     @Nonnull
@@ -41,4 +40,5 @@ public class IsNull<T> extends org.hamcrest.core.IsNull<T> {
 
     protected IsNull() {
     }
+
 }
