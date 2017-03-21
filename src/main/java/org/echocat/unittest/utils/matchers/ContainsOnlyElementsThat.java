@@ -19,6 +19,12 @@ public class ContainsOnlyElementsThat<V, T> extends StreamBasedMatcherSupport<V,
         static <T> Matcher<Stream<T>> containsOnlyElementsThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsOnlyElementsThat<>(StreamUtils::toStream, matcher, otherMatchers);
         }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<Stream<T>> containsOnlyElements(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsOnlyElementsThat(matcher, otherMatchers);
+        }
     }
 
     public interface Iterables {
@@ -26,6 +32,12 @@ public class ContainsOnlyElementsThat<V, T> extends StreamBasedMatcherSupport<V,
         @Nonnull
         static <T> Matcher<Iterable<T>> containsOnlyElementsThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsOnlyElementsThat<>(StreamUtils::toStream, matcher, otherMatchers);
+        }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<Iterable<T>> containsOnlyElements(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsOnlyElementsThat(matcher, otherMatchers);
         }
     }
 
@@ -35,6 +47,12 @@ public class ContainsOnlyElementsThat<V, T> extends StreamBasedMatcherSupport<V,
         static <T> Matcher<Iterator<T>> containsOnlyElementsThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsOnlyElementsThat<>(StreamUtils::toStream, matcher, otherMatchers);
         }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<Iterator<T>> containsOnlyElements(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsOnlyElementsThat(matcher, otherMatchers);
+        }
     }
 
     public interface Spliterators {
@@ -43,6 +61,12 @@ public class ContainsOnlyElementsThat<V, T> extends StreamBasedMatcherSupport<V,
         static <T> Matcher<Spliterator<T>> containsOnlyElementsThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsOnlyElementsThat<>(StreamUtils::toStream, matcher, otherMatchers);
         }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<Spliterator<T>> containsOnlyElements(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsOnlyElementsThat(matcher, otherMatchers);
+        }
     }
 
     public interface Arrays {
@@ -50,6 +74,12 @@ public class ContainsOnlyElementsThat<V, T> extends StreamBasedMatcherSupport<V,
         @Nonnull
         static <T> Matcher<T[]> containsOnlyElementsThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsOnlyElementsThat<>(StreamUtils::toStream, matcher, otherMatchers);
+        }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<T[]> containsOnlyElements(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsOnlyElementsThat(matcher, otherMatchers);
         }
     }
 

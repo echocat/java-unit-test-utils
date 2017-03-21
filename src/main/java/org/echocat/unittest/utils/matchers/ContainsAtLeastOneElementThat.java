@@ -19,6 +19,12 @@ public class ContainsAtLeastOneElementThat<V, T> extends StreamBasedMatcherSuppo
         static <T> Matcher<Stream<T>> containsAtLeastOneElementThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsAtLeastOneElementThat<>(StreamUtils::toStream, matcher, otherMatchers);
         }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<Stream<T>> containsAtLeastOneElement(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsAtLeastOneElementThat(matcher, otherMatchers);
+        }
     }
 
     public interface Iterables {
@@ -26,6 +32,12 @@ public class ContainsAtLeastOneElementThat<V, T> extends StreamBasedMatcherSuppo
         @Nonnull
         static <T> Matcher<Iterable<T>> containsAtLeastOneElementThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsAtLeastOneElementThat<>(StreamUtils::toStream, matcher, otherMatchers);
+        }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<Iterable<T>> containsAtLeastOneElement(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsAtLeastOneElementThat(matcher, otherMatchers);
         }
     }
 
@@ -35,6 +47,12 @@ public class ContainsAtLeastOneElementThat<V, T> extends StreamBasedMatcherSuppo
         static <T> Matcher<Iterator<T>> containsAtLeastOneElementThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsAtLeastOneElementThat<>(StreamUtils::toStream, matcher, otherMatchers);
         }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<Iterator<T>> containsAtLeastOneElement(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsAtLeastOneElementThat(matcher, otherMatchers);
+        }
     }
 
     public interface Spliterators {
@@ -43,6 +61,12 @@ public class ContainsAtLeastOneElementThat<V, T> extends StreamBasedMatcherSuppo
         static <T> Matcher<Spliterator<T>> containsAtLeastOneElementThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsAtLeastOneElementThat<>(StreamUtils::toStream, matcher, otherMatchers);
         }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<Spliterator<T>> containsAtLeastOneElement(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsAtLeastOneElementThat(matcher, otherMatchers);
+        }
     }
 
     public interface Arrays {
@@ -50,6 +74,12 @@ public class ContainsAtLeastOneElementThat<V, T> extends StreamBasedMatcherSuppo
         @Nonnull
         static <T> Matcher<T[]> containsAtLeastOneElementThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
             return new ContainsAtLeastOneElementThat<>(StreamUtils::toStream, matcher, otherMatchers);
+        }
+
+        @SafeVarargs
+        @Nonnull
+        static <T> Matcher<T[]> containsAtLeastOneElement(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+            return containsAtLeastOneElementThat(matcher, otherMatchers);
         }
     }
 

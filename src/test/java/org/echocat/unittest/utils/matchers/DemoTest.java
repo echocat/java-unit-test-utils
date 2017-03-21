@@ -5,19 +5,17 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.echocat.unittest.utils.matchers.CompareTo.isGreaterThanOrEqualTo;
-import static org.echocat.unittest.utils.matchers.ContainsAtLeastOneElementThat.Iterables.containsAtLeastOneElementThat;
-import static org.echocat.unittest.utils.matchers.ContainsOnlyElementsThat.Iterables.containsOnlyElementsThat;
+import static org.echocat.unittest.utils.matchers.ContainsAtLeastOneElementThat.Iterables.containsAtLeastOneElement;
+import static org.echocat.unittest.utils.matchers.ContainsOnlyElementsThat.Iterables.containsOnlyElements;
 import static org.echocat.unittest.utils.matchers.HasItems.hasElements;
 import static org.echocat.unittest.utils.matchers.IsEqualTo.isEqualTo;
 import static org.echocat.unittest.utils.matchers.IsOneOf.isOneOf;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
-import static org.echocat.unittest.utils.matchers.ThrowsException.throwsExceptionWithMessage;
 import static org.echocat.unittest.utils.matchers.WhereValueOf.whereValueOf;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
-
-import static java.util.Arrays.asList;
 
 public class DemoTest {
 
@@ -27,20 +25,20 @@ public class DemoTest {
         assertThat("hello", isEqualTo("hello"));
 
         final List<Moo> aListOfThings = asList(
-                new Moo().setName("MyBert").setAge(45),
-                new Moo().setName("MyTom").setAge(40)
+            new Moo().setName("MyBert").setAge(45),
+            new Moo().setName("MyTom").setAge(40)
         );
 
         assertThat(aListOfThings, hasElements());
 
-        assertThat(aListOfThings, containsOnlyElementsThat(
-                whereValueOf(Moo::getName, "name", startsWith("My")),
-                whereValueOf(Moo::getAge, "age", isGreaterThanOrEqualTo(40))
+        assertThat(aListOfThings, containsOnlyElements(
+            whereValueOf(Moo::getName, "name", startsWith("My")),
+            whereValueOf(Moo::getAge, "age", isGreaterThanOrEqualTo(40))
         ));
 
-        assertThat(aListOfThings, containsAtLeastOneElementThat(
-                whereValueOf(Moo::getName, "name", startsWith("My")),
-                whereValueOf(Moo::getAge, "age", isGreaterThanOrEqualTo(45))
+        assertThat(aListOfThings, containsAtLeastOneElement(
+            whereValueOf(Moo::getName, "name", startsWith("My")),
+            whereValueOf(Moo::getAge, "age", isGreaterThanOrEqualTo(45))
         ));
 
         assertThat(() -> {
