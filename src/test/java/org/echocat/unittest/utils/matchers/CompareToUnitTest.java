@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 
 import static org.echocat.unittest.utils.TestUtils.givenDescription;
 import static org.echocat.unittest.utils.matchers.CompareTo.*;
-import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -147,21 +146,6 @@ public class CompareToUnitTest {
         instance.describeTo(description);
 
         assertThat(description.toString(), equalTo("equals to <1>"));
-    }
-
-    @Test
-    public void typeOfDoesNotAcceptNull() throws Exception {
-        assertThat(() -> typeOf(null), throwsException(NullPointerException.class, "The provided expected value is null."));
-    }
-
-    @Test
-    public void typeOfDoesNotAcceptNonComparable() throws Exception {
-        assertThat(() -> typeOf(new Object()), throwsException(IllegalArgumentException.class, "The provided expected value is not of type.*"));
-    }
-
-    @Test
-    public void typeOfHappyPath() throws Exception {
-        assertThat(typeOf(1), sameInstance(Integer.class));
     }
 
     @Nonnull

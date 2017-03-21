@@ -6,6 +6,8 @@ import org.hamcrest.TypeSafeMatcher;
 
 import javax.annotation.Nonnull;
 
+import static org.echocat.unittest.utils.utils.ClassUtils.typeOf;
+
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class CompareTo<T extends Comparable<T>> extends TypeSafeMatcher<T> {
 
@@ -50,36 +52,23 @@ public class CompareTo<T extends Comparable<T>> extends TypeSafeMatcher<T> {
     }
 
     @Nonnull
-    private static final Comparator<Comparable> GREATER_THAN_COMPARATOR = (actual, exp) -> actual.compareTo(exp) > 0;
-    @Nonnull
-    private static final Comparator<Comparable> GREATER_THAN_OR_EQUAL_TO_COMPARATOR = (actual, exp) -> actual.compareTo(exp) >= 0;
-    @Nonnull
-    private static final Comparator<Comparable> LESS_THAN_COMPARATOR = (actual, exp) -> actual.compareTo(exp) < 0;
-    @Nonnull
-    private static final Comparator<Comparable> LESS_THAN_OR_EQUAL_TO_COMPARATOR = (actual, exp) -> actual.compareTo(exp) <= 0;
-
-    @Nonnull
     protected static <T extends Comparable<T>> Comparator<T> greaterThanComparator() {
-        //noinspection RedundantCast
-        return (Comparator<T>) (Object) GREATER_THAN_COMPARATOR;
+        return (actual, exp) -> actual.compareTo(exp) > 0;
     }
 
     @Nonnull
     protected static <T extends Comparable<T>> Comparator<T> greaterThanOrEqualToComparator() {
-        //noinspection RedundantCast
-        return (Comparator<T>) (Object) GREATER_THAN_OR_EQUAL_TO_COMPARATOR;
+        return (actual, exp) -> actual.compareTo(exp) >= 0;
     }
 
     @Nonnull
     protected static <T extends Comparable<T>> Comparator<T> lessThanComparator() {
-        //noinspection RedundantCast
-        return (Comparator<T>) (Object) LESS_THAN_COMPARATOR;
+        return (actual, exp) -> actual.compareTo(exp) < 0;
     }
 
     @Nonnull
     protected static <T extends Comparable<T>> Comparator<T> lessThanOrEqualToComparator() {
-        //noinspection RedundantCast
-        return (Comparator<T>) (Object) LESS_THAN_OR_EQUAL_TO_COMPARATOR;
+        return (actual, exp) -> actual.compareTo(exp) <= 0;
     }
 
     @Nonnull
@@ -119,18 +108,6 @@ public class CompareTo<T extends Comparable<T>> extends TypeSafeMatcher<T> {
     @Nonnull
     protected Comparator<T> comparator() {
         return comparator;
-    }
-
-    @Nonnull
-    protected static Class<?> typeOf(@Nonnull Object expected) {
-        //noinspection ConstantConditions
-        if (expected == null) {
-            throw new NullPointerException("The provided expected value is null.");
-        }
-        if (!(expected instanceof Comparable)) {
-            throw new IllegalArgumentException("The provided expected value is not of type " + Comparable.class.getName() + ".");
-        }
-        return expected.getClass();
     }
 
     @FunctionalInterface
