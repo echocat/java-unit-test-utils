@@ -157,6 +157,7 @@ public class StringsUnitTest {
 
         assertThat(instance.matches("666 hello"), equalTo(true));
         assertThat(instance.matches("hello 666"), equalTo(false));
+        assertThat(instance.matches(666), equalTo(false));
     }
 
     @Test
