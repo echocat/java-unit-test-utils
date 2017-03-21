@@ -89,9 +89,6 @@ public class Strings<T extends CharSequence> extends BaseMatcher<T> {
 
     @Override
     public boolean matches(@Nullable Object item) {
-        if (item instanceof String) {
-            return comparator.check((String) item, expected);
-        }
         if (item instanceof CharSequence) {
             return comparator.check(item.toString(), expected);
         }
