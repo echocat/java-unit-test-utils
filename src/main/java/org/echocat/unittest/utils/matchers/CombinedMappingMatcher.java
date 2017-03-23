@@ -4,40 +4,46 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.util.Collections.addAll;
 import static java.util.Collections.unmodifiableList;
 
-public abstract class StreamBasedMatcherSupport<V, T> extends BaseMatcher<V> {
+public class CombinedMappingMatcher<V, T> extends BaseMatcher<V> {
 
     @Nonnegative
     protected static final int MAXIMUM_MISMATCHES_TO_REPORT = 10;
     @Nonnull
     private final Function<V, Stream<T>> mapper;
     @Nonnull
-    private final Iterable<Matcher<T>> matchers;
+    private final Iterable<? extends Matcher<T>> matchers;
+    @Nonnull
+    private final StreamMatcher<T> streamMatcher;
+    @Nonnull
+    private final String description;
 
-    protected StreamBasedMatcherSupport(@Nonnull Function<V, Stream<T>> mapper, @Nonnull Matcher<T> firstMatcher, @Nullable Matcher<T>[] otherMatchers) {
-        this(mapper, collectMatchers(firstMatcher, otherMatchers));
-    }
-
-    protected StreamBasedMatcherSupport(@Nonnull Function<V, Stream<T>> mapper, @Nonnull Iterable<Matcher<T>> matchers) {
+    public CombinedMappingMatcher(@Nonnull Function<V, Stream<T>> mapper,
+                                  @Nonnull Iterable<? extends Matcher<T>> matchers,
+                                  @Nonnull StreamMatcher<T> streamMatcher,
+                                  @Nonnull String description
+    ) {
         this.mapper = mapper;
         this.matchers = matchers;
+        this.streamMatcher = streamMatcher;
+        this.description = description;
     }
 
+    @SafeVarargs
     @Nonnull
-    protected static <T> Iterable<Matcher<T>> collectMatchers(@Nonnull Matcher<T> firstMatcher, @Nullable Matcher<T>[] otherMatchers) {
+    public static <T> Iterable<Matcher<T>> collectMatchers(@Nonnull Matcher<T> firstMatcher, @Nullable Matcher<T>... otherMatchers) {
         final List<Matcher<T>> result = new ArrayList<>(1 + (otherMatchers != null ? otherMatchers.length : 0));
         result.add(firstMatcher);
         if (otherMatchers != null) {
@@ -46,35 +52,38 @@ public abstract class StreamBasedMatcherSupport<V, T> extends BaseMatcher<V> {
         return unmodifiableList(result);
     }
 
-    @Nonnull
-    protected Function<V, Stream<T>> mapper() {
-        return mapper;
-    }
-
-    @Nonnull
-    protected Iterable<Matcher<T>> matchers() {
-        return matchers;
-    }
-
     @Override
     public boolean matches(@Nullable Object item) {
         if (item == null) {
             return false;
         }
-        //noinspection unchecked
-        return matches(mapper.apply((V) item));
+        final Stream<T> stream;
+        try {
+            //noinspection unchecked
+            stream = mapper().apply((V) item);
+        } catch (final ClassCastException ignored) {
+            return false;
+        }
+        return streamMatcher().matches(matchers(), stream);
     }
-
-    protected abstract boolean matches(@Nonnull Stream<T> items);
 
     @Override
     public void describeMismatch(@Nullable Object item, @Nonnull Description description) {
         if (item == null) {
-            description.appendText("is null");
+            description.appendText("was ").appendValue(null);
+            return;
+        }
+        final Stream<T> stream;
+        try {
+            //noinspection unchecked
+            stream = mapper().apply((V) item);
+        } catch (final ClassCastException ignored) {
+            //noinspection ConstantConditions
+            description.appendText("was unexpected type ").appendValue(item.getClass());
             return;
         }
         //noinspection unchecked
-        describeMismatch(mapper.apply((V) item), description);
+        describeMismatch(stream, description);
     }
 
     protected void describeMismatch(@Nonnull Stream<T> items, @Nonnull Description description) {
@@ -118,6 +127,29 @@ public abstract class StreamBasedMatcherSupport<V, T> extends BaseMatcher<V> {
         });
     }
 
-    protected abstract String description();
+    @Nonnull
+    protected Function<V, Stream<T>> mapper() {
+        return mapper;
+    }
+
+    @Nonnull
+    protected Iterable<? extends Matcher<T>> matchers() {
+        return matchers;
+    }
+
+    @Nonnull
+    protected StreamMatcher<T> streamMatcher() {
+        return streamMatcher;
+    }
+
+    @Nonnull
+    protected String description() {
+        return description;
+    }
+
+    @FunctionalInterface
+    public interface StreamMatcher<T> {
+        boolean matches(@Nonnull Iterable<? extends Matcher<T>> matchers, @Nonnull Stream<T> input);
+    }
 
 }
