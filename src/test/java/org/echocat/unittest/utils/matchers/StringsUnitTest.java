@@ -20,7 +20,7 @@ public class StringsUnitTest {
         final Matcher<String> instance = startsWith("666");
 
         assertThat(instance, instanceOf(Strings.class));
-        assertThat(((Strings<?>) instance).comparator(), sameInstance(startsWithComparator()));
+        assertThat(((Strings<?>) instance).comparator(), sameInstance(Strings.startsWithComparator()));
         assertThat(((Strings<?>) instance).comparatorDescription(), equalTo("starts with"));
         assertThat(((Strings<?>) instance).expected(), equalTo("666"));
     }
@@ -30,7 +30,7 @@ public class StringsUnitTest {
         final Matcher<String> instance = endsWith("666");
 
         assertThat(instance, instanceOf(Strings.class));
-        assertThat(((Strings<?>) instance).comparator(), sameInstance(endsWithComparator()));
+        assertThat(((Strings<?>) instance).comparator(), sameInstance(Strings.endsWithComparator()));
         assertThat(((Strings<?>) instance).comparatorDescription(), equalTo("ends with"));
         assertThat(((Strings<?>) instance).expected(), equalTo("666"));
     }
@@ -40,7 +40,7 @@ public class StringsUnitTest {
         final Matcher<String> instance = contains("666");
 
         assertThat(instance, instanceOf(Strings.class));
-        assertThat(((Strings<?>) instance).comparator(), sameInstance(containsComparator()));
+        assertThat(((Strings<?>) instance).comparator(), sameInstance(Strings.containsComparator()));
         assertThat(((Strings<?>) instance).comparatorDescription(), equalTo("contains"));
         assertThat(((Strings<?>) instance).expected(), equalTo("666"));
     }
@@ -50,17 +50,18 @@ public class StringsUnitTest {
         final Matcher<String> instance = Strings.matches("666");
 
         assertThat(instance, instanceOf(Strings.class));
-        assertThat(((Strings<?>) instance).comparator(), sameInstance(matchesComparator()));
+        assertThat(((Strings<?>) instance).comparator(), sameInstance(Strings.matchesComparator()));
         assertThat(((Strings<?>) instance).comparatorDescription(), equalTo("matches regular expression"));
         assertThat(((Strings<?>) instance).expected(), equalTo("666"));
     }
 
     @Test
     public void factoryMethodEqualsIgnoreCase() throws Exception {
+        //noinspection LiteralAsArgToStringEquals
         final Matcher<String> instance = equalsIgnoreCase("666");
 
         assertThat(instance, instanceOf(Strings.class));
-        assertThat(((Strings<?>) instance).comparator(), sameInstance(equalsIgnoreCaseComparator()));
+        assertThat(((Strings<?>) instance).comparator(), sameInstance(Strings.equalsIgnoreCaseComparator()));
         assertThat(((Strings<?>) instance).comparatorDescription(), equalTo("equals ignore case"));
         assertThat(((Strings<?>) instance).expected(), equalTo("666"));
     }
@@ -70,7 +71,7 @@ public class StringsUnitTest {
         final Matcher<String> instance = isEqualIgnoreCase("666");
 
         assertThat(instance, instanceOf(Strings.class));
-        assertThat(((Strings<?>) instance).comparator(), sameInstance(equalsIgnoreCaseComparator()));
+        assertThat(((Strings<?>) instance).comparator(), sameInstance(Strings.equalsIgnoreCaseComparator()));
         assertThat(((Strings<?>) instance).comparatorDescription(), equalTo("equals ignore case"));
         assertThat(((Strings<?>) instance).expected(), equalTo("666"));
     }
@@ -80,7 +81,7 @@ public class StringsUnitTest {
         final Matcher<String> instance = isEqualToIgnoreCase("666");
 
         assertThat(instance, instanceOf(Strings.class));
-        assertThat(((Strings<?>) instance).comparator(), sameInstance(equalsIgnoreCaseComparator()));
+        assertThat(((Strings<?>) instance).comparator(), sameInstance(Strings.equalsIgnoreCaseComparator()));
         assertThat(((Strings<?>) instance).comparatorDescription(), equalTo("equals ignore case"));
         assertThat(((Strings<?>) instance).expected(), equalTo("666"));
     }
@@ -90,14 +91,14 @@ public class StringsUnitTest {
         final Matcher<String> instance = equalsToIgnoreCase("666");
 
         assertThat(instance, instanceOf(Strings.class));
-        assertThat(((Strings<?>) instance).comparator(), sameInstance(equalsIgnoreCaseComparator()));
+        assertThat(((Strings<?>) instance).comparator(), sameInstance(Strings.equalsIgnoreCaseComparator()));
         assertThat(((Strings<?>) instance).comparatorDescription(), equalTo("equals ignore case"));
         assertThat(((Strings<?>) instance).expected(), equalTo("666"));
     }
 
     @Test
-    public void factoryMethodStartsWithComparator() throws Exception {
-        final Comparator instance = startsWithComparator();
+    public void startsWithComparator() throws Exception {
+        final Comparator instance = Strings.startsWithComparator();
 
         assertThat(instance.check("666 hello world", "666"), equalTo(true));
         assertThat(instance.check("hello 666 world", "666"), equalTo(false));
@@ -105,8 +106,8 @@ public class StringsUnitTest {
     }
 
     @Test
-    public void factoryMethodEndsWithComparator() throws Exception {
-        final Comparator instance = endsWithComparator();
+    public void endsWithComparator() throws Exception {
+        final Comparator instance = Strings.endsWithComparator();
 
         assertThat(instance.check("666 hello world", "666"), equalTo(false));
         assertThat(instance.check("hello 666 world", "666"), equalTo(false));
@@ -114,8 +115,8 @@ public class StringsUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsComparator() throws Exception {
-        final Comparator instance = containsComparator();
+    public void containsComparator() throws Exception {
+        final Comparator instance = Strings.containsComparator();
 
         assertThat(instance.check("66 hello world", "666"), equalTo(false));
         assertThat(instance.check("666 hello world", "666"), equalTo(true));
@@ -124,8 +125,8 @@ public class StringsUnitTest {
     }
 
     @Test
-    public void factoryMethodMatchesComparator() throws Exception {
-        final Comparator instance = matchesComparator();
+    public void matchesComparator() throws Exception {
+        final Comparator instance = Strings.matchesComparator();
 
         assertThat(instance.check("66 hello world", ".*666.*"), equalTo(false));
         assertThat(instance.check("666 hello world", ".*666.*"), equalTo(true));
@@ -134,8 +135,8 @@ public class StringsUnitTest {
     }
 
     @Test
-    public void factoryMethodEqualsIgnoreCaseComparator() throws Exception {
-        final Comparator instance = equalsIgnoreCaseComparator();
+    public void equalsIgnoreCaseComparator() throws Exception {
+        final Comparator instance = Strings.equalsIgnoreCaseComparator();
 
         assertThat(instance.check("hello world", "hello world"), equalTo(true));
         assertThat(instance.check("hElLo WoRlD", "hello world"), equalTo(true));
@@ -144,9 +145,9 @@ public class StringsUnitTest {
 
     @Test
     public void constructor() throws Exception {
-        final Strings<String> instance = new Strings<>("test", startsWithComparator(), "666");
+        final Strings<String> instance = new Strings<>("test", Strings.startsWithComparator(), "666");
 
-        assertThat(instance.comparator(), sameInstance(startsWithComparator()));
+        assertThat(instance.comparator(), sameInstance(Strings.startsWithComparator()));
         assertThat(instance.comparatorDescription(), equalTo("test"));
         assertThat(instance.expected(), equalTo("666"));
     }
@@ -172,7 +173,7 @@ public class StringsUnitTest {
 
     @Nonnull
     protected static Matcher<String> givenStartsWith666Instance() {
-        return new Strings<>("starts with", startsWithComparator(), "666");
+        return new Strings<>("starts with", Strings.startsWithComparator(), "666");
     }
 
 }

@@ -16,17 +16,18 @@ public class ClassUtilsUnitTest {
 
     @Test
     public void typeOfDoesNotAcceptNull() throws Exception {
-        assertThat(() -> typeOf(null), throwsException(NullPointerException.class, "The provided expected value is null."));
+        //noinspection ConstantConditions
+        assertThat(() -> typeOf(Comparable.class, null), throwsException(NullPointerException.class, "The provided object value is null."));
     }
 
     @Test
     public void typeOfDoesNotAcceptNonComparable() throws Exception {
-        assertThat(() -> typeOf(new Object()), throwsException(IllegalArgumentException.class, "The provided expected value is not of type.*"));
+        assertThat(() -> typeOf(Comparable.class, new Object()), throwsException(IllegalArgumentException.class, "The provided object value is not of type.*"));
     }
 
     @Test
     public void typeOfHappyPath() throws Exception {
-        assertThat(typeOf(1), sameInstance(Integer.class));
+        assertThat(typeOf(Comparable.class, 1), sameInstance(Integer.class));
     }
 
 }

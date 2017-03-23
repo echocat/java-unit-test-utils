@@ -9,16 +9,36 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Objects;
 
+import static java.util.Arrays.asList;
+
 public class Iterables<V, T extends Iterable<V>> extends BaseMatcher<T> {
+
+    @SafeVarargs
+    @Nonnull
+    public static <V, T extends Iterable<V>> Matcher<T> startsWith(@Nonnull V... prefix) {
+        return startsWith(asList(prefix));
+    }
 
     @Nonnull
     public static <V, T extends Iterable<V>> Matcher<T> startsWith(@Nonnull Iterable<? extends V> prefix) {
         return new Iterables<>("starts with", startsWithComparator(), prefix);
     }
 
+    @SafeVarargs
+    @Nonnull
+    public static <V, T extends Iterable<V>> Matcher<T> endsWith(@Nonnull V... suffix) {
+        return endsWith(asList(suffix));
+    }
+
     @Nonnull
     public static <V, T extends Iterable<V>> Matcher<T> endsWith(@Nonnull Iterable<? extends V> suffix) {
         return new Iterables<>("ends with", endsWithComparator(), suffix);
+    }
+
+    @SafeVarargs
+    @Nonnull
+    public static <V, T extends Iterable<V>> Matcher<T> contains(@Nonnull V... what) {
+        return contains(asList(what));
     }
 
     @Nonnull
@@ -129,15 +149,9 @@ public class Iterables<V, T extends Iterable<V>> extends BaseMatcher<T> {
             if (Objects.equals(fao, feo)) {
                 final Iterator<Object> ei = expected.iterator();
                 skipOne(ei);
-                while (ai.hasNext() && ei.hasNext()) {
-                    final Object ao = ai.next();
-                    final Object eo = ei.next();
-                    if (!Objects.equals(ao, eo)) {
-                        break;
-                    }
-                }
+                final boolean allMatches = continueMatchesOn(ai, ei);
                 if (!ai.hasNext() && !ei.hasNext()) {
-                    return true;
+                    return allMatches;
                 }
             }
         }
@@ -159,22 +173,29 @@ public class Iterables<V, T extends Iterable<V>> extends BaseMatcher<T> {
             if (Objects.equals(fao, feo)) {
                 final Iterator<Object> ei = expected.iterator();
                 skipOne(ei);
-                while (ai.hasNext() && ei.hasNext()) {
-                    final Object ao = ai.next();
-                    final Object eo = ei.next();
-                    if (!Objects.equals(ao, eo)) {
-                        break;
-                    }
-                }
+                final boolean allMatches = continueMatchesOn(ai, ei);
                 if (!ei.hasNext()) {
-                    return true;
+                    return allMatches;
                 }
             }
         }
         return false;
     }
 
-    protected static void skipOne(@Nonnull Iterator<Object> iterator) {
+    protected static boolean continueMatchesOn(@Nonnull Iterator<Object> ai, @Nonnull Iterator<Object> ei) {
+        boolean allMatches = true;
+        while (ai.hasNext() && ei.hasNext()) {
+            final Object ao = ai.next();
+            final Object eo = ei.next();
+            if (!Objects.equals(ao, eo)) {
+                allMatches = false;
+                break;
+            }
+        }
+        return allMatches;
+    }
+
+    protected static void skipOne(@Nonnull Iterator<?> iterator) {
         if (!iterator.hasNext()) {
             throw new IllegalStateException();
         }

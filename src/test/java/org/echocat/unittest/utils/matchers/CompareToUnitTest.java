@@ -19,7 +19,7 @@ public class CompareToUnitTest {
         final Matcher<Integer> instance = isGreaterThan(666);
 
         assertThat(instance, instanceOf(CompareTo.class));
-        assertThat(((CompareTo) instance).comparator(), sameInstance(greaterThanComparator()));
+        assertThat(((CompareTo) instance).comparator(), sameInstance(CompareTo.greaterThanComparator()));
         assertThat(((CompareTo) instance).comparatorDescription(), equalTo("is greater than"));
         assertThat(((CompareTo) instance).expected(), equalTo(666));
     }
@@ -29,7 +29,7 @@ public class CompareToUnitTest {
         final Matcher<Integer> instance = isGreaterThanOrEqualTo(666);
 
         assertThat(instance, instanceOf(CompareTo.class));
-        assertThat(((CompareTo) instance).comparator(), sameInstance(greaterThanOrEqualToComparator()));
+        assertThat(((CompareTo) instance).comparator(), sameInstance(CompareTo.greaterThanOrEqualToComparator()));
         assertThat(((CompareTo) instance).comparatorDescription(), equalTo("is greater than or equal to"));
         assertThat(((CompareTo) instance).expected(), equalTo(666));
     }
@@ -39,7 +39,7 @@ public class CompareToUnitTest {
         final Matcher<Integer> instance = isLessThan(666);
 
         assertThat(instance, instanceOf(CompareTo.class));
-        assertThat(((CompareTo) instance).comparator(), sameInstance(lessThanComparator()));
+        assertThat(((CompareTo) instance).comparator(), sameInstance(CompareTo.lessThanComparator()));
         assertThat(((CompareTo) instance).comparatorDescription(), equalTo("is less than"));
         assertThat(((CompareTo) instance).expected(), equalTo(666));
     }
@@ -49,7 +49,7 @@ public class CompareToUnitTest {
         final Matcher<Integer> instance = isLessThanOrEqualTo(666);
 
         assertThat(instance, instanceOf(CompareTo.class));
-        assertThat(((CompareTo) instance).comparator(), sameInstance(lessThanOrEqualToComparator()));
+        assertThat(((CompareTo) instance).comparator(), sameInstance(CompareTo.lessThanOrEqualToComparator()));
         assertThat(((CompareTo) instance).comparatorDescription(), equalTo("is less than or equal to"));
         assertThat(((CompareTo) instance).expected(), equalTo(666));
     }
@@ -59,7 +59,7 @@ public class CompareToUnitTest {
         final Matcher<Integer> instance = greaterThan(666);
 
         assertThat(instance, instanceOf(CompareTo.class));
-        assertThat(((CompareTo) instance).comparator(), sameInstance(greaterThanComparator()));
+        assertThat(((CompareTo) instance).comparator(), sameInstance(CompareTo.greaterThanComparator()));
         assertThat(((CompareTo) instance).comparatorDescription(), equalTo("is greater than"));
         assertThat(((CompareTo) instance).expected(), equalTo(666));
     }
@@ -69,7 +69,7 @@ public class CompareToUnitTest {
         final Matcher<Integer> instance = greaterThanOrEqualTo(666);
 
         assertThat(instance, instanceOf(CompareTo.class));
-        assertThat(((CompareTo) instance).comparator(), sameInstance(greaterThanOrEqualToComparator()));
+        assertThat(((CompareTo) instance).comparator(), sameInstance(CompareTo.greaterThanOrEqualToComparator()));
         assertThat(((CompareTo) instance).comparatorDescription(), equalTo("is greater than or equal to"));
         assertThat(((CompareTo) instance).expected(), equalTo(666));
     }
@@ -79,7 +79,7 @@ public class CompareToUnitTest {
         final Matcher<Integer> instance = lessThan(666);
 
         assertThat(instance, instanceOf(CompareTo.class));
-        assertThat(((CompareTo) instance).comparator(), sameInstance(lessThanComparator()));
+        assertThat(((CompareTo) instance).comparator(), sameInstance(CompareTo.lessThanComparator()));
         assertThat(((CompareTo) instance).comparatorDescription(), equalTo("is less than"));
         assertThat(((CompareTo) instance).expected(), equalTo(666));
     }
@@ -89,14 +89,14 @@ public class CompareToUnitTest {
         final Matcher<Integer> instance = lessThanOrEqualTo(666);
 
         assertThat(instance, instanceOf(CompareTo.class));
-        assertThat(((CompareTo) instance).comparator(), sameInstance(lessThanOrEqualToComparator()));
+        assertThat(((CompareTo) instance).comparator(), sameInstance(CompareTo.lessThanOrEqualToComparator()));
         assertThat(((CompareTo) instance).comparatorDescription(), equalTo("is less than or equal to"));
         assertThat(((CompareTo) instance).expected(), equalTo(666));
     }
 
     @Test
-    public void factoryMethodGreaterThanComparator() throws Exception {
-        final Comparator<Integer> instance = greaterThanComparator();
+    public void greaterThanComparator() throws Exception {
+        final Comparator<Integer> instance = CompareTo.greaterThanComparator();
 
         assertThat(instance.check(2, 1), equalTo(true));
         assertThat(instance.check(1, 2), equalTo(false));
@@ -104,8 +104,8 @@ public class CompareToUnitTest {
     }
 
     @Test
-    public void factoryMethodGreaterThanOrEqualToComparator() throws Exception {
-        final Comparator<Integer> instance = greaterThanOrEqualToComparator();
+    public void greaterThanOrEqualToComparator() throws Exception {
+        final Comparator<Integer> instance = CompareTo.greaterThanOrEqualToComparator();
 
         assertThat(instance.check(2, 1), equalTo(true));
         assertThat(instance.check(1, 2), equalTo(false));
@@ -113,8 +113,8 @@ public class CompareToUnitTest {
     }
 
     @Test
-    public void factoryMethodLessThanComparator() throws Exception {
-        final Comparator<Integer> instance = lessThanComparator();
+    public void lessThanComparator() throws Exception {
+        final Comparator<Integer> instance = CompareTo.lessThanComparator();
 
         assertThat(instance.check(2, 1), equalTo(false));
         assertThat(instance.check(1, 2), equalTo(true));
@@ -122,8 +122,8 @@ public class CompareToUnitTest {
     }
 
     @Test
-    public void factoryMethodLessThanOrEqualToComparator() throws Exception {
-        final Comparator<Integer> instance = lessThanOrEqualToComparator();
+    public void lessThanOrEqualToComparator() throws Exception {
+        final Comparator<Integer> instance = CompareTo.lessThanOrEqualToComparator();
 
         assertThat(instance.check(2, 1), equalTo(false));
         assertThat(instance.check(1, 2), equalTo(true));

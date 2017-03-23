@@ -2,18 +2,19 @@ package org.echocat.unittest.utils.utils;
 
 import javax.annotation.Nonnull;
 
-public class ClassUtils {
+public final class ClassUtils {
 
     @Nonnull
-    public static Class<?> typeOf(@Nonnull Object expected) {
+    public static <T> Class<? extends T> typeOf(@Nonnull Class<T> requiredType, @Nonnull Object object) {
         //noinspection ConstantConditions
-        if (expected == null) {
-            throw new NullPointerException("The provided expected value is null.");
+        if (object == null) {
+            throw new NullPointerException("The provided object value is null.");
         }
-        if (!(expected instanceof Comparable)) {
-            throw new IllegalArgumentException("The provided expected value is not of type " + Comparable.class.getName() + ".");
+        if (!requiredType.isInstance(object)) {
+            throw new IllegalArgumentException("The provided object value is not of type " + Comparable.class.getName() + ".");
         }
-        return expected.getClass();
+        // noinspection unchecked
+        return (Class<? extends T>) object.getClass();
     }
 
 }

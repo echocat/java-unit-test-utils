@@ -79,7 +79,7 @@ public class CompareTo<T extends Comparable<T>> extends TypeSafeMatcher<T> {
     private final Comparator<T> comparator;
 
     protected CompareTo(@Nonnull T expected, @Nonnull String comparatorDescription, @Nonnull Comparator<T> comparator) {
-        super(typeOf(expected));
+        super(typeOf(Comparable.class, expected));
         this.expected = expected;
         this.comparatorDescription = comparatorDescription;
         this.comparator = comparator;
