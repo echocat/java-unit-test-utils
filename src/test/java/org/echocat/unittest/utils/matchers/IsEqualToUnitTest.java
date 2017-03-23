@@ -1,8 +1,13 @@
 package org.echocat.unittest.utils.matchers;
 
+import org.echocat.unittest.utils.matchers.WhereValueOfUnitTest.Person;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
+
+import static org.echocat.unittest.utils.TestUtils.givenDescription;
 import static org.echocat.unittest.utils.matchers.IsEqualTo.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -58,5 +63,19 @@ public class IsEqualToUnitTest {
     }
 
 
+    @Test
+    public void describeTo() throws Exception {
+        final Description description = givenDescription();
+        final IsEqualTo<String> instance = givenInstance();
+
+        instance.describeTo(description);
+
+        assertThat(description.toString(), equalTo("is equal to \"Bert\""));
+    }
+
+    @Nonnull
+    protected static IsEqualTo<String> givenInstance() {
+        return new IsEqualTo<>("Bert");
+    }
 
 }

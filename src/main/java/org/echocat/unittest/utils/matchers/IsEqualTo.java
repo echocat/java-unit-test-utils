@@ -1,5 +1,6 @@
 package org.echocat.unittest.utils.matchers;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.core.IsEqual;
 
@@ -40,6 +41,11 @@ public class IsEqualTo<T> extends IsEqual<T> {
     protected IsEqualTo(@Nullable T expected) {
         super(expected);
         this.expected = expected;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("is equal to ").appendValue(expected());
     }
 
     @Nullable

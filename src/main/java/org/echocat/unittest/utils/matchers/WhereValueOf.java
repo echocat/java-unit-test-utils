@@ -48,22 +48,50 @@ public class WhereValueOf<T, ST> extends BaseMatcher<T> {
 
     @Override
     public boolean matches(@Nullable Object item) {
-        //noinspection unchecked
-        final ST subItem = mapper.apply((T) item);
-        return subMatcher.matches(subItem);
+        final ST subItem;
+        try {
+            //noinspection unchecked
+            subItem = mapper().apply((T) item);
+        } catch (final ClassCastException ignored) {
+            return false;
+        }
+        return subMatcher().matches(subItem);
     }
 
     @Override
     public void describeTo(@Nonnull Description description) {
-        description.appendText("where value of ").appendValue(isNotEmpty(mapperDescription) ? mapperDescription : mapper).appendText(" ");
-        subMatcher.describeTo(description);
+        final String mapperDescription = mapperDescription();
+        description.appendText("where value of ").appendValue(isNotEmpty(mapperDescription) ? mapperDescription : mapper()).appendText(" ");
+        subMatcher().describeTo(description);
     }
 
     @Override
     public void describeMismatch(@Nullable Object item, @Nonnull Description description) {
-        //noinspection unchecked
-        final ST subItem = mapper.apply((T) item);
-        subMatcher.describeMismatch(subItem, description);
+        final ST subItem;
+        try {
+            //noinspection unchecked
+            subItem = mapper().apply((T) item);
+        } catch (final ClassCastException ignored) {
+            //noinspection ConstantConditions
+            description.appendText("was unexpected type ").appendValue(item.getClass());
+            return;
+        }
+        subMatcher().describeMismatch(subItem, description);
+    }
+
+    @Nonnull
+    protected Function<T, ST> mapper() {
+        return mapper;
+    }
+
+    @Nullable
+    protected String mapperDescription() {
+        return mapperDescription;
+    }
+
+    @Nonnull
+    protected Matcher<ST> subMatcher() {
+        return subMatcher;
     }
 
 }
