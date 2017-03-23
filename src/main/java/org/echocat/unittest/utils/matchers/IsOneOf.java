@@ -7,8 +7,6 @@ import org.hamcrest.Matcher;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 
@@ -17,26 +15,29 @@ public class IsOneOf<T> extends BaseMatcher<T> {
     @Nonnull
     private final Collection<T> expected;
 
+    @SafeVarargs
     @Nonnull
-    public static <T> Matcher<T> isOneOf(@Nonnull final Collection<T> expected) {
+    public static <T> Matcher<T> isOneOf(@Nonnull T... expected) {
+        return isOneOf(asList(expected));
+    }
+
+    @Nonnull
+    public static <T> Matcher<T> isOneOf(@Nonnull Collection<T> expected) {
         return new IsOneOf<>(expected);
     }
 
     @SafeVarargs
     @Nonnull
-    public static <T> Matcher<T> isOneOf(@Nonnull final T firstExpected, @Nullable final T... others) {
-        final Set<T> them = new HashSet<>();
-        them.add(firstExpected);
-        if (others != null) {
-            them.addAll(asList(others));
-        }
-        return isOneOf(them);
+    public static <T> Matcher<T> isAnyOf(@Nonnull T... expected) {
+        return isAnyOf(asList(expected));
+    }
+
+    @Nonnull
+    public static <T> Matcher<T> isAnyOf(@Nonnull Collection<T> expected) {
+        return isOneOf(expected);
     }
 
     protected IsOneOf(@Nonnull Collection<T> expected) {
-        if (expected.isEmpty()) {
-            throw new IllegalArgumentException("There is no expected item provided.");
-        }
         this.expected = expected;
     }
 
@@ -48,12 +49,22 @@ public class IsOneOf<T> extends BaseMatcher<T> {
 
     @Override
     public void describeTo(@Nonnull Description description) {
-        description.appendText("is one of ").appendValue(expected);
+        description.appendText("is one of").appendText(" [");
+        boolean first = true;
+        for (final T item : expected) {
+            if (first) {
+                first = false;
+            } else {
+                description.appendText(", ");
+            }
+            description.appendValue(item);
+        }
+        description.appendText("]");
     }
 
-    @Override
-    public void describeMismatch(@Nullable Object item, @Nonnull Description description) {
-        description.appendText("was ").appendValue(item);
+    @Nonnull
+    protected Collection<T> expected() {
+        return expected;
     }
 
 }
