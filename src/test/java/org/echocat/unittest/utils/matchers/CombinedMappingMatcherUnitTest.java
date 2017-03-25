@@ -19,6 +19,7 @@ import static org.echocat.unittest.utils.TestUtils.givenDescription;
 import static org.echocat.unittest.utils.matchers.CombinedMappingMatcher.collectMatchers;
 import static org.echocat.unittest.utils.matchers.CompareTo.isGreaterThanOrEqualTo;
 import static org.echocat.unittest.utils.matchers.CompareTo.isLessThanOrEqualTo;
+import static org.echocat.unittest.utils.matchers.IsEqualTo.isEqualTo;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
@@ -109,7 +110,57 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Test
-    public void describeToFor2Matchers() throws Exception {
+    public void describeMismatchFor2MatchersAndTwoMismatches() throws Exception {
+        final Description description = givenDescription();
+        final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstanceFor2FailingMatchers();
+
+        instance.describeMismatch(singleton(1), description);
+
+        assertThat(description.toString(), equalTo("for <1> is greater than or equal to <5> was <1>\n" +
+            "              and is equal to <10> was <1>"));
+    }
+
+    @Test
+    public void describeMismatchForMoreThan11Mismatches() throws Exception {
+        final Description description = givenDescription();
+        final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
+
+        instance.describeMismatch(asList(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10), description);
+
+        assertThat(description.toString(), equalTo("for <-1> is greater than or equal to <0> was <-1>\n" +
+            "          for <-2> is greater than or equal to <0> was <-2>\n" +
+            "          for <-3> is greater than or equal to <0> was <-3>\n" +
+            "          for <-4> is greater than or equal to <0> was <-4>\n" +
+            "          for <-5> is greater than or equal to <0> was <-5>\n" +
+            "          for <-6> is greater than or equal to <0> was <-6>\n" +
+            "          for <-7> is greater than or equal to <0> was <-7>\n" +
+            "          for <-8> is greater than or equal to <0> was <-8>\n" +
+            "          for <-9> is greater than or equal to <0> was <-9>\n" +
+            "          for <-10> is greater than or equal to <0> was <-10>"));
+    }
+
+    @Test
+    public void describeMismatchForMoreThan10Mismatches() throws Exception {
+        final Description description = givenDescription();
+        final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
+
+        instance.describeMismatch(asList(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12), description);
+
+        assertThat(description.toString(), equalTo("for <-1> is greater than or equal to <0> was <-1>\n" +
+            "          for <-2> is greater than or equal to <0> was <-2>\n" +
+            "          for <-3> is greater than or equal to <0> was <-3>\n" +
+            "          for <-4> is greater than or equal to <0> was <-4>\n" +
+            "          for <-5> is greater than or equal to <0> was <-5>\n" +
+            "          for <-6> is greater than or equal to <0> was <-6>\n" +
+            "          for <-7> is greater than or equal to <0> was <-7>\n" +
+            "          for <-8> is greater than or equal to <0> was <-8>\n" +
+            "          for <-9> is greater than or equal to <0> was <-9>\n" +
+            "          for <-10> is greater than or equal to <0> was <-10>\n" +
+            "          [...]"));
+    }
+
+    @Test
+    public void describeToFor2MatchersAndOneFails() throws Exception {
         final Description description = givenDescription();
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
 
@@ -122,6 +173,11 @@ public class CombinedMappingMatcherUnitTest {
     @Nonnull
     protected static CombinedMappingMatcher<Iterable<Integer>, Integer> givenInstance() {
         return new CombinedMappingMatcher<>(MAPPER, MATCHERS, STREAM_MATCHER, "first item");
+    }
+
+    @Nonnull
+    protected static CombinedMappingMatcher<Iterable<Integer>, Integer> givenInstanceFor2FailingMatchers() {
+        return new CombinedMappingMatcher<>(MAPPER, asList(isGreaterThanOrEqualTo(5), isEqualTo(10)), STREAM_MATCHER, "first item");
     }
 
 }
