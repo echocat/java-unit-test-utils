@@ -7,12 +7,14 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static java.util.Collections.synchronizedMap;
+import static java.util.regex.Pattern.compile;
 
 @SuppressWarnings("NonExceptionNameEndsWithException")
 public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
@@ -24,7 +26,7 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
 
     @Nonnull
     public static <T extends Execution> Matcher<T> throwsException(@Nonnull Class<? extends Throwable> type, @Nullable String messagePattern) {
-        return throwsException(type, messagePattern != null ? Pattern.compile(messagePattern, Pattern.DOTALL) : null);
+        return throwsException(type, messagePattern != null ? compile(messagePattern, Pattern.DOTALL) : null);
     }
 
     @Nonnull
@@ -39,7 +41,7 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
 
     @Nonnull
     public static <T extends Execution> Matcher<T> throwsExceptionWithMessage(@Nonnull Class<? extends Throwable> type, @Nullable String messagePattern) {
-        return throwsException(type, messagePattern);
+        return throwsExceptionWithMessage(type, messagePattern != null ? compile(messagePattern) : null);
     }
 
     @Nonnull
@@ -51,13 +53,13 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
 
     @Nonnull
     private final Class<? extends Throwable> expectedExceptionType;
-    @Nullable
-    private final Pattern expectedExceptionMessagePattern;
+    @Nonnull
+    private final Optional<Pattern> expectedExceptionMessagePattern;
 
     protected ThrowsException(@Nonnull Class<? extends Throwable> expectedExceptionType, @Nullable Pattern expectedExceptionMessagePattern) {
         super(Execution.class);
         this.expectedExceptionType = expectedExceptionType;
-        this.expectedExceptionMessagePattern = expectedExceptionMessagePattern;
+        this.expectedExceptionMessagePattern = Optional.ofNullable(expectedExceptionMessagePattern);
     }
 
     @Override
@@ -68,11 +70,10 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
             return false;
         }
         if (expectedExceptionType.isInstance(e)) {
-            if (expectedExceptionMessagePattern == null) {
-                return true;
-            }
-            final String message = e.getMessage();
-            return message != null && expectedExceptionMessagePattern.matcher(message).matches();
+            return expectedExceptionMessagePattern().map(pattern -> {
+                    final String message = e.getMessage();
+                    return message != null && pattern.matcher(message).matches();
+            }).orElse(true);
         }
         if (e instanceof Error) {
             throw (Error) e;
@@ -95,10 +96,8 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
 
     @Override
     public void describeTo(@Nonnull Description description) {
-        description.appendText("exeuction should throw exception of type ").appendValue(expectedExceptionType);
-        if (expectedExceptionMessagePattern != null) {
-            description.appendText(" with message that machtes ").appendValue(expectedExceptionMessagePattern);
-        }
+        description.appendText("execution should throw exception of type ").appendValue(expectedExceptionType);
+        expectedExceptionMessagePattern().ifPresent(pattern -> description.appendText(" with message that machtes ").appendValue(pattern));
     }
 
     @Override
@@ -110,16 +109,15 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
         }
         //noinspection ObjectEquality
         if (e == NONE) {
-            mismatchDescription.appendText("execution throws no execption");
+            mismatchDescription.appendText("execution throws no exception");
             return;
         }
         if (!expectedExceptionType.isInstance(e)) {
             mismatchDescription.appendText("throws unexpected exception ").appendValue(e);
             return;
         }
-        if (expectedExceptionMessagePattern == null) {
-            throw new IllegalStateException("This method should not be called if the exception type is the execpected one but there is no pattern to match the message.");
-        }
+        expectedExceptionMessagePattern()
+            .orElseThrow(() -> new IllegalStateException("This method should not be called if the exception type is the expected one but there is no pattern to match the message."));
         final String message = e.getMessage();
         if (message == null) {
             mismatchDescription.appendText("message of exception was ").appendValue(null);
@@ -128,9 +126,18 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
         mismatchDescription.appendText("message of exception was ").appendText(message);
     }
 
+    @Nonnull
+    protected Class<? extends Throwable> expectedExceptionType() {
+        return expectedExceptionType;
+    }
+
+    @Nonnull
+    protected Optional<Pattern> expectedExceptionMessagePattern() {
+        return expectedExceptionMessagePattern;
+    }
+
     @FunctionalInterface
     public interface Execution {
-        @SuppressWarnings("ProhibitedExceptionDeclared")
         void execute() throws Throwable;
     }
 
