@@ -7,11 +7,11 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.echocat.unittest.utils.matchers.CompareTo.isGreaterThanOrEqualTo;
-import static org.echocat.unittest.utils.matchers.ContainsAtLeastOneElementThat.Iterables.containsAtLeastOneElement;
-import static org.echocat.unittest.utils.matchers.ContainsOnlyElementsThat.Iterables.containsOnlyElements;
 import static org.echocat.unittest.utils.matchers.HasItems.hasElements;
 import static org.echocat.unittest.utils.matchers.IsEqualTo.isEqualTo;
 import static org.echocat.unittest.utils.matchers.IsOneOf.isOneOf;
+import static org.echocat.unittest.utils.matchers.IterableMatchers.containsAtLeastOneElement;
+import static org.echocat.unittest.utils.matchers.IterableMatchers.containsOnlyElements;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
 import static org.echocat.unittest.utils.matchers.WhereValueOf.whereValueOf;
 import static org.hamcrest.CoreMatchers.startsWith;
