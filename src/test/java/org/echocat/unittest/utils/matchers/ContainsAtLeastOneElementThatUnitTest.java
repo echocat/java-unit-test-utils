@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singleton;
+import static org.echocat.unittest.utils.matchers.ContainsAtLeastOneElementThat.matches;
 import static org.echocat.unittest.utils.matchers.ContainsAtLeastOneElementThat.streamMatcherInstance;
 import static org.echocat.unittest.utils.matchers.IsEqualTo.isEqualTo;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -33,7 +34,17 @@ public class ContainsAtLeastOneElementThatUnitTest {
     }
 
     @Test
-    public void matches() throws Exception {
+    public void matchesWorks() throws Exception {
+        final Set<Matcher<Integer>> matchers = givenMatchers();
+
+        assertThat(matches(matchers, Stream.of(0, 1, 2)), equalTo(true));
+        assertThat(matches(matchers, Stream.of(-1, 0, 1)), equalTo(true));
+        assertThat(matches(matchers, Stream.of(-2, -1, 0)), equalTo(true));
+        assertThat(matches(matchers, Stream.of(0)), equalTo(true));
+        assertThat(matches(matchers, Stream.of(0, 0, 0, 0)), equalTo(true));
+        assertThat(matches(matchers, Stream.of()), equalTo(false));
+        assertThat(matches(matchers, Stream.of(1, 2, 3)), equalTo(false));
+        assertThat(matches(matchers, Stream.of(1)), equalTo(false));
     }
 
     @Nonnull
