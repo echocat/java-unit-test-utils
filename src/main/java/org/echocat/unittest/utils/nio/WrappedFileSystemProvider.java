@@ -37,6 +37,11 @@ public class WrappedFileSystemProvider<T extends WrappedPath> extends FileSystem
     }
 
     @Nonnull
+    protected Class<T> wrappedPathType() {
+        return wrappedPathType;
+    }
+
+    @Nonnull
     protected Path unwrap(@Nullable Path plain) {
         if (plain == null) {
             throw new NullPointerException("No path provided.");
