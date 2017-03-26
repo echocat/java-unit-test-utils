@@ -5,13 +5,13 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.WeakHashMap;
 import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.util.Collections.synchronizedMap;
 import static java.util.regex.Pattern.compile;
@@ -71,8 +71,8 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
         }
         if (expectedExceptionType.isInstance(e)) {
             return expectedExceptionMessagePattern().map(pattern -> {
-                    final String message = e.getMessage();
-                    return message != null && pattern.matcher(message).matches();
+                final String message = e.getMessage();
+                return message != null && pattern.matcher(message).matches();
             }).orElse(true);
         }
         if (e instanceof Error) {
@@ -97,33 +97,26 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
     @Override
     public void describeTo(@Nonnull Description description) {
         description.appendText("execution should throw exception of type ").appendValue(expectedExceptionType);
-        expectedExceptionMessagePattern().ifPresent(pattern -> description.appendText(" with message that machtes ").appendValue(pattern));
+        expectedExceptionMessagePattern().ifPresent(pattern -> description.appendText(" with message that matches ").appendValue(pattern));
     }
 
     @Override
     protected void describeMismatchSafely(@Nonnull T item, @Nonnull Description mismatchDescription) {
-        final Throwable e = executionToThrowable.get(item);
-        if (e == null) {
-            mismatchDescription.appendText("execution was not executed");
-            return;
-        }
+        final Throwable e = executionToThrowable.computeIfAbsent(item, this::executeExecutionAndReturnException);
         //noinspection ObjectEquality
         if (e == NONE) {
-            mismatchDescription.appendText("execution throws no exception");
-            return;
-        }
-        if (!expectedExceptionType.isInstance(e)) {
-            mismatchDescription.appendText("throws unexpected exception ").appendValue(e);
+            mismatchDescription.appendText("throws no exception");
             return;
         }
         expectedExceptionMessagePattern()
-            .orElseThrow(() -> new IllegalStateException("This method should not be called if the exception type is the expected one but there is no pattern to match the message."));
-        final String message = e.getMessage();
-        if (message == null) {
-            mismatchDescription.appendText("message of exception was ").appendValue(null);
-            return;
-        }
-        mismatchDescription.appendText("message of exception was ").appendText(message);
+            .ifPresent(pattern -> {
+                final String message = e.getMessage();
+                if (message == null) {
+                    mismatchDescription.appendText("message of exception was null");
+                    return;
+                }
+                mismatchDescription.appendText("message of exception was ").appendValue(message);
+            });
     }
 
     @Nonnull

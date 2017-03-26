@@ -1,14 +1,15 @@
 package org.echocat.unittest.utils.matchers;
 
 import org.echocat.unittest.utils.matchers.ThrowsException.Execution;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
-
 import java.lang.reflect.UndeclaredThrowableException;
 
 import static java.util.regex.Pattern.compile;
+import static org.echocat.unittest.utils.TestUtils.givenDescription;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsExceptionWithMessage;
 import static org.hamcrest.CoreMatchers.*;
@@ -138,15 +139,67 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void matchesSafely() throws Exception {
+    public void describeToWhichIgnoresMessage() throws Exception {
+        final Description description = givenDescription();
+        final Matcher<Execution> instance = givenMessageIgnoringInstance();
+
+        instance.describeTo(description);
+
+        assertThat(description.toString(), equalTo("execution should throw exception of type <" + TestException.class + ">"));
     }
 
     @Test
-    public void describeTo() throws Exception {
+    public void describeToWhichRespectsMessage() throws Exception {
+        final Description description = givenDescription();
+        final Matcher<Execution> instance = givenMessageRespectingInstance();
+
+        instance.describeTo(description);
+
+        assertThat(description.toString(), equalTo("execution should throw exception of type <" + TestException.class + "> with message that matches <test>"));
     }
 
     @Test
-    public void describeMismatchSafely() throws Exception {
+    public void describeMismatchForProducesNoException() throws Exception {
+        final Description description = givenDescription();
+        final Execution execution = givenNoopExecution();
+        final Matcher<Execution> instance = givenMessageIgnoringInstance();
+
+        instance.describeMismatch(execution, description);
+
+        assertThat(description.toString(), equalTo("throws no exception"));
+    }
+
+    @Test
+    public void describeMismatchForMessageIgnoring() throws Exception {
+        final Description description = givenDescription();
+        final Execution execution = givenExpectedExceptionThrowingExecution();
+        final Matcher<Execution> instance = givenMessageIgnoringInstance();
+
+        instance.describeMismatch(execution, description);
+
+        assertThat(description.toString(), equalTo(""));
+    }
+
+    @Test
+    public void describeMismatchForNullMessage() throws Exception {
+        final Description description = givenDescription();
+        final Execution execution = givenExpectedExceptionWithNullMessageThrowingExecution();
+        final Matcher<Execution> instance = givenMessageRespectingInstance();
+
+        instance.describeMismatch(execution, description);
+
+        assertThat(description.toString(), equalTo("message of exception was null"));
+    }
+
+    @Test
+    public void describeMismatchForOtherMessage() throws Exception {
+        final Description description = givenDescription();
+        final Execution execution = givenExpectedExceptionWithOtherMessageThrowingExecution();
+        final Matcher<Execution> instance = givenMessageRespectingInstance();
+
+        instance.describeMismatch(execution, description);
+
+        assertThat(description.toString(), equalTo("message of exception was \"other\""));
     }
 
     @Nonnull
@@ -169,6 +222,20 @@ public class ThrowsExceptionUnitTest {
     protected static Execution givenExpectedExceptionThrowingExecution() {
         return () -> {
             throw new TestException("test");
+        };
+    }
+
+    @Nonnull
+    protected static Execution givenExpectedExceptionWithNullMessageThrowingExecution() {
+        return () -> {
+            throw new TestException(null);
+        };
+    }
+
+    @Nonnull
+    protected static Execution givenExpectedExceptionWithOtherMessageThrowingExecution() {
+        return () -> {
+            throw new TestException("other");
         };
     }
 
