@@ -15,6 +15,12 @@ public interface ArrayMatchers {
         return new ContainsOnlyElementsThat<>(StreamUtils::toStream, matchers);
     }
 
+    @SafeVarargs
+    @Nonnull
+    static <T> Matcher<T[]> containsOnlyElementsThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+        return containsOnlyElementsThat(collectMatchers(matcher, otherMatchers));
+    }
+
     @Nonnull
     static <T> Matcher<T[]> containsOnlyElements(@Nonnull Iterable<? extends Matcher<T>> matchers) {
         return containsOnlyElementsThat(matchers);
@@ -22,19 +28,19 @@ public interface ArrayMatchers {
 
     @SafeVarargs
     @Nonnull
-    static <T> Matcher<T[]> containsOnlyElementsThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
-        return containsOnlyElementsThat(collectMatchers(matcher, otherMatchers));
-    }
-
-    @SafeVarargs
-    @Nonnull
     static <T> Matcher<T[]> containsOnlyElements(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
-        return containsOnlyElementsThat(matcher, otherMatchers);
+        return containsOnlyElements(collectMatchers(matcher, otherMatchers));
     }
 
     @Nonnull
     static <T> Matcher<T[]> containsAtLeastOneElementThat(@Nonnull Iterable<? extends Matcher<T>> matchers) {
         return new ContainsAtLeastOneElementThat<>(StreamUtils::toStream, matchers);
+    }
+
+    @SafeVarargs
+    @Nonnull
+    static <T> Matcher<T[]> containsAtLeastOneElementThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
+        return containsAtLeastOneElementThat(collectMatchers(matcher, otherMatchers));
     }
 
     @Nonnull
@@ -44,14 +50,8 @@ public interface ArrayMatchers {
 
     @SafeVarargs
     @Nonnull
-    static <T> Matcher<T[]> containsAtLeastOneElementThat(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
-        return containsAtLeastOneElementThat(collectMatchers(matcher, otherMatchers));
-    }
-
-    @SafeVarargs
-    @Nonnull
     static <T> Matcher<T[]> containsAtLeastOneElement(@Nonnull Matcher<T> matcher, @Nullable Matcher<T>... otherMatchers) {
-        return containsAtLeastOneElementThat(matcher, otherMatchers);
+        return containsAtLeastOneElement(collectMatchers(matcher, otherMatchers));
     }
 
 }
