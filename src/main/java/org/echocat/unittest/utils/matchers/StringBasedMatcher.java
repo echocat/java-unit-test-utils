@@ -7,47 +7,7 @@ import org.hamcrest.Matcher;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class Strings<T extends CharSequence> extends BaseMatcher<T> {
-
-    @Nonnull
-    public static <T extends CharSequence> Matcher<T> startsWith(@Nonnull CharSequence prefix) {
-        return new Strings<>("starts with", startsWithComparator(), prefix.toString());
-    }
-
-    @Nonnull
-    public static <T extends CharSequence> Matcher<T> endsWith(@Nonnull CharSequence suffix) {
-        return new Strings<>("ends with", endsWithComparator(), suffix.toString());
-    }
-
-    @Nonnull
-    public static <T extends CharSequence> Matcher<T> contains(@Nonnull CharSequence what) {
-        return new Strings<>("contains", containsComparator(), what.toString());
-    }
-
-    @Nonnull
-    public static <T extends CharSequence> Matcher<T> matches(@Nonnull CharSequence regex) {
-        return new Strings<>("matches regular expression", matchesComparator(), regex.toString());
-    }
-
-    @Nonnull
-    public static <T extends CharSequence> Matcher<T> equalsIgnoreCase(@Nonnull CharSequence what) {
-        return new Strings<>("equals ignore case", equalsIgnoreCaseComparator(), what.toString());
-    }
-
-    @Nonnull
-    public static <T extends CharSequence> Matcher<T> isEqualIgnoreCase(@Nonnull CharSequence what) {
-        return equalsIgnoreCase(what);
-    }
-
-    @Nonnull
-    public static <T extends CharSequence> Matcher<T> isEqualToIgnoreCase(@Nonnull CharSequence what) {
-        return equalsIgnoreCase(what);
-    }
-
-    @Nonnull
-    public static <T extends CharSequence> Matcher<T> equalsToIgnoreCase(@Nonnull CharSequence what) {
-        return equalsIgnoreCase(what);
-    }
+public class StringBasedMatcher<T extends CharSequence> extends BaseMatcher<T> {
 
     @Nonnull
     protected static Comparator startsWithComparator() {
@@ -81,7 +41,7 @@ public class Strings<T extends CharSequence> extends BaseMatcher<T> {
     @Nonnull
     private final Comparator comparator;
 
-    protected Strings(@Nonnull String comparatorDescription, @Nonnull Comparator comparator, @Nonnull String expected) {
+    protected StringBasedMatcher(@Nonnull String comparatorDescription, @Nonnull Comparator comparator, @Nonnull String expected) {
         this.comparatorDescription = comparatorDescription;
         this.comparator = comparator;
         this.expected = expected;

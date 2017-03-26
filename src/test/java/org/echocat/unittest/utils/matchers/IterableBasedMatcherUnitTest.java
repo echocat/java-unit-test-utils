@@ -11,57 +11,26 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyIterator;
 import static org.echocat.unittest.utils.TestUtils.givenDescription;
-import static org.echocat.unittest.utils.matchers.Iterables.*;
-import static org.echocat.unittest.utils.matchers.Iterables.endsWith;
-import static org.echocat.unittest.utils.matchers.Iterables.startsWith;
+import static org.echocat.unittest.utils.matchers.IterableBasedMatcher.Comparator;
+import static org.echocat.unittest.utils.matchers.IterableBasedMatcher.skipOne;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 
-public class IterablesUnitTest {
-
-    @Test
-    public void factoryMethodStartsWith() throws Exception {
-        final Matcher<List<String>> instance = startsWith("a", "b", "c");
-
-        assertThat(instance, instanceOf(Iterables.class));
-        assertThat(((Iterables<?, ?>) instance).comparator(), sameInstance(Iterables.startsWithComparator()));
-        assertThat(((Iterables<?, ?>) instance).comparatorDescription(), equalTo("starts with"));
-        assertThat(((Iterables<?, ?>) instance).expected(), equalTo(iterableOf("a", "b", "c")));
-    }
-
-    @Test
-    public void factoryMethodEndsWith() throws Exception {
-        final Matcher<List<String>> instance = endsWith("a", "b", "c");
-
-        assertThat(instance, instanceOf(Iterables.class));
-        assertThat(((Iterables<?, ?>) instance).comparator(), sameInstance(Iterables.endsWithComparator()));
-        assertThat(((Iterables<?, ?>) instance).comparatorDescription(), equalTo("ends with"));
-        assertThat(((Iterables<?, ?>) instance).expected(), equalTo(iterableOf("a", "b", "c")));
-    }
-
-    @Test
-    public void factoryMethodContains() throws Exception {
-        final Matcher<List<String>> instance = contains("a", "b", "c");
-
-        assertThat(instance, instanceOf(Iterables.class));
-        assertThat(((Iterables<?, ?>) instance).comparator(), sameInstance(Iterables.containsComparator()));
-        assertThat(((Iterables<?, ?>) instance).comparatorDescription(), equalTo("contains"));
-        assertThat(((Iterables<?, ?>) instance).expected(), equalTo(iterableOf("a", "b", "c")));
-    }
-
+public class IterableBasedMatcherUnitTest {
     @Test
     public void constructor() throws Exception {
-        final Iterables<String, List<String>> instance = new Iterables<>("test", Iterables.startsWithComparator(), iterableOf("a", "b", "c"));
+        final IterableBasedMatcher<String, List<String>> instance = new IterableBasedMatcher<>("test", IterableBasedMatcher.startsWithComparator(), iterableOf("a", "b", "c"));
 
-        assertThat(instance.comparator(), sameInstance(Iterables.startsWithComparator()));
+        assertThat(instance.comparator(), sameInstance(IterableBasedMatcher.startsWithComparator()));
         assertThat(instance.comparatorDescription(), equalTo("test"));
         assertThat(instance.expected(), equalTo(iterableOf("a", "b", "c")));
     }
 
     @Test
     public void startsWithComparator() throws Exception {
-        final Comparator<Integer> instance = Iterables.startsWithComparator();
+        final Comparator<Integer> instance = IterableBasedMatcher.startsWithComparator();
 
         assertThat(instance.check(iterableOf(0, 1, 2, 3, 4, 5), iterableOf(0, 1, 2)), equalTo(true));
         assertThat(instance.check(iterableOf(0, 1, 2, 3, 4, 5), iterableOf(3, 4, 5)), equalTo(false));
@@ -73,7 +42,7 @@ public class IterablesUnitTest {
 
     @Test
     public void endsWithComparator() throws Exception {
-        final Comparator<Integer> instance = Iterables.endsWithComparator();
+        final Comparator<Integer> instance = IterableBasedMatcher.endsWithComparator();
 
         assertThat(instance.check(iterableOf(0, 1, 2, 3, 4, 5), iterableOf(0, 1, 2)), equalTo(false));
         assertThat(instance.check(iterableOf(0, 1, 2, 3, 4, 5), iterableOf(3, 4, 5)), equalTo(true));
@@ -90,7 +59,7 @@ public class IterablesUnitTest {
 
     @Test
     public void containsComparator() throws Exception {
-        final Comparator<Integer> instance = Iterables.containsComparator();
+        final Comparator<Integer> instance = IterableBasedMatcher.containsComparator();
 
         assertThat(instance.check(iterableOf(0, 1, 2, 3, 4, 5), iterableOf(0, 1, 2)), equalTo(true));
         assertThat(instance.check(iterableOf(0, 1, 2, 3, 4, 5), iterableOf(3, 4, 5)), equalTo(true));
@@ -168,8 +137,8 @@ public class IterablesUnitTest {
     }
 
     @Nonnull
-    protected static Iterables<Integer, Iterable<Integer>> givenStartsWith123Instance() {
-        return new Iterables<>("starts with", Iterables.startsWithComparator(), iterableOf(0, 1, 2));
+    protected static IterableBasedMatcher<Integer, Iterable<Integer>> givenStartsWith123Instance() {
+        return new IterableBasedMatcher<>("starts with", IterableBasedMatcher.startsWithComparator(), iterableOf(0, 1, 2));
     }
 
     @SafeVarargs

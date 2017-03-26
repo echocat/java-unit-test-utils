@@ -11,57 +11,24 @@ import java.util.Objects;
 
 import static java.util.Arrays.asList;
 
-public class Iterables<V, T extends Iterable<V>> extends BaseMatcher<T> {
-
-    @SafeVarargs
-    @Nonnull
-    public static <V, T extends Iterable<V>> Matcher<T> startsWith(@Nonnull V... prefix) {
-        return startsWith(asList(prefix));
-    }
-
-    @Nonnull
-    public static <V, T extends Iterable<V>> Matcher<T> startsWith(@Nonnull Iterable<? extends V> prefix) {
-        return new Iterables<>("starts with", startsWithComparator(), prefix);
-    }
-
-    @SafeVarargs
-    @Nonnull
-    public static <V, T extends Iterable<V>> Matcher<T> endsWith(@Nonnull V... suffix) {
-        return endsWith(asList(suffix));
-    }
-
-    @Nonnull
-    public static <V, T extends Iterable<V>> Matcher<T> endsWith(@Nonnull Iterable<? extends V> suffix) {
-        return new Iterables<>("ends with", endsWithComparator(), suffix);
-    }
-
-    @SafeVarargs
-    @Nonnull
-    public static <V, T extends Iterable<V>> Matcher<T> contains(@Nonnull V... what) {
-        return contains(asList(what));
-    }
-
-    @Nonnull
-    public static <V, T extends Iterable<V>> Matcher<T> contains(@Nonnull Iterable<? extends V> what) {
-        return new Iterables<>("contains", containsComparator(), what);
-    }
+public class IterableBasedMatcher<V, T extends Iterable<V>> extends BaseMatcher<T> {
 
     @Nonnull
     protected static <V> Comparator<V> startsWithComparator() {
         //noinspection unchecked
-        return (Comparator<V>) (Comparator<Object>) Iterables::startsWith;
+        return (Comparator<V>) (Comparator<Object>) IterableBasedMatcher::startsWith;
     }
 
     @Nonnull
     protected static <V> Comparator<V> endsWithComparator() {
         //noinspection unchecked
-        return (Comparator<V>) (Comparator<Object>) Iterables::endsWith;
+        return (Comparator<V>) (Comparator<Object>) IterableBasedMatcher::endsWith;
     }
 
     @Nonnull
     protected static <V> Comparator<V> containsComparator() {
         //noinspection unchecked
-        return (Comparator<V>) (Comparator<Object>) Iterables::contains;
+        return (Comparator<V>) (Comparator<Object>) IterableBasedMatcher::contains;
     }
 
     @Nonnull
@@ -71,7 +38,7 @@ public class Iterables<V, T extends Iterable<V>> extends BaseMatcher<T> {
     @Nonnull
     private final Comparator<V> comparator;
 
-    protected Iterables(@Nonnull String comparatorDescription, @Nonnull Comparator<V> comparator, @Nonnull Iterable<? extends V> expected) {
+    protected IterableBasedMatcher(@Nonnull String comparatorDescription, @Nonnull Comparator<V> comparator, @Nonnull Iterable<? extends V> expected) {
         this.comparatorDescription = comparatorDescription;
         this.comparator = comparator;
         this.expected = expected;
