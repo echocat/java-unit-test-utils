@@ -7,7 +7,7 @@
     <groupId>org.echocat</groupId>
     <artifactId>java-unit-test-utils</artifactId>
     <packaging>jar</packaging>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <url>https://github.com/echocat/java-unit-test-utils</url>
     <description>Provides utils to write your tests in Java (special for JUnit).</description>
 
@@ -253,7 +253,7 @@
         <connection>scm:git://github.com/echocat/java-unit-test-utils.git</connection>
         <developerConnection>scm:git:git@github.com:echocat/java-unit-test-utils.git</developerConnection>
         <url>https://github.com/echocat/java-unit-test-utils</url>
-        <tag>HEAD</tag>
+        <tag>version-0.4</tag>
     </scm>
 
 </project>
