@@ -88,4 +88,10 @@ public class IterableMatchersUnitTest {
     protected static <T> Iterable<T> iterableOf(@Nonnull T... values) {
         return asList(values);
     }
+
+    @Test
+    public void constructor() {
+        new IterableMatchers();
+    }
+
 }

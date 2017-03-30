@@ -50,4 +50,9 @@ public class StreamMatchersUnitTest {
         assertThat(((CombinedMappingMatcher<?, ?>) instance).matchers(), equalTo(asList(MATCHER1, MATCHER2)));
     }
 
+    @Test
+    public void constructor() {
+        new StreamMatchers();
+    }
+
 }

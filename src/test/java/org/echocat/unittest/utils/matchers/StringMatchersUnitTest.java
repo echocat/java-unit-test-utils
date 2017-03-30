@@ -5,10 +5,8 @@ import org.junit.Test;
 
 import static org.echocat.unittest.utils.matchers.StringMatchers.endsWith;
 import static org.echocat.unittest.utils.matchers.StringMatchers.startsWith;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 public class StringMatchersUnitTest {
 
@@ -91,6 +89,11 @@ public class StringMatchersUnitTest {
         assertThat(((StringBasedMatcher<?>) instance).comparator(), sameInstance(StringBasedMatcher.equalsIgnoreCaseComparator()));
         assertThat(((StringBasedMatcher<?>) instance).comparatorDescription(), equalTo("equals ignore case"));
         assertThat(((StringBasedMatcher<?>) instance).expected(), equalTo("666"));
+    }
+
+    @Test
+    public void constructor() {
+        new StringMatchers();
     }
 
 }

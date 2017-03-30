@@ -11,7 +11,7 @@ import static org.echocat.unittest.utils.matchers.CompareTo.isLessThanOrEqualTo;
 import static org.echocat.unittest.utils.matchers.IteratorMatchers.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class IteratorMatchersUnitTest {
 
@@ -48,6 +48,11 @@ public class IteratorMatchersUnitTest {
 
         assertThat(instance, instanceOf(ContainsAtLeastOneElementThat.class));
         assertThat(((CombinedMappingMatcher<?, ?>) instance).matchers(), equalTo(asList(MATCHER1, MATCHER2)));
+    }
+
+    @Test
+    public void constructor() {
+        new IteratorMatchers();
     }
 
 }
