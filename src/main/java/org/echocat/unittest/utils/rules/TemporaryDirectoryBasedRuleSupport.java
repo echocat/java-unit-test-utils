@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -135,6 +136,9 @@ public abstract class TemporaryDirectoryBasedRuleSupport<T extends TemporaryDire
     }
 
     protected void handleExceptionIfRequired(@Nonnull IOException e) throws IOException {
+        if (e instanceof NoSuchFileException) {
+            return;
+        }
         if (isFailOnProblemsWhileCleanup()) {
             throw e;
         }
