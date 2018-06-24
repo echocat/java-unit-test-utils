@@ -1,6 +1,6 @@
 package org.echocat.unittest.utils.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
@@ -15,12 +15,12 @@ import static org.junit.Assert.assertThat;
 public class StreamUtilsUnitTest {
 
     @Test
-    public void constructur() throws Exception {
+    void constructur() throws Exception {
         new StreamUtils();
     }
 
     @Test
-    public void toStreamOfArray() throws Exception {
+    void toStreamOfArray() throws Exception {
         final Object[] toConvert = givenArrayWithLength4();
 
         final Stream<Object> instance = toStream(toConvert);
@@ -29,7 +29,7 @@ public class StreamUtilsUnitTest {
     }
 
     @Test
-    public void toStreamOfIterable() throws Exception {
+    void toStreamOfIterable() throws Exception {
         final Iterable<Integer> toConvert = givenCollectionOfLength4();
 
         final Stream<Integer> instance = toStream(toConvert);
@@ -38,7 +38,7 @@ public class StreamUtilsUnitTest {
     }
 
     @Test
-    public void toStreamOfIterator() throws Exception {
+    void toStreamOfIterator() throws Exception {
         final Iterable<Integer> toConvert = givenCollectionOfLength4();
 
         final Stream<Integer> instance = toStream(toConvert.iterator());
@@ -47,7 +47,7 @@ public class StreamUtilsUnitTest {
     }
 
     @Test
-    public void toStreamOfSpliterator() throws Exception {
+    void toStreamOfSpliterator() throws Exception {
         final Iterable<Integer> toConvert = givenCollectionOfLength4();
 
         final Stream<Integer> instance = toStream(toConvert.spliterator());
@@ -56,7 +56,7 @@ public class StreamUtilsUnitTest {
     }
 
     @Test
-    public void toStreamOfStream() throws Exception {
+    void toStreamOfStream() throws Exception {
         final Stream<Integer> toConvert = givenStreamWithLength4();
 
         final Stream<Integer> instance = toStream(toConvert);

@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 
@@ -15,28 +15,28 @@ import static org.junit.Assert.assertThat;
 public class HasItemsUnitTest {
 
     @Test
-    public void factoryMethodHasItems() throws Exception {
+    void factoryMethodHasItems() throws Exception {
         final Matcher<Object> instance = hasItems();
 
         assertThat(instance, instanceOf(HasItems.class));
     }
 
     @Test
-    public void factoryMethodHasElements() throws Exception {
+    void factoryMethodHasElements() throws Exception {
         final Matcher<Object> instance = hasElements();
 
         assertThat(instance, instanceOf(HasItems.class));
     }
 
     @Test
-    public void factoryMethodIsNotEmpty() throws Exception {
+    void factoryMethodIsNotEmpty() throws Exception {
         final Matcher<Object> instance = isNotEmpty();
 
         assertThat(instance, instanceOf(HasItems.class));
     }
 
     @Test
-    public void matches() throws Exception {
+    void matches() throws Exception {
         final HasItems instance = givenInstance();
 
         assertThat(instance.matches(""), equalTo(false));
@@ -44,7 +44,7 @@ public class HasItemsUnitTest {
     }
 
     @Test
-    public void describeTo() throws Exception {
+    void describeTo() throws Exception {
         final Description description = givenDescription();
         final HasItems instance = givenInstance();
 
@@ -54,7 +54,7 @@ public class HasItemsUnitTest {
     }
 
     @Test
-    public void describeMismatch() throws Exception {
+    void describeMismatch() throws Exception {
         final Description description = givenDescription();
         final HasItems instance = givenInstance();
 
@@ -64,7 +64,7 @@ public class HasItemsUnitTest {
     }
 
     @Nonnull
-    protected static HasItems givenInstance() {
+    private static HasItems givenInstance() {
         return new HasItems();
     }
 

@@ -6,17 +6,12 @@ import org.junit.runners.model.Statement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 
-import static java.lang.Character.isLetterOrDigit;
-import static java.nio.file.FileVisitResult.CONTINUE;
-import static java.nio.file.Files.*;
+import static java.nio.file.Files.createTempDirectory;
 import static java.util.Objects.requireNonNull;
+import static org.echocat.unittest.utils.utils.FileUtils.deleteRecursively;
+import static org.echocat.unittest.utils.utils.FileUtils.normalizeName;
 
 public abstract class TemporaryDirectoryBasedRuleSupport<T extends TemporaryDirectoryBasedRuleSupport<T>> implements TestRule {
 
@@ -53,7 +48,7 @@ public abstract class TemporaryDirectoryBasedRuleSupport<T extends TemporaryDire
             evaluate(base, description, baseDirectory);
         } finally {
             TemporaryDirectoryBasedRuleSupport.this.baseDirectory = null;
-            deleteDirectory(baseDirectory);
+            deleteRecursively(baseDirectory, isFailOnProblemsWhileCleanup());
         }
     }
 
@@ -72,76 +67,7 @@ public abstract class TemporaryDirectoryBasedRuleSupport<T extends TemporaryDire
 
     @Nonnull
     protected String folderNameFor(@Nonnull Description description) {
-        return normalizeFolderName(description.getDisplayName());
-    }
-
-    @Nonnull
-    protected String normalizeFolderName(@Nonnull String input) {
-        final char[] inputCharacters = input.toCharArray();
-        final char[] result = new char[inputCharacters.length];
-        for (int i = 0; i < inputCharacters.length; i++) {
-            final char c = inputCharacters[i];
-            if (isLetterOrDigit(c)
-                || c == '.'
-                || c == ','
-                || c == '_'
-                || c == '-'
-                || c == '@'
-                || c == '%'
-                || c == '~'
-                || c == '('
-                || c == ')'
-                || c == '['
-                || c == ']'
-                || c == '!'
-                ) {
-                result[i] = c;
-            } else {
-                result[i] = '_';
-            }
-        }
-        return new String(result);
-    }
-
-    protected void deleteDirectory(@Nonnull Path what) throws Exception {
-        try {
-            walkFileTree(what, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    try {
-                        delete(file);
-                    } catch (final IOException e) {
-                        handleExceptionIfRequired(e);
-                    }
-                    return CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    if (exc != null) {
-                        handleExceptionIfRequired(exc);
-                    } else {
-                        try {
-                            delete(dir);
-                        } catch (final IOException e) {
-                            handleExceptionIfRequired(e);
-                        }
-                    }
-                    return CONTINUE;
-                }
-            });
-        } catch (final IOException e) {
-            handleExceptionIfRequired(e);
-        }
-    }
-
-    protected void handleExceptionIfRequired(@Nonnull IOException e) throws IOException {
-        if (e instanceof NoSuchFileException) {
-            return;
-        }
-        if (isFailOnProblemsWhileCleanup()) {
-            throw e;
-        }
+        return normalizeName(description.getDisplayName());
     }
 
 }

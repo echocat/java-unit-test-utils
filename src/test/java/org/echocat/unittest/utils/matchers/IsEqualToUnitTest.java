@@ -1,9 +1,8 @@
 package org.echocat.unittest.utils.matchers;
 
-import org.echocat.unittest.utils.matchers.WhereValueOfUnitTest.Person;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +15,7 @@ import static org.junit.Assert.assertThat;
 public class IsEqualToUnitTest {
 
     @Test
-    public void factoryMethodEqualTo() throws Exception {
+    void factoryMethodEqualTo() throws Exception {
         final Matcher<Object> matcher = IsEqualTo.equalTo(666L);
 
         assertThat(matcher, instanceOf(IsEqualTo.class));
@@ -24,7 +23,7 @@ public class IsEqualToUnitTest {
     }
 
     @Test
-    public void factoryMethodIsEqualTo() throws Exception {
+    void factoryMethodIsEqualTo() throws Exception {
         final Matcher<Object> matcher = isEqualTo(666L);
 
         assertThat(matcher, instanceOf(IsEqualTo.class));
@@ -32,7 +31,7 @@ public class IsEqualToUnitTest {
     }
 
     @Test
-    public void factoryMethodIs() throws Exception {
+    void factoryMethodIs() throws Exception {
         final Matcher<Object> matcher = is(666L);
 
         assertThat(matcher, instanceOf(IsEqualTo.class));
@@ -40,7 +39,7 @@ public class IsEqualToUnitTest {
     }
 
     @Test
-    public void factoryMethodIsTrue() throws Exception {
+    void factoryMethodIsTrue() throws Exception {
         final Matcher<Boolean> matcher = isTrue();
 
         assertThat(matcher, instanceOf(IsEqualTo.class));
@@ -48,7 +47,7 @@ public class IsEqualToUnitTest {
     }
 
     @Test
-    public void factoryMethodIsFalse() throws Exception {
+    void factoryMethodIsFalse() throws Exception {
         final Matcher<Boolean> matcher = isFalse();
 
         assertThat(matcher, instanceOf(IsEqualTo.class));
@@ -56,7 +55,7 @@ public class IsEqualToUnitTest {
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final Matcher<Object> matcher = new IsEqualTo<>(666L);
 
         assertThat(((IsEqualTo<?>) matcher).expected(), equalTo(666L));
@@ -64,7 +63,7 @@ public class IsEqualToUnitTest {
 
 
     @Test
-    public void describeTo() throws Exception {
+    void describeTo() throws Exception {
         final Description description = givenDescription();
         final IsEqualTo<String> instance = givenInstance();
 
@@ -74,7 +73,7 @@ public class IsEqualToUnitTest {
     }
 
     @Nonnull
-    protected static IsEqualTo<String> givenInstance() {
+    private static IsEqualTo<String> givenInstance() {
         return new IsEqualTo<>("Bert");
     }
 

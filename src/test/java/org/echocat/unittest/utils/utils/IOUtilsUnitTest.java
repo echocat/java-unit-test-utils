@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.utils;
 
 import org.echocat.unittest.utils.rules.TestFile;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
@@ -27,12 +27,12 @@ public class IOUtilsUnitTest {
     public static final TestFile LARGE_CONTENT_FILE = new TestFile("largeContent.bin", withGeneratedContent(LARGE_FILE_SIZE));
 
     @Test
-    public void constructur() throws Exception {
+    void constructur() throws Exception {
         new IOUtils();
     }
 
     @Test
-    public void copyWithSmallContent() throws Exception {
+    void copyWithSmallContent() throws Exception {
         try (final InputStream is = newInputStream(SMALL_CONTENT_FILE)) {
             try (final ByteArrayOutputStream os = new ByteArrayOutputStream()) {
                 final long read = copy(is, os);
@@ -45,7 +45,7 @@ public class IOUtilsUnitTest {
     }
 
     @Test
-    public void copyWithLargeContent() throws Exception {
+    void copyWithLargeContent() throws Exception {
         try (final InputStream is = newInputStream(LARGE_CONTENT_FILE)) {
             try (final ByteArrayOutputStream os = new ByteArrayOutputStream()) {
                 final long read = copy(is, os);
@@ -58,7 +58,7 @@ public class IOUtilsUnitTest {
     }
 
     @Nonnull
-    protected static byte[] bytesOf(@Nonnull Path file) throws IOException {
+    private static byte[] bytesOf(@Nonnull Path file) throws IOException {
         return readAllBytes(file);
     }
 

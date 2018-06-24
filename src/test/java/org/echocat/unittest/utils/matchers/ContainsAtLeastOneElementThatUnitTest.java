@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.matchers;
 
 import org.echocat.unittest.utils.utils.StreamUtils;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -20,10 +20,10 @@ import static org.junit.Assert.assertThat;
 public class ContainsAtLeastOneElementThatUnitTest {
 
     @Nonnull
-    protected static final Function<Iterable<Integer>, Stream<Integer>> MAPPER = StreamUtils::toStream;
+    private static final Function<Iterable<Integer>, Stream<Integer>> MAPPER = StreamUtils::toStream;
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final Set<Matcher<Integer>> matchers = givenMatchers();
         final ContainsAtLeastOneElementThat<Iterable<Integer>, Integer> instance = new ContainsAtLeastOneElementThat<>(MAPPER, matchers);
 
@@ -34,7 +34,7 @@ public class ContainsAtLeastOneElementThatUnitTest {
     }
 
     @Test
-    public void matchesWorks() throws Exception {
+    void matchesWorks() throws Exception {
         final Set<Matcher<Integer>> matchers = givenMatchers();
 
         assertThat(matches(matchers, Stream.of(0, 1, 2)), equalTo(true));
@@ -48,7 +48,7 @@ public class ContainsAtLeastOneElementThatUnitTest {
     }
 
     @Nonnull
-    protected static Set<Matcher<Integer>> givenMatchers() {
+    private static Set<Matcher<Integer>> givenMatchers() {
         return singleton(isEqualTo(0));
     }
 

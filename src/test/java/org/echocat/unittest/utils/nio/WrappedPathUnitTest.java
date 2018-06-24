@@ -1,6 +1,6 @@
 package org.echocat.unittest.utils.nio;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 public class WrappedPathUnitTest {
 
     @Test
-    public void wrapped() throws Exception {
+    void wrapped() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -25,7 +25,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void getFileSystem() throws Exception {
+    void getFileSystem() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -35,7 +35,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void isAbsolute() throws Exception {
+    void isAbsolute() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -45,7 +45,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void getRoot() throws Exception {
+    void getRoot() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -55,7 +55,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void getFileName() throws Exception {
+    void getFileName() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -65,7 +65,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void getParent() throws Exception {
+    void getParent() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -75,7 +75,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void getNameCount() throws Exception {
+    void getNameCount() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -85,7 +85,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void getName() throws Exception {
+    void getName() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -95,7 +95,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void subpath() throws Exception {
+    void subpath() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -105,7 +105,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void startsWith() throws Exception {
+    void startsWith() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -115,7 +115,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void startsWith1() throws Exception {
+    void startsWith1() throws Exception {
         final Path mockPath1 = givenMockPath();
         final Path mockPath2 = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath1);
@@ -126,7 +126,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void endsWith() throws Exception {
+    void endsWith() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -136,7 +136,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void endsWith1() throws Exception {
+    void endsWith1() throws Exception {
         final Path mockPath1 = givenMockPath();
         final Path mockPath2 = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath1);
@@ -147,7 +147,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void normalize() throws Exception {
+    void normalize() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -157,7 +157,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void resolve() throws Exception {
+    void resolve() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -167,7 +167,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void resolve1() throws Exception {
+    void resolve1() throws Exception {
         final Path mockPath1 = givenMockPath();
         final Path mockPath2 = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath1);
@@ -178,7 +178,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void resolveSibling() throws Exception {
+    void resolveSibling() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -188,7 +188,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void resolveSibling1() throws Exception {
+    void resolveSibling1() throws Exception {
         final Path mockPath1 = givenMockPath();
         final Path mockPath2 = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath1);
@@ -199,7 +199,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void relativize() throws Exception {
+    void relativize() throws Exception {
         final Path mockPath1 = givenMockPath();
         final Path mockPath2 = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath1);
@@ -210,7 +210,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void toUri() throws Exception {
+    void toUri() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -220,7 +220,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void toAbsolutePath() throws Exception {
+    void toAbsolutePath() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -230,7 +230,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void toRealPath() throws Exception {
+    void toRealPath() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -240,7 +240,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void toFile() throws Exception {
+    void toFile() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -250,7 +250,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void register() throws Exception {
+    void register() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
         final WatchService watchService = givenWatchService();
@@ -262,7 +262,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void register1() throws Exception {
+    void register1() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
         final WatchService watchService = givenWatchService();
@@ -275,7 +275,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void iterator() throws Exception {
+    void iterator() throws Exception {
         final Path mockPath = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath);
 
@@ -285,7 +285,7 @@ public class WrappedPathUnitTest {
     }
 
     @Test
-    public void compareTo() throws Exception {
+    void compareTo() throws Exception {
         final Path mockPath1 = givenMockPath();
         final Path mockPath2 = givenMockPath();
         final WrappedPath instance = givenInstanceFor(mockPath1);
@@ -296,31 +296,31 @@ public class WrappedPathUnitTest {
     }
 
     @Nonnull
-    protected static WrappedPath givenInstanceFor(@Nonnull Path wrapped) {
+    private static WrappedPath givenInstanceFor(@Nonnull Path wrapped) {
         return new WrappedPathImpl(wrapped);
     }
 
     @Nonnull
-    protected static Path givenMockPath() {
+    private static Path givenMockPath() {
         return mock(Path.class);
     }
 
     @Nonnull
-    protected static Modifier[] givenEmptyModifiers() {
+    private static Modifier[] givenEmptyModifiers() {
         return new Modifier[]{};
     }
 
     @Nonnull
-    protected static Kind<?>[] givenEmptyKinds() {
+    private static Kind<?>[] givenEmptyKinds() {
         return new Kind[]{};
     }
 
     @Nonnull
-    protected static WatchService givenWatchService() {
+    private static WatchService givenWatchService() {
         return mock(WatchService.class);
     }
 
-    protected static class WrappedPathImpl implements WrappedPath {
+    static class WrappedPathImpl implements WrappedPath {
 
         @Nonnull
         private final Path wrapped;

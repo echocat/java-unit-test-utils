@@ -1,7 +1,7 @@
 package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
@@ -15,11 +15,11 @@ import static org.junit.Assert.assertThat;
 
 public class StreamMatchersUnitTest {
 
-    protected static final Matcher<Integer> MATCHER1 = isGreaterThanOrEqualTo(0);
-    protected static final Matcher<Integer> MATCHER2 = isLessThanOrEqualTo(10);
+    private static final Matcher<Integer> MATCHER1 = isGreaterThanOrEqualTo(0);
+    private static final Matcher<Integer> MATCHER2 = isLessThanOrEqualTo(10);
 
     @Test
-    public void factoryMethodContainsOnlyElementsThat() throws Exception {
+    void factoryMethodContainsOnlyElementsThat() throws Exception {
         final Matcher<Stream<Integer>> instance = containsOnlyElementsThat(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsOnlyElementsThat.class));
@@ -27,7 +27,7 @@ public class StreamMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsOnlyElements() throws Exception {
+    void factoryMethodContainsOnlyElements() throws Exception {
         final Matcher<Stream<Integer>> instance = containsOnlyElements(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsOnlyElementsThat.class));
@@ -35,7 +35,7 @@ public class StreamMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsAtLeastOneElementThat() throws Exception {
+    void factoryMethodContainsAtLeastOneElementThat() throws Exception {
         final Matcher<Stream<Integer>> instance = containsAtLeastOneElementThat(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsAtLeastOneElementThat.class));
@@ -43,7 +43,7 @@ public class StreamMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsAtLeastOneElement() throws Exception {
+    void factoryMethodContainsAtLeastOneElement() throws Exception {
         final Matcher<Stream<Integer>> instance = containsAtLeastOneElement(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsAtLeastOneElementThat.class));
@@ -51,7 +51,7 @@ public class StreamMatchersUnitTest {
     }
 
     @Test
-    public void constructor() {
+    void constructor() {
         new StreamMatchers();
     }
 

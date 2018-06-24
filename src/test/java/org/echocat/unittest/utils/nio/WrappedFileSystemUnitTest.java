@@ -1,6 +1,6 @@
 package org.echocat.unittest.utils.nio;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.nio.file.FileSystem;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 public class WrappedFileSystemUnitTest {
 
     @Test
-    public void wrapped() throws Exception {
+    void wrapped() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -22,7 +22,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void provider() throws Exception {
+    void provider() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -34,7 +34,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void close() throws Exception {
+    void close() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -44,7 +44,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void isOpen() throws Exception {
+    void isOpen() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -54,7 +54,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void isReadOnly() throws Exception {
+    void isReadOnly() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -64,7 +64,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void getSeparator() throws Exception {
+    void getSeparator() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -74,7 +74,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void getRootDirectories() throws Exception {
+    void getRootDirectories() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -84,7 +84,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void getFileStores() throws Exception {
+    void getFileStores() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -94,7 +94,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void supportedFileAttributeViews() throws Exception {
+    void supportedFileAttributeViews() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -104,7 +104,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void getPath() throws Exception {
+    void getPath() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
         final String path1 = "1";
@@ -116,7 +116,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void getPathMatcher() throws Exception {
+    void getPathMatcher() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
         final String syntax = "1";
@@ -127,7 +127,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void getUserPrincipalLookupService() throws Exception {
+    void getUserPrincipalLookupService() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -137,7 +137,7 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Test
-    public void newWatchService() throws Exception {
+    void newWatchService() throws Exception {
         final FileSystem mockFileSystem = givenMockFileSystem();
         final WrappedFileSystem<WrappedPath> instance = givenInstanceFor(mockFileSystem);
 
@@ -147,12 +147,12 @@ public class WrappedFileSystemUnitTest {
     }
 
     @Nonnull
-    protected static WrappedFileSystem<WrappedPath> givenInstanceFor(FileSystem mockFileSystem) {
+    private static WrappedFileSystem<WrappedPath> givenInstanceFor(FileSystem mockFileSystem) {
         return new WrappedFileSystem<>(WrappedPath.class, mockFileSystem);
     }
 
     @Nonnull
-    protected static FileSystem givenMockFileSystem() {
+    private static FileSystem givenMockFileSystem() {
         final FileSystem instance = mock(FileSystem.class);
         doReturn(mock(FileSystemProvider.class)).when(instance).provider();
         return instance;

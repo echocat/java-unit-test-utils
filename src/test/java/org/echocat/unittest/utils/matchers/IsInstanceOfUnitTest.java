@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Array;
 
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 public class IsInstanceOfUnitTest {
 
     @Test
-    public void factoryMethodIsInstanceOf() throws Exception {
+    void factoryMethodIsInstanceOf() throws Exception {
         final Matcher<Object> matcher = isInstanceOf(Array.class);
 
         assertThat(matcher, CoreMatchers.instanceOf(IsInstanceOf.class));
@@ -21,7 +21,7 @@ public class IsInstanceOfUnitTest {
     }
 
     @Test
-    public void factoryMethodInstanceOf() throws Exception {
+    void factoryMethodInstanceOf() throws Exception {
         final Matcher<Object> matcher = instanceOf(Array.class);
 
         assertThat(matcher, CoreMatchers.instanceOf(IsInstanceOf.class));
@@ -29,7 +29,7 @@ public class IsInstanceOfUnitTest {
     }
 
     @Test
-    public void factoryMethodAny() throws Exception {
+    void factoryMethodAny() throws Exception {
         final Matcher<Array> matcher = any(Array.class);
 
         assertThat(matcher, CoreMatchers.instanceOf(IsInstanceOf.class));

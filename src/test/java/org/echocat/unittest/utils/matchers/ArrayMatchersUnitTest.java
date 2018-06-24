@@ -1,7 +1,7 @@
 package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Arrays.asList;
 import static org.echocat.unittest.utils.matchers.ArrayMatchers.*;
@@ -17,7 +17,7 @@ public class ArrayMatchersUnitTest {
     protected static final Matcher<Integer> MATCHER2 = isLessThanOrEqualTo(10);
 
     @Test
-    public void factoryMethodContainsOnlyElementsThat() throws Exception {
+    void factoryMethodContainsOnlyElementsThat() throws Exception {
         final Matcher<Integer[]> instance = containsOnlyElementsThat(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsOnlyElementsThat.class));
@@ -25,7 +25,7 @@ public class ArrayMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsOnlyElements() throws Exception {
+    void factoryMethodContainsOnlyElements() throws Exception {
         final Matcher<Integer[]> instance = containsOnlyElements(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsOnlyElementsThat.class));
@@ -33,7 +33,7 @@ public class ArrayMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsAtLeastOneElementThat() throws Exception {
+    void factoryMethodContainsAtLeastOneElementThat() throws Exception {
         final Matcher<Integer[]> instance = containsAtLeastOneElementThat(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsAtLeastOneElementThat.class));
@@ -41,7 +41,7 @@ public class ArrayMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsAtLeastOneElement() throws Exception {
+    void factoryMethodContainsAtLeastOneElement() throws Exception {
         final Matcher<Integer[]> instance = containsAtLeastOneElement(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsAtLeastOneElementThat.class));
@@ -49,7 +49,7 @@ public class ArrayMatchersUnitTest {
     }
 
     @Test
-    public void constructor() {
+    void constructor() {
         new ArrayMatchers();
     }
 

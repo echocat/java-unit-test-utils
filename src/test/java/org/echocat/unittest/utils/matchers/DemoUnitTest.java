@@ -1,7 +1,6 @@
 package org.echocat.unittest.utils.matchers;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -17,11 +16,10 @@ import static org.echocat.unittest.utils.matchers.WhereValueOf.whereValueOf;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
-public class DemoTest {
+public class DemoUnitTest {
 
     @Test
-    @Ignore
-    public void matches() throws Exception {
+    void matches() throws Exception {
         assertThat("hello", isEqualTo("hello"));
 
         final List<Moo> aListOfThings = asList(
@@ -48,7 +46,7 @@ public class DemoTest {
         assertThat("hello", isOneOf("hello", "foo", "bar"));
     }
 
-    public static class Moo {
+    private static class Moo {
         private String name;
         private Integer age;
 

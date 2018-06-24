@@ -1,7 +1,7 @@
 package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 public class IsNotUnitTest {
 
     @Test
-    public void factoryMethodNot() throws Exception {
+    void factoryMethodNot() throws Exception {
         final Matcher<Object> enclosed = givenMatcher();
         final Matcher<Object> instance = not(enclosed);
 
@@ -23,7 +23,7 @@ public class IsNotUnitTest {
     }
 
     @Test
-    public void factoryMethodIsNot() throws Exception {
+    void factoryMethodIsNot() throws Exception {
         final Matcher<Object> enclosed = givenMatcher();
         final Matcher<Object> instance = isNot(enclosed);
 
@@ -32,7 +32,7 @@ public class IsNotUnitTest {
     }
 
     @Test
-    public void factoryMethodNot2() throws Exception {
+    void factoryMethodNot2() throws Exception {
         final Object expected = givenAnObject();
         final Matcher<Object> instance = not(expected);
 
@@ -42,7 +42,7 @@ public class IsNotUnitTest {
     }
 
     @Test
-    public void factoryMethodIsNot2() throws Exception {
+    void factoryMethodIsNot2() throws Exception {
         final Object expected = givenAnObject();
         final Matcher<Object> instance = isNot(expected);
 
@@ -52,7 +52,7 @@ public class IsNotUnitTest {
     }
 
     @Test
-    public void factoryMethodNotEqualTo() throws Exception {
+    void factoryMethodNotEqualTo() throws Exception {
         final Object expected = givenAnObject();
         final Matcher<Object> instance = notEqualTo(expected);
 
@@ -62,7 +62,7 @@ public class IsNotUnitTest {
     }
 
     @Test
-    public void factoryMethodIsNotEqualTo() throws Exception {
+    void factoryMethodIsNotEqualTo() throws Exception {
         final Object expected = givenAnObject();
         final Matcher<Object> instance = isNotEqualTo(expected);
 
@@ -72,7 +72,7 @@ public class IsNotUnitTest {
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final Matcher<Object> enclosed = givenMatcher();
         final IsNot<Object> instance = new IsNot<>(enclosed);
 
@@ -80,13 +80,13 @@ public class IsNotUnitTest {
     }
 
     @Nonnull
-    protected static Matcher<Object> givenMatcher() {
+    private static Matcher<Object> givenMatcher() {
         //noinspection unchecked
         return mock(Matcher.class);
     }
 
     @Nonnull
-    protected static Object givenAnObject() {
+    private static Object givenAnObject() {
         return new Object();
     }
 

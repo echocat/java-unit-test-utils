@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.util.Iterator;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertThat;
 
 public class IterableBasedMatcherUnitTest {
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final IterableBasedMatcher<String, List<String>> instance = new IterableBasedMatcher<>("test", IterableBasedMatcher.startsWithComparator(), iterableOf("a", "b", "c"));
 
         assertThat(instance.comparator(), sameInstance(IterableBasedMatcher.startsWithComparator()));
@@ -29,7 +29,7 @@ public class IterableBasedMatcherUnitTest {
     }
 
     @Test
-    public void startsWithComparator() throws Exception {
+    void startsWithComparator() throws Exception {
         final Comparator<Integer> instance = IterableBasedMatcher.startsWithComparator();
 
         assertThat(instance.check(iterableOf(0, 1, 2, 3, 4, 5), iterableOf(0, 1, 2)), equalTo(true));
@@ -41,7 +41,7 @@ public class IterableBasedMatcherUnitTest {
     }
 
     @Test
-    public void endsWithComparator() throws Exception {
+    void endsWithComparator() throws Exception {
         final Comparator<Integer> instance = IterableBasedMatcher.endsWithComparator();
 
         assertThat(instance.check(iterableOf(0, 1, 2, 3, 4, 5), iterableOf(0, 1, 2)), equalTo(false));
@@ -58,7 +58,7 @@ public class IterableBasedMatcherUnitTest {
     }
 
     @Test
-    public void containsComparator() throws Exception {
+    void containsComparator() throws Exception {
         final Comparator<Integer> instance = IterableBasedMatcher.containsComparator();
 
         assertThat(instance.check(iterableOf(0, 1, 2, 3, 4, 5), iterableOf(0, 1, 2)), equalTo(true));
@@ -76,7 +76,7 @@ public class IterableBasedMatcherUnitTest {
     }
 
     @Test
-    public void matches() throws Exception {
+    void matches() throws Exception {
         final Matcher<Iterable<Integer>> instance = givenStartsWith123Instance();
 
         assertThat(instance.matches(iterableOf(0, 1, 2)), equalTo(true));
@@ -85,7 +85,7 @@ public class IterableBasedMatcherUnitTest {
     }
 
     @Test
-    public void describeTo() throws Exception {
+    void describeTo() throws Exception {
         final Description description = givenDescription();
         final Matcher<Iterable<Integer>> instance = givenStartsWith123Instance();
 
@@ -95,7 +95,7 @@ public class IterableBasedMatcherUnitTest {
     }
 
     @Test
-    public void skipOneSucceedsWithMoreThanOneLeftEntries() throws Exception {
+    void skipOneSucceedsWithMoreThanOneLeftEntries() throws Exception {
         final Iterator<Integer> actual = givenIteratorWith2LeftEntries();
 
         skipOne(actual);
@@ -106,7 +106,7 @@ public class IterableBasedMatcherUnitTest {
     }
 
     @Test
-    public void skipOneSucceedsWithOneLeftEntry() throws Exception {
+    void skipOneSucceedsWithOneLeftEntry() throws Exception {
         final Iterator<Integer> actual = givenIteratorWithOneLeftEntry();
 
         skipOne(actual);
@@ -115,35 +115,35 @@ public class IterableBasedMatcherUnitTest {
     }
 
     @Test
-    public void skipOneFailsWithNoLeftEntry() throws Exception {
+    void skipOneFailsWithNoLeftEntry() throws Exception {
         final Iterator<Integer> actual = givenEmptyIterator();
 
         assertThat(() -> skipOne(actual), throwsException(IllegalStateException.class));
     }
 
     @Nonnull
-    protected static Iterator<Integer> givenIteratorWith2LeftEntries() {
+    private static Iterator<Integer> givenIteratorWith2LeftEntries() {
         return iterableOf(0, 1).iterator();
     }
 
     @Nonnull
-    protected static Iterator<Integer> givenIteratorWithOneLeftEntry() {
+    private static Iterator<Integer> givenIteratorWithOneLeftEntry() {
         return iterableOf(0).iterator();
     }
 
     @Nonnull
-    protected static Iterator<Integer> givenEmptyIterator() {
+    private static Iterator<Integer> givenEmptyIterator() {
         return emptyIterator();
     }
 
     @Nonnull
-    protected static IterableBasedMatcher<Integer, Iterable<Integer>> givenStartsWith123Instance() {
+    private static IterableBasedMatcher<Integer, Iterable<Integer>> givenStartsWith123Instance() {
         return new IterableBasedMatcher<>("starts with", IterableBasedMatcher.startsWithComparator(), iterableOf(0, 1, 2));
     }
 
     @SafeVarargs
     @Nonnull
-    protected static <T> Iterable<T> iterableOf(@Nonnull T... values) {
+    private static <T> Iterable<T> iterableOf(@Nonnull T... values) {
         return asList(values);
     }
 }
