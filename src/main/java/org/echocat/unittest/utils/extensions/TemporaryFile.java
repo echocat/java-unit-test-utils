@@ -1,6 +1,9 @@
 package org.echocat.unittest.utils.extensions;
 
-import org.echocat.unittest.utils.nio.TemporaryResourceBroker.ContentProducer;
+import org.echocat.unittest.utils.extensions.TemporaryFile.Provider;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker.ContentProducer;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -8,8 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -20,30 +22,26 @@ import static java.lang.Thread.currentThread;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static java.lang.reflect.Modifier.isStatic;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
+import static org.echocat.unittest.utils.extensions.TemporaryPath.Utils.methodBasedContentProducerFor;
+import static org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation.typeOf;
 import static org.echocat.unittest.utils.utils.IOUtils.copy;
 
 @Target({PARAMETER, FIELD})
 @Retention(RUNTIME)
+@TemporaryPath(provider = Provider.class)
 public @interface TemporaryFile {
-
-    /**
-     * Alias for {@link #ofName}.
-     */
-    @Nonnull
-    String value() default "";
 
     /**
      * Will be the filename of the created temporary file on the disk.
      */
     @Nonnull
-    String ofName() default "";
+    String ofName() default "test";
 
     /**
      * <p>Creates the content of this file as a copy of this file in classpath.</p>
@@ -53,6 +51,7 @@ public @interface TemporaryFile {
      *
      * @see #relativeTo
      * @see #withContent
+     * @see #withBinaryContent
      * @see #withRandomContentOfLength
      * @see #usingGeneratorMethod
      */
@@ -60,16 +59,23 @@ public @interface TemporaryFile {
     String fromClasspath() default "";
 
     /**
-     * Sets the relation of files in classpath. See {@link #fromClasspath} for more details.
+     * <p>Sets the relation of files in classpath. See {@link #fromClasspath} for more details.</p>
+     *
+     * <p>If set to {@link TestClass TestClass} the provided classpath resource (by {@link #fromClasspath}) will
+     * be resolved in relation to the current test class.</p>
+     *
+     * <p>If set to {@link Root Root} the provided classpath resource (by {@link #fromClasspath}) will
+     * be resolved from the root of the whole classpath.</p>
      *
      * @see #fromClasspath
      */
-    Class<?> relativeTo() default Root.class;
+    Class<?> relativeTo() default TestClass.class;
 
     /**
      * <p>Specifies a content of this file (encoded in UTF8).</p>
      *
      * @see #fromClasspath
+     * @see #withBinaryContent
      * @see #withRandomContentOfLength
      * @see #usingGeneratorMethod
      */
@@ -77,10 +83,22 @@ public @interface TemporaryFile {
     String withContent() default "";
 
     /**
+     * <p>Specifies a content of this file in bytes.</p>
+     *
+     * @see #fromClasspath
+     * @see #withContent
+     * @see #withRandomContentOfLength
+     * @see #usingGeneratorMethod
+     */
+    @Nonnull
+    byte[] withBinaryContent() default {};
+
+    /**
      * <p>Will generate the file content with given length with random content.</p>
      *
      * @see #fromClasspath
      * @see #withContent
+     * @see #withBinaryContent
      * @see #usingGeneratorMethod
      */
     @Nonnegative
@@ -95,28 +113,39 @@ public @interface TemporaryFile {
      *
      * @see #fromClasspath
      * @see #withContent
+     * @see #withBinaryContent
      * @see #withRandomContentOfLength
      */
     @Nonnull
     String usingGeneratorMethod() default "";
 
     @SuppressWarnings("InterfaceNeverImplemented")
-    public interface Root {}
+    interface TestClass {}
+    @SuppressWarnings("InterfaceNeverImplemented")
+    interface Root {}
 
-    public static class ContentProducerFactory {
+    class Provider implements TemporaryPath.Provider<TemporaryFile> {
 
         @Nonnull
         private static final Random RANDOM = new Random(666L);
         @Nonnull
         private static final Collection<Function<TemporaryFile, Optional<ContentProducer<OutputStream>>>> INPUT_TO_PRODUCER = unmodifiableList(asList(
-            ContentProducerFactory::createFromClasspathFor,
-            ContentProducerFactory::createWithContentFor,
-            ContentProducerFactory::createWithRandomContentOfLengthFor,
-            ContentProducerFactory::createUsingGeneratorMethodFor
+            Provider::createFromClasspathFor,
+            Provider::createWithContentFor,
+            Provider::createWithBinaryContentFor,
+            Provider::createWithRandomContentOfLengthFor,
+            Provider::createUsingGeneratorMethodFor
         ));
 
         @Nonnull
-        public ContentProducer<OutputStream> createFor(@Nonnull TemporaryFile input) {
+        @Override
+        public Path provide(@Nonnull TemporaryFile forAnnotation, @Nonnull Relation<?> relation, @Nonnull TemporaryPathBroker using) throws Exception {
+            final ContentProducer<OutputStream> contentProducer = contentProducerFor(forAnnotation);
+            return using.newFile(forAnnotation.ofName(), relation, contentProducer);
+        }
+
+        @Nonnull
+        public ContentProducer<OutputStream> contentProducerFor(@Nonnull TemporaryFile input) {
             final List<ContentProducer<OutputStream>> candidates = inputToProducer().stream()
                 .map(candidate -> candidate.apply(input))
                 .filter(Optional::isPresent)
@@ -145,10 +174,18 @@ public @interface TemporaryFile {
             }
             final String path = removeLeadingSlashes(input.fromClasspath());
             return of((relation, os) -> {
-                try (final InputStream is = input.relativeTo().equals(Root.class)
-                    ? currentThread().getContextClassLoader().getResourceAsStream(path)
-                    : input.relativeTo().getResourceAsStream(path)) {
-                    copy(is, os);
+                Class<?> baseClass = input.relativeTo();
+                if (baseClass.equals(Root.class)) {
+                    try (final InputStream is = currentThread().getContextClassLoader().getResourceAsStream(path)) {
+                        copy(is, os);
+                    }
+                } else {
+                    if (baseClass.equals(TestClass.class)) {
+                        baseClass = typeOf(relation);
+                    }
+                    try (final InputStream is = baseClass.getResourceAsStream(path)) {
+                        copy(is, os);
+                    }
                 }
             });
         }
@@ -159,6 +196,14 @@ public @interface TemporaryFile {
                 return empty();
             }
             return of((relation, os) -> os.write(input.withContent().getBytes(UTF_8)));
+        }
+
+        @Nonnull
+        protected static Optional<ContentProducer<OutputStream>> createWithBinaryContentFor(@Nonnull TemporaryFile input) {
+            if (input.withBinaryContent().length == 0) {
+                return empty();
+            }
+            return of((relation, os) -> os.write(input.withBinaryContent()));
         }
 
         @Nonnull
@@ -184,39 +229,9 @@ public @interface TemporaryFile {
             if (input.usingGeneratorMethod().isEmpty()) {
                 return empty();
             }
-            return of((relation, os) -> {
-                final Method method = generatorMethodOf(relation, input.usingGeneratorMethod());
-                try {
-                    method.invoke(relation instanceof Class ? null : relation, os);
-                } catch (final Exception e) {
-                    final Throwable target = e instanceof InvocationTargetException ? ((InvocationTargetException) e).getTargetException() : null;
-                    if (target instanceof Error) {
-                        //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
-                        throw (Error) target;
-                    }
-                    if (target instanceof RuntimeException) {
-                        //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
-                        throw (RuntimeException) target;
-                    }
-                    throw new RuntimeException("Cloud not execute " + method + " to generate temporary file content.", target != null ? target : e);
-                }
-            });
+            return of(methodBasedContentProducerFor(input, input.usingGeneratorMethod(), OutputStream.class));
         }
 
-        @Nonnull
-        protected static Method generatorMethodOf(@Nonnull Object relation, @Nonnull String name) {
-            final Class<?> relationType = relation instanceof Class ? (Class<?>) relation : relation.getClass();
-            try {
-                final Method method = relationType.getDeclaredMethod(name, OutputStream.class);
-                if (relation instanceof Class && !isStatic(method.getModifiers())) {
-                    throw new IllegalArgumentException("The definition of given @TemporaryFile reflects the method " + name + "(OutputStream os)" +
-                        " which is not static but needs to be static.");
-                }
-                return method;
-            } catch (final NoSuchMethodException e) {
-                throw new IllegalArgumentException("The definition of given @TemporaryFile reflects a method " + name + "(OutputStream os) but it does not exist.", e);
-            }
-        }
 
         @Nonnull
         protected static String removeLeadingSlashes(@Nonnull String input) {

@@ -11,7 +11,7 @@ import static java.lang.Character.isLetterOrDigit;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.Files.*;
 
-public class FileUtils {
+public final class FileUtils {
 
     @Nonnull
     public static String normalizeName(@Nonnull String input) {

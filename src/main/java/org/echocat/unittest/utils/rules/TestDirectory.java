@@ -1,6 +1,7 @@
 package org.echocat.unittest.utils.rules;
 
-import org.echocat.unittest.utils.nio.WrappedPath;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker.ContentProducer;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
@@ -8,40 +9,43 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.file.Path;
 
-public class TestDirectory extends TemporaryDirectoryBasedRuleSupport<TestDirectory> implements WrappedPath {
+import static org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation.classRelationFor;
+
+public class TestDirectory extends TemporaryDirectoryBasedRuleSupport<TestDirectory> {
 
     @Nullable
-    private final ContentProducer contentProducer;
+    private final ContentProducer<Path> contentProducer;
+    @Nonnull
+    private final String name;
 
-
-    public TestDirectory() {
-        this(null);
+    public TestDirectory(@Nonnull String name) {
+        this(name, null);
     }
 
-    public TestDirectory(@Nullable ContentProducer contentProducer) {
+    public TestDirectory(@Nonnull String name, @Nullable ContentProducer<Path> contentProducer) {
+        this.name = name;
         this.contentProducer = contentProducer;
     }
 
-    @Override
-    protected void evaluate(@Nonnull Statement base, @Nonnull Description description, @Nonnull Path baseDirectory) throws Throwable {
-        if (contentProducer != null) {
-            contentProducer.produce(baseDirectory);
-        }
-        base.evaluate();
+    /**
+     * @deprecated Use {@link #TestDirectory(String)} instead.
+     */
+    @Deprecated
+    public TestDirectory() {
+        this("test", null);
+    }
+
+    /**
+     * @deprecated Use {@link #TestDirectory(String, ContentProducer)} instead.
+     */
+    @Deprecated
+    public TestDirectory(@Nullable ContentProducer<Path> contentProducer) {
+        this("test", contentProducer);
     }
 
     @Override
-    @Nonnull
-    public Path wrapped() {
-        return baseDirectory();
+    protected Path evaluatePath(@Nonnull Statement base, @Nonnull Description description, @Nonnull TemporaryPathBroker broker) throws Throwable {
+        return broker.newDirectory(name, classRelationFor(description.getTestClass()), contentProducer);
     }
-
-    @FunctionalInterface
-    public static interface ContentProducer {
-        public void produce(@Nonnull Path path) throws Exception;
-    }
-
-    @Override
-    public String toString() {return wrapped().toString();}
 
 }

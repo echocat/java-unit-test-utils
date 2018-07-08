@@ -1,12 +1,12 @@
 package org.echocat.unittest.utils.utils;
 
-import org.echocat.unittest.utils.rules.TestDirectory;
-import org.echocat.unittest.utils.rules.TestFile;
-import org.junit.ClassRule;
+import org.echocat.unittest.utils.extensions.TemporaryDirectory;
+import org.echocat.unittest.utils.extensions.TemporaryFile;
+import org.echocat.unittest.utils.extensions.TemporaryPaths;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
@@ -16,14 +16,8 @@ import static org.echocat.unittest.utils.utils.SizeUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+@ExtendWith(TemporaryPaths.class)
 public class SizeUtilsUnitTest {
-
-    @ClassRule
-    public static final TestFile FILE_OF_LENGTH_4 = new TestFile("fileOfLength4.txt", "0123");
-    @ClassRule
-    public static final TestFile EMPTY_FILE = new TestFile("emptyFile.txt", "");
-    @ClassRule
-    public static final TestDirectory EMPTY_DIRECTORY = new TestDirectory();
 
     @Test
     void constructur() throws Exception {
@@ -190,43 +184,39 @@ public class SizeUtilsUnitTest {
     }
 
     @Test
-    void sizeOfPathWithLength4() throws Exception {
-        final Object toTest = givenPathWithLength4();
-
-        assertThat(sizeOf(toTest), equalTo(4L));
+    void sizeOfPathWithLength4(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        assertThat(sizeOf(pathWithLengthOf4), equalTo(4L));
     }
 
     @Test
-    void sizeOfEmptyPath() throws Exception {
-        final Object toTest = givenEmptyPath();
-
-        assertThat(sizeOf(toTest), equalTo(0L));
+    void sizeOfEmptyPath(@TemporaryFile Path emptyPath) throws Exception {
+        assertThat(sizeOf(emptyPath), equalTo(0L));
     }
 
     @Test
-    void sizeOfNotExistingPathFails() throws Exception {
-        final Object toTest = givenNotExistingPath();
+    void sizeOfNotExistingPathFails(@TemporaryDirectory Path root) throws Exception {
+        final Object toTest = givenNotExistingPath(root);
 
         assertThat(() -> sizeOf(toTest), throwsException(UncheckedIOException.class, "java.nio.file.NoSuchFileException: .*doesNotExist"));
     }
 
     @Test
-    void sizeOfFileWithLength4() throws Exception {
-        final Object toTest = givenFileWithLength4();
+    void sizeOfFileWithLength4(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        final Object toTest = pathWithLengthOf4.toFile();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    void sizeOfEmptyFile() throws Exception {
-        final Object toTest = givenEmptyFile();
+    void sizeOfEmptyFile(@TemporaryFile Path emptyPath) throws Exception {
+        final Object toTest = emptyPath.toFile();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    void sizeOfNotExistingFileFails() throws Exception {
-        final Object toTest = givenNotExistingFile();
+    void sizeOfNotExistingFileFails(@TemporaryDirectory Path root) throws Exception {
+        final Object toTest = givenNotExistingPath(root).toFile();
 
         assertThat(() -> sizeOf(toTest), throwsException(UncheckedIOException.class, "java.nio.file.NoSuchFileException: .*doesNotExist"));
     }
@@ -424,43 +414,39 @@ public class SizeUtilsUnitTest {
     }
 
     @Test
-    void isEmptyOfPathWithLength4() throws Exception {
-        final Object toTest = givenPathWithLength4();
-
-        assertThat(isEmpty(toTest), equalTo(false));
+    void isEmptyOfPathWithLength4(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        assertThat(isEmpty(pathWithLengthOf4), equalTo(false));
     }
 
     @Test
-    void isEmptyOfEmptyPath() throws Exception {
-        final Object toTest = givenEmptyPath();
-
-        assertThat(isEmpty(toTest), equalTo(true));
+    void isEmptyOfEmptyPath(@TemporaryFile Path empty) throws Exception {
+        assertThat(isEmpty(empty), equalTo(true));
     }
 
     @Test
-    void isEmptyOfUnknownPathThrowsException() throws Exception {
-        final Object toTest = givenNotExistingPath();
+    void isEmptyOfUnknownPathThrowsException(@TemporaryDirectory Path root) throws Exception {
+        final Object toTest = givenNotExistingPath(root);
 
         assertThat(() -> isEmpty(toTest), throwsException(UncheckedIOException.class, "java.nio.file.NoSuchFileException: .*doesNotExist"));
     }
 
     @Test
-    void isEmptyOfFileWithLength4() throws Exception {
-        final Object toTest = givenFileWithLength4();
+    void isEmptyOfFileWithLength4(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        final Object toTest = pathWithLengthOf4.toFile();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    void isEmptyOfEmptyFile() throws Exception {
-        final Object toTest = givenFileWithLength4();
+    void isEmptyOfEmptyFile(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        final Object toTest = pathWithLengthOf4.toFile();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    void isEmptyOfUnknownFileThrowsException() throws Exception {
-        final Object toTest = givenNotExistingFile();
+    void isEmptyOfUnknownFileThrowsException(@TemporaryDirectory Path root) throws Exception {
+        final Object toTest = givenNotExistingPath(root).toFile();
 
         assertThat(() -> isEmpty(toTest), throwsException(UncheckedIOException.class, "java.nio.file.NoSuchFileException: .*doesNotExist"));
     }
@@ -546,34 +532,8 @@ public class SizeUtilsUnitTest {
     }
 
     @Nonnull
-    private static Path givenPathWithLength4() {
-        return FILE_OF_LENGTH_4;
+    private static Path givenNotExistingPath(@Nonnull Path root) {
+        return root.resolve("doesNotExist");
     }
-
-    @Nonnull
-    private static Path givenEmptyPath() {
-        return EMPTY_FILE;
-    }
-
-    @Nonnull
-    private static Path givenNotExistingPath() {
-        return EMPTY_DIRECTORY.resolve("doesNotExist");
-    }
-
-    @Nonnull
-    private static File givenFileWithLength4() {
-        return givenPathWithLength4().toFile();
-    }
-
-    @Nonnull
-    private static File givenEmptyFile() {
-        return givenEmptyPath().toFile();
-    }
-
-    @Nonnull
-    private static File givenNotExistingFile() {
-        return givenNotExistingPath().toFile();
-    }
-
 
 }

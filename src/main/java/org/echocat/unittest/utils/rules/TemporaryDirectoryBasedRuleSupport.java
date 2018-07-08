@@ -1,22 +1,22 @@
 package org.echocat.unittest.utils.rules;
 
+import org.echocat.unittest.utils.nio.TemporaryPathBroker;
+import org.echocat.unittest.utils.nio.WrappedPath;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.nio.file.Path;
+import java.util.Optional;
 
-import static java.nio.file.Files.createTempDirectory;
-import static java.util.Objects.requireNonNull;
-import static org.echocat.unittest.utils.utils.FileUtils.deleteRecursively;
+import static java.util.Optional.of;
 import static org.echocat.unittest.utils.utils.FileUtils.normalizeName;
 
-public abstract class TemporaryDirectoryBasedRuleSupport<T extends TemporaryDirectoryBasedRuleSupport<T>> implements TestRule {
+public abstract class TemporaryDirectoryBasedRuleSupport<T extends TemporaryDirectoryBasedRuleSupport<T>> implements TestRule, WrappedPath {
 
-    @Nullable
-    private Path baseDirectory;
+    @Nonnull
+    private Optional<Path> path = Optional.empty();
 
     private boolean failOnProblemsWhileCleanup = true;
 
@@ -36,38 +36,51 @@ public abstract class TemporaryDirectoryBasedRuleSupport<T extends TemporaryDire
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                TemporaryDirectoryBasedRuleSupport.this.evaluate(base, description);
+                try (final TemporaryPathBroker broker = temporaryResourceBrokerFor(description)) {
+                    path = of(evaluatePath(base, description, broker));
+                    try {
+                        base.evaluate();
+                    } finally {
+                        path = Optional.empty();
+                    }
+                }
             }
         };
     }
 
-    protected void evaluate(@Nonnull Statement base, @Nonnull Description description) throws Throwable {
-        final Path baseDirectory = generateTemporaryFolderFor(description);
-        TemporaryDirectoryBasedRuleSupport.this.baseDirectory = baseDirectory;
-        try {
-            evaluate(base, description, baseDirectory);
-        } finally {
-            TemporaryDirectoryBasedRuleSupport.this.baseDirectory = null;
-            deleteRecursively(baseDirectory, isFailOnProblemsWhileCleanup());
+    protected abstract Path evaluatePath(@Nonnull Statement base, @Nonnull Description description, @Nonnull TemporaryPathBroker broker) throws Throwable;
+
+    @Nonnull
+    @Override
+    public Path wrapped() {
+        return path.orElseThrow(() -> new IllegalStateException("Method was not called within test evaluation or @Rule/@ClassRule was missing at field."));
+    }
+
+    @Nonnull
+    protected TemporaryPathBroker temporaryResourceBrokerFor(@Nonnull Description description) {
+        return TemporaryPathBroker.temporaryResourceBrokerFor(normalizeName(description.getDisplayName()));
+    }
+
+    @Override
+    public String toString() {return wrapped().toString();}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
+        if (o instanceof WrappedPath) {
+            return wrapped().equals(((WrappedPath) o).wrapped());
+        }
+        if (o instanceof Path) {
+            return wrapped().equals(o);
+        }
+        return false;
     }
 
-    protected abstract void evaluate(@Nonnull Statement base, @Nonnull Description description, @Nonnull Path baseDirectory) throws Throwable;
-
-    @Nonnull
-    protected Path baseDirectory() {
-        return requireNonNull(baseDirectory, "Method was not called within test evaluation or @Rule/@ClassRule was missing at field.");
-    }
-
-    @Nonnull
-    protected Path generateTemporaryFolderFor(@Nonnull Description description) throws Exception {
-        final String name = folderNameFor(description);
-        return createTempDirectory(name + "-");
-    }
-
-    @Nonnull
-    protected String folderNameFor(@Nonnull Description description) {
-        return normalizeName(description.getDisplayName());
+    @Override
+    public int hashCode() {
+        return wrapped().hashCode();
     }
 
 }

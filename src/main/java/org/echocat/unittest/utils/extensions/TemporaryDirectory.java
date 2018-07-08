@@ -1,12 +1,13 @@
 package org.echocat.unittest.utils.extensions;
 
-import org.echocat.unittest.utils.nio.TemporaryResourceBroker.ContentProducer;
+import org.echocat.unittest.utils.extensions.TemporaryDirectory.Provider;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker.ContentProducer;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -16,29 +17,23 @@ import java.util.function.Function;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
+import static org.echocat.unittest.utils.extensions.TemporaryPath.Utils.methodBasedContentProducerFor;
 
 @Target({PARAMETER, FIELD})
 @Retention(RUNTIME)
+@TemporaryPath(provider = Provider.class)
 public @interface TemporaryDirectory {
-
-    /**
-     * Alias for {@link #ofName}.
-     */
-    @Nonnull
-    String value() default "";
 
     /**
      * Will be the filename of the created temporary file on the disk.
      */
     @Nonnull
-    String ofName() default "";
-
+    String ofName() default "test";
 
     /**
      * <p>Will use a method in test-suite of given name to generate the content.</p>
@@ -50,19 +45,23 @@ public @interface TemporaryDirectory {
     @Nonnull
     String usingGeneratorMethod() default "";
 
-    @SuppressWarnings("InterfaceNeverImplemented")
-    public interface Root {}
-
-    public static class ContentProducerFactory {
+    class Provider implements TemporaryPath.Provider<TemporaryDirectory> {
 
         @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
         @Nonnull
         private static final Collection<Function<TemporaryDirectory, Optional<ContentProducer<Path>>>> INPUT_TO_PRODUCER = unmodifiableList(asList(
-            ContentProducerFactory::createUsingGeneratorMethodFor
+            Provider::createUsingGeneratorMethodFor
         ));
 
         @Nonnull
-        public ContentProducer<Path> createFor(@Nonnull TemporaryDirectory input) {
+        @Override
+        public Path provide(@Nonnull TemporaryDirectory forAnnotation, @Nonnull Relation<?> relation, @Nonnull TemporaryPathBroker using) throws Exception {
+            final ContentProducer<Path> contentProducer = contentProducerFor(forAnnotation);
+            return using.newDirectory(forAnnotation.ofName(), relation, contentProducer);
+        }
+
+        @Nonnull
+        public ContentProducer<Path> contentProducerFor(@Nonnull TemporaryDirectory input) {
             final List<ContentProducer<Path>> candidates = inputToProducer().stream()
                 .map(candidate -> candidate.apply(input))
                 .filter(Optional::isPresent)
@@ -89,38 +88,7 @@ public @interface TemporaryDirectory {
             if (input.usingGeneratorMethod().isEmpty()) {
                 return empty();
             }
-            return of((relation, os) -> {
-                final Method method = generatorMethodOf(relation, input.usingGeneratorMethod());
-                try {
-                    method.invoke(relation instanceof Class ? null : relation, os);
-                } catch (final Exception e) {
-                    final Throwable target = e instanceof InvocationTargetException ? ((InvocationTargetException) e).getTargetException() : null;
-                    if (target instanceof Error) {
-                        //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
-                        throw (Error) target;
-                    }
-                    if (target instanceof RuntimeException) {
-                        //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
-                        throw (RuntimeException) target;
-                    }
-                    throw new RuntimeException("Cloud not execute " + method + " to generate temporary directory content.", target != null ? target : e);
-                }
-            });
-        }
-
-        @Nonnull
-        protected static Method generatorMethodOf(@Nonnull Object relation, @Nonnull String name) {
-            final Class<?> relationType = relation instanceof Class ? (Class<?>) relation : relation.getClass();
-            try {
-                final Method method = relationType.getDeclaredMethod(name, Path.class);
-                if (relation instanceof Class && !isStatic(method.getModifiers())) {
-                    throw new IllegalArgumentException("The definition of given @TemporaryDirectory reflects the method " + name + "(OutputStream os)" +
-                        " which is not static but needs to be static.");
-                }
-                return method;
-            } catch (final NoSuchMethodException e) {
-                throw new IllegalArgumentException("The definition of given @TemporaryDirectory reflects a method " + name + "(OutputStream os) but it does not exist.", e);
-            }
+            return of(methodBasedContentProducerFor(input, input.usingGeneratorMethod(), Path.class));
         }
 
     }
