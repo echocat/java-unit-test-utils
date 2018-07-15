@@ -1,10 +1,8 @@
 package org.echocat.unittest.utils.extensions;
 
+import org.echocat.unittest.utils.nio.Relation;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker;
-import org.echocat.unittest.utils.nio.TemporaryPathBroker.ClassRelation;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker.ContentProducer;
-import org.echocat.unittest.utils.nio.TemporaryPathBroker.ObjectRelation;
-import org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
@@ -25,8 +23,7 @@ import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation.targetOf;
-import static org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation.typeOf;
+import static org.echocat.unittest.utils.nio.Relation.typeOf;
 
 @Target({ANNOTATION_TYPE})
 @Retention(RUNTIME)
@@ -70,7 +67,7 @@ public @interface TemporaryPath {
             if (candidates.size() == 1) {
                 return of(candidates.get(0));
             }
-            throw new IllegalArgumentException("The element " + element + " is annotated with more then one valid annotations for temporary resource management: " + candidates);
+            throw new IllegalArgumentException("The element " + element + " is annotated with more than one valid annotations for temporary resource management: " + candidates);
         }
 
         @Nonnull
@@ -103,7 +100,7 @@ public @interface TemporaryPath {
             final Class<?> relationType = typeOf(relation);
             try {
                 final Method method = relationType.getDeclaredMethod(name, toArgumentType);
-                if (relation instanceof ClassRelation && !isStatic(method.getModifiers())) {
+                if (relation instanceof Relation.Class && !isStatic(method.getModifiers())) {
                     throw new IllegalArgumentException("The definition of given @" + annotation.annotationType().getSimpleName()
                         + " reflects the method " + name + "(" + toArgumentType.getName() + ") which is not static but needs to be static.");
                 }

@@ -3,7 +3,7 @@ package org.echocat.unittest.utils.extensions;
 import org.echocat.unittest.utils.extensions.TemporaryDirectory.Provider;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker.ContentProducer;
-import org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation;
+import org.echocat.unittest.utils.nio.Relation;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.Retention;

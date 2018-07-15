@@ -1,20 +1,25 @@
 package org.echocat.unittest.utils.extensions;
 
+import org.echocat.unittest.utils.extensions.TemporaryFile.Provider;
+import org.echocat.unittest.utils.extensions.TemporaryFile.Root;
+import org.echocat.unittest.utils.extensions.TemporaryFile.TestClass;
+import org.echocat.unittest.utils.extensions.subpackage.Something;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.annotation.Nonnull;
 import java.io.OutputStream;
-import java.nio.file.Files;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.*;
-import static java.util.Arrays.asList;
-import static org.echocat.unittest.utils.TestUtils.numberOfChildrenOf;
+import static java.util.Collections.singletonList;
 import static org.echocat.unittest.utils.matchers.IsEqualTo.equalTo;
 import static org.echocat.unittest.utils.matchers.IsEqualTo.isEqualTo;
 import static org.echocat.unittest.utils.matchers.IsNot.isNot;
+import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @ExtendWith(TemporaryPaths.class)
@@ -24,14 +29,24 @@ public class TemporaryFileUnitTest {
     private Path instanceField1;
     @TemporaryFile
     private Path instanceField2;
+    @TemporaryFile(usingGeneratorMethod = "instanceGeneratorMethod")
+    private Path instanceFieldWithGenerator;
+    @TemporaryFile(usingGeneratorMethod = "staticGeneratorMethod")
+    private Path instanceFieldStaticWithGenerator;
 
     @TemporaryFile
     private static Path classField1;
     @TemporaryFile
     private static Path classField2;
+    @TemporaryFile(usingGeneratorMethod = "staticGeneratorMethod")
+    private static Path staticFieldWithGenerator;
 
-    private void generatorMethod(@Nonnull OutputStream to) throws Exception {
-        to.write("abc".getBytes(UTF_8));
+    private void instanceGeneratorMethod(@Nonnull OutputStream to) throws Exception {
+        to.write("instance-abc".getBytes(UTF_8));
+    }
+
+    private static void staticGeneratorMethod(@Nonnull OutputStream to) throws Exception {
+        to.write("static-abc".getBytes(UTF_8));
     }
 
     @Test
@@ -98,9 +113,112 @@ public class TemporaryFileUnitTest {
     }
 
     @Test
-    void usingGeneratorMethodWorksAsExpected(@TemporaryFile(usingGeneratorMethod = "generatorMethod") Path path) throws Exception {
-        assertThat(size(path), isEqualTo(3L));
-        assertThat(Files.readAllLines(path), isEqualTo(asList("abc")));
+    void fromClasspathWorksAsExpected(@TemporaryFile(fromClasspath = "/testFile.txt") Path path) throws Exception {
+        assertThat(readAllLines(path), isEqualTo(singletonList("org.echocat.unittest.utils.extensions")));
+    }
+
+    @SuppressWarnings("DefaultAnnotationParam")
+    @Test
+    void fromClasspathWithRelationToOfTestClassWorksAsExpected(@TemporaryFile(fromClasspath = "//testFile.txt", relativeTo = TestClass.class) Path path) throws Exception {
+        assertThat(readAllLines(path), isEqualTo(singletonList("org.echocat.unittest.utils.extensions")));
+    }
+
+    @Test
+    void fromClasspathWithRelationToOfSomeClassWorksAsExpected(@TemporaryFile(fromClasspath = "/testFile.txt", relativeTo = Something.class) Path path) throws Exception {
+        assertThat(readAllLines(path), isEqualTo(singletonList("org.echocat.unittest.utils.extensions.subpackage")));
+    }
+
+    @Test
+    void fromClasspathWithRelationToOfRootWorksAsExpected(@TemporaryFile(fromClasspath = "/testFile.txt", relativeTo = Root.class) Path path) throws Exception {
+        assertThat(readAllLines(path), isEqualTo(singletonList("ROOT")));
+    }
+
+    @Test
+    void withContentWorksAsExpected(@TemporaryFile(withContent = "string content") Path path) throws Exception {
+        assertThat(readAllLines(path), isEqualTo(singletonList("string content")));
+    }
+
+    @Test
+    void withBinaryContentWorksAsExpected(@TemporaryFile(withBinaryContent = {6, 6, 6}) Path path) throws Exception {
+        assertThat(readAllBytes(path), isEqualTo(new byte[]{6, 6, 6}));
+    }
+
+    @Test
+    void withRandomContentOfLengthWorksAsExpected(@TemporaryFile(withRandomContentOfLength = 666) Path path) throws Exception {
+        assertThat(size(path), isEqualTo(666L));
+    }
+
+    @Test
+    void usingInstanceGeneratorMethodForMethodParameterInjectionWorksAsExpected(@TemporaryFile(usingGeneratorMethod = "instanceGeneratorMethod") Path path) throws Exception {
+        assertThat(readAllLines(path), isEqualTo(singletonList("instance-abc")));
+    }
+
+    @Test
+    void usingStaticGeneratorMethodForMethodParameterInjectionWorksAsExpected(@TemporaryFile(usingGeneratorMethod = "staticGeneratorMethod") Path path) throws Exception {
+        assertThat(readAllLines(path), isEqualTo(singletonList("static-abc")));
+    }
+
+    @Test
+    void usingInstanceGeneratorMethodForInstanceFieldInjectionWorksAsExpected() throws Exception {
+        assertThat(readAllLines(instanceFieldWithGenerator), isEqualTo(singletonList("instance-abc")));
+    }
+
+    @Test
+    void usingStaticGeneratorMethodForInstanceFieldInjectionWorksAsExpected() throws Exception {
+        assertThat(readAllLines(instanceFieldStaticWithGenerator), isEqualTo(singletonList("static-abc")));
+    }
+
+    @Test
+    void usingStaticGeneratorMethodForStaticFieldInjectionWorksAsExpected() throws Exception {
+        assertThat(readAllLines(staticFieldWithGenerator), isEqualTo(singletonList("static-abc")));
+    }
+
+    @Test
+    void fromClassPathAndWithContentDoesNotWorkTogether() throws Exception {
+        final Provider provider = givenProvider();
+        final TemporaryFile instance = givenInstanceFor("fromClassPathAndWithContent");
+
+        assertThat(() -> provider.contentProducerFor(instance),
+            throwsException(IllegalArgumentException.class, "The definition of given @TemporaryFile is ambiguous - it leads to more than one way to generate the content."));
+    }
+
+    @Test
+    void fromClassPathAndWithBinaryContentDoesNotWorkTogether() throws Exception {
+        final Provider provider = givenProvider();
+        final TemporaryFile instance = givenInstanceFor("fromClassPathAndWithBinaryContent");
+
+        assertThat(() -> provider.contentProducerFor(instance),
+            throwsException(IllegalArgumentException.class, "The definition of given @TemporaryFile is ambiguous - it leads to more than one way to generate the content."));
+    }
+
+    @Test
+    void withContentAndWithBinaryContentDoesNotWorkTogether() throws Exception {
+        final Provider provider = givenProvider();
+        final TemporaryFile instance = givenInstanceFor("withContentAndWithBinaryContent");
+
+        assertThat(() -> provider.contentProducerFor(instance),
+            throwsException(IllegalArgumentException.class, "The definition of given @TemporaryFile is ambiguous - it leads to more than one way to generate the content."));
+    }
+
+    @Nonnull
+    private static TemporaryFile givenInstanceFor(@Nonnull String testFieldName) throws Exception {
+        final Field field = TestFields.class.getDeclaredField(testFieldName);
+        return Optional.ofNullable(field.getAnnotation(TemporaryFile.class))
+            .orElseThrow(() -> new IllegalArgumentException("Annotation missing."));
+    }
+
+    @Nonnull
+    private static TemporaryFile.Provider givenProvider() {
+        return new Provider();
+    }
+
+    private static class TestFields {
+        @TemporaryFile(fromClasspath = "testFile.txt", withContent = "content")
+        private Path fromClassPathAndWithContent;
+        @TemporaryFile(fromClasspath = "testFile.txt", withBinaryContent = {6})
+        private Path fromClassPathAndWithBinaryContent;
+        @TemporaryFile(withContent = "content", withBinaryContent = {6})
+        private Path withContentAndWithBinaryContent;
     }
 
 }

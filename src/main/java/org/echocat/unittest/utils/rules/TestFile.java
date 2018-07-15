@@ -16,7 +16,7 @@ import java.util.Random;
 import static java.lang.Thread.currentThread;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation.classRelationFor;
+import static org.echocat.unittest.utils.nio.Relation.classRelationFor;
 import static org.echocat.unittest.utils.utils.IOUtils.copy;
 
 public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> {

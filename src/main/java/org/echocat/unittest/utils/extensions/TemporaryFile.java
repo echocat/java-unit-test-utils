@@ -3,7 +3,7 @@ package org.echocat.unittest.utils.extensions;
 import org.echocat.unittest.utils.extensions.TemporaryFile.Provider;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker.ContentProducer;
-import org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation;
+import org.echocat.unittest.utils.nio.Relation;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.echocat.unittest.utils.extensions.TemporaryPath.Utils.methodBasedContentProducerFor;
-import static org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation.typeOf;
+import static org.echocat.unittest.utils.nio.Relation.typeOf;
 import static org.echocat.unittest.utils.utils.IOUtils.copy;
 
 @Target({PARAMETER, FIELD})

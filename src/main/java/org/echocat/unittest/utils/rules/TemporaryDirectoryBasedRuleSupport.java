@@ -58,7 +58,7 @@ public abstract class TemporaryDirectoryBasedRuleSupport<T extends TemporaryDire
 
     @Nonnull
     protected TemporaryPathBroker temporaryResourceBrokerFor(@Nonnull Description description) {
-        return TemporaryPathBroker.temporaryResourceBrokerFor(normalizeName(description.getDisplayName()));
+        return TemporaryPathBroker.temporaryPathBrokerFor(normalizeName(description.getDisplayName()));
     }
 
     @Override

@@ -24,15 +24,26 @@ public class TemporaryDirectoryUnitTest {
     private Path instanceField1;
     @TemporaryDirectory
     private Path instanceField2;
+    @TemporaryDirectory(usingGeneratorMethod = "instanceGeneratorMethod")
+    private Path instanceFieldWithGenerator;
+    @TemporaryDirectory(usingGeneratorMethod = "staticGeneratorMethod")
+    private Path instanceFieldStaticWithGenerator;
 
     @TemporaryDirectory
     private static Path classField1;
     @TemporaryDirectory
     private static Path classField2;
+    @TemporaryDirectory(usingGeneratorMethod = "staticGeneratorMethod")
+    private static Path staticFieldWithGenerator;
 
-    private void generatorMethod(@Nonnull Path to) throws Exception {
-        createFile(to.resolve("foo"));
-        createFile(to.resolve("bar"));
+    private void instanceGeneratorMethod(@Nonnull Path to) throws Exception {
+        createFile(to.resolve("instance-foo"));
+        createFile(to.resolve("instance-bar"));
+    }
+
+    private static void staticGeneratorMethod(@Nonnull Path to) throws Exception {
+        createFile(to.resolve("static-foo"));
+        createFile(to.resolve("static-bar"));
     }
 
     @Test
@@ -99,11 +110,43 @@ public class TemporaryDirectoryUnitTest {
     }
 
     @Test
-    void usingGeneratorMethodWorksAsExpected(@TemporaryDirectory(usingGeneratorMethod = "generatorMethod") Path path) throws Exception {
+    void usingInstanceGeneratorMethodForMethodParameterInjectionWorksAsExpected(@TemporaryDirectory(usingGeneratorMethod = "instanceGeneratorMethod") Path path) throws Exception {
         final Set<String> children = childrenOf(path);
         assertThat(children, hasLengthOf(2));
-        assertThat(children, contains("foo"));
-        assertThat(children, contains("bar"));
+        assertThat(children, contains("instance-foo"));
+        assertThat(children, contains("instance-bar"));
+    }
+
+    @Test
+    void usingStaticGeneratorMethodForMethodParameterInjectionWorksAsExpected(@TemporaryDirectory(usingGeneratorMethod = "staticGeneratorMethod") Path path) throws Exception {
+        final Set<String> children = childrenOf(path);
+        assertThat(children, hasLengthOf(2));
+        assertThat(children, contains("static-foo"));
+        assertThat(children, contains("static-bar"));
+    }
+
+    @Test
+    void usingInstanceGeneratorMethodForInstanceFieldInjectionWorksAsExpected() throws Exception {
+        final Set<String> children = childrenOf(instanceFieldWithGenerator);
+        assertThat(children, hasLengthOf(2));
+        assertThat(children, contains("instance-foo"));
+        assertThat(children, contains("instance-bar"));
+    }
+
+    @Test
+    void usingStaticGeneratorMethodForInstanceFieldInjectionWorksAsExpected() throws Exception {
+        final Set<String> children = childrenOf(instanceFieldStaticWithGenerator);
+        assertThat(children, hasLengthOf(2));
+        assertThat(children, contains("static-foo"));
+        assertThat(children, contains("static-bar"));
+    }
+
+    @Test
+    void usingStaticGeneratorMethodForStaticFieldInjectionWorksAsExpected() throws Exception {
+        final Set<String> children = childrenOf(staticFieldWithGenerator);
+        assertThat(children, hasLengthOf(2));
+        assertThat(children, contains("static-foo"));
+        assertThat(children, contains("static-bar"));
     }
 
 }

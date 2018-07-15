@@ -1,11 +1,13 @@
 package org.echocat.unittest.utils.extensions;
 
+import org.echocat.unittest.utils.nio.Relation;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker;
-import org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation;
 import org.junit.jupiter.api.extension.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
+import java.lang.Class;
+import java.lang.Object;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -22,8 +24,8 @@ import static org.echocat.unittest.utils.extensions.TemporaryPath.Utils.findTemp
 import static org.echocat.unittest.utils.extensions.TemporaryPath.Utils.provide;
 import static org.echocat.unittest.utils.extensions.TemporaryPaths.Scope.all;
 import static org.echocat.unittest.utils.extensions.TemporaryPaths.Scope.each;
-import static org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation.*;
-import static org.echocat.unittest.utils.nio.TemporaryPathBroker.temporaryResourceBrokerFor;
+import static org.echocat.unittest.utils.nio.Relation.*;
+import static org.echocat.unittest.utils.nio.TemporaryPathBroker.temporaryPathBrokerFor;
 import static org.echocat.unittest.utils.utils.IOUtils.closeAll;
 
 public class TemporaryPaths implements ParameterResolver, BeforeAllCallback, BeforeEachCallback, AfterAllCallback, AfterEachCallback {
@@ -56,7 +58,7 @@ public class TemporaryPaths implements ParameterResolver, BeforeAllCallback, Bef
         try {
             boolean success = false;
             final Relation<?> relation = each.relationFor(extensionContext);
-            final TemporaryPathBroker broker = temporaryResourceBrokerFor(displayNameFor(extensionContext, each) + "." + parameterContext.getIndex());
+            final TemporaryPathBroker broker = temporaryPathBrokerFor(displayNameFor(extensionContext, each) + "." + parameterContext.getIndex());
             try {
                 final Path path = provide(annotation, relation, broker);
                 register(broker, each);
@@ -111,7 +113,7 @@ public class TemporaryPaths implements ParameterResolver, BeforeAllCallback, Bef
         if (annotation.isPresent()) {
             boolean success = false;
             final Relation<?> relation = scope.relationFor(context);
-            final TemporaryPathBroker broker = temporaryResourceBrokerFor(displayNameFor(context, scope));
+            final TemporaryPathBroker broker = temporaryPathBrokerFor(displayNameFor(context, scope));
             try {
                 final Path path = provide(annotation.get(), relation, broker);
                 final Class<?> fieldType = field.getType();

@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.file.Path;
 
-import static org.echocat.unittest.utils.nio.TemporaryPathBroker.Relation.classRelationFor;
+import static org.echocat.unittest.utils.nio.Relation.classRelationFor;
 
 public class TestDirectory extends TemporaryDirectoryBasedRuleSupport<TestDirectory> {
 
