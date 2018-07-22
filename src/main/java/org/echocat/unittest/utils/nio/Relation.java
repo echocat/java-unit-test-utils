@@ -38,6 +38,12 @@ public interface Relation<T> extends Supplier<T> {
     }
 
     @Nonnull
+    static <T> Class<T> classRelationFor(@Nonnull T instance) {
+        //noinspection unchecked
+        return (Class<T>) classRelationFor(instance.getClass());
+    }
+
+    @Nonnull
     static <T> Object<T> objectRelationFor(@Nonnull T object) {
         return () -> object;
     }

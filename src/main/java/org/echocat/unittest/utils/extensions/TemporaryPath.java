@@ -5,6 +5,8 @@ import org.echocat.unittest.utils.nio.TemporaryPathBroker;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker.ContentProducer;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -19,7 +21,6 @@ import java.util.Optional;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -71,14 +72,18 @@ public @interface TemporaryPath {
         }
 
         @Nonnull
-        public static <T> ContentProducer<T> methodBasedContentProducerFor(@Nonnull Annotation annotation, @Nonnull String name, @Nonnull Class<?> toArgumentType) {
-            return (relation, os) -> {
-                final Method method = generatorMethodFor(annotation, relation, name, toArgumentType);
+        public static <T> ContentProducer<T> methodBasedContentProducerFor(
+            @Nonnull Class<? extends Annotation> annotationType,
+            @Nonnull String name,
+            @Nonnull Class<T> toArgumentType
+        ) {
+            return (relation, argument) -> {
+                final Method method = generatorMethodFor(annotationType, relation, name, toArgumentType);
                 try {
                     if (isStatic(method.getModifiers())) {
-                        method.invoke(null, os);
+                        method.invoke(null, argument);
                     } else {
-                        method.invoke(relation.get(), os);
+                        method.invoke(relation.get(), argument);
                     }
                 } catch (final Exception e) {
                     final Throwable target = e instanceof InvocationTargetException ? ((InvocationTargetException) e).getTargetException() : null;
@@ -90,28 +95,29 @@ public @interface TemporaryPath {
                         //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
                         throw (RuntimeException) target;
                     }
-                    throw new RuntimeException("Cloud not execute " + method + " to generate temporary file content.", target != null ? target : e);
+                    if (target instanceof IOException) {
+                        //noinspection ThrowInsideCatchBlockWhichIgnoresCaughtException
+                        throw new UncheckedIOException(target.getMessage(), (IOException) target);
+                    }
+                    final Throwable cause = target != null ? target : e;
+                    throw new RuntimeException(cause.getMessage(), cause);
                 }
             };
         }
 
         @Nonnull
-        public static Method generatorMethodFor(@Nonnull Annotation annotation, @Nonnull Relation<?> relation, @Nonnull String name, @Nonnull Class<?> toArgumentType) {
+        public static Method generatorMethodFor(@Nonnull Class<? extends Annotation> annotationType, @Nonnull Relation<?> relation, @Nonnull String name, @Nonnull Class<?> toArgumentType) {
             final Class<?> relationType = typeOf(relation);
             try {
                 final Method method = relationType.getDeclaredMethod(name, toArgumentType);
                 if (relation instanceof Relation.Class && !isStatic(method.getModifiers())) {
-                    throw new IllegalArgumentException("The definition of given @" + annotation.annotationType().getSimpleName()
+                    throw new IllegalArgumentException("The definition of given @" + annotationType.getSimpleName()
                         + " reflects the method " + name + "(" + toArgumentType.getName() + ") which is not static but needs to be static.");
-                }
-                if (isAbstract(method.getModifiers())) {
-                    throw new IllegalArgumentException("The definition of given @" + annotation.annotationType().getSimpleName()
-                        + " reflects the method " + name + "(" + toArgumentType.getName() + ") which is abstract but needs to be not abstract.");
                 }
                 method.setAccessible(true);
                 return method;
             } catch (final NoSuchMethodException e) {
-                throw new IllegalArgumentException("The definition of given @" + annotation.annotationType().getSimpleName()
+                throw new IllegalArgumentException("The definition of given @" + annotationType.getSimpleName()
                     + " reflects a method " + name + "(" + toArgumentType.getName() + ") but it does not exist.", e);
             }
         }

@@ -148,7 +148,7 @@ public class WrappedFileSystemUnitTest {
 
     @Nonnull
     private static WrappedFileSystem<WrappedPath> givenInstanceFor(FileSystem mockFileSystem) {
-        return new WrappedFileSystem<>(WrappedPath.class, mockFileSystem);
+        return new WrappedFileSystem<>(WrappedPath.class, mockFileSystem, null);
     }
 
     @Nonnull

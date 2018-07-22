@@ -45,8 +45,7 @@ public class ThrowsException<T extends Execution> extends TypeSafeMatcher<T> {
     }
 
     @Nonnull
-    protected static final Throwable NONE = new Throwable() {
-    };
+    protected static final Throwable NONE = new Throwable();
 
     @Nonnull
     private final Map<Execution, Throwable> executionToThrowable = synchronizedMap(new WeakHashMap<>());

@@ -2,29 +2,38 @@ package org.echocat.unittest.utils.extensions;
 
 import org.echocat.unittest.utils.nio.Relation;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.GuardedBy;
-import java.lang.Class;
-import java.lang.Object;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isStatic;
-import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 import static org.echocat.unittest.utils.extensions.TemporaryPath.Utils.findTemporaryPathEnabledAnnotation;
 import static org.echocat.unittest.utils.extensions.TemporaryPath.Utils.provide;
 import static org.echocat.unittest.utils.extensions.TemporaryPaths.Scope.all;
 import static org.echocat.unittest.utils.extensions.TemporaryPaths.Scope.each;
-import static org.echocat.unittest.utils.nio.Relation.*;
+import static org.echocat.unittest.utils.nio.Relation.classRelationFor;
+import static org.echocat.unittest.utils.nio.Relation.objectRelationFor;
+import static org.echocat.unittest.utils.nio.Relation.targetOf;
 import static org.echocat.unittest.utils.nio.TemporaryPathBroker.temporaryPathBrokerFor;
 import static org.echocat.unittest.utils.utils.IOUtils.closeAll;
 
@@ -165,28 +174,27 @@ public class TemporaryPaths implements ParameterResolver, BeforeAllCallback, Bef
 
     protected void after(@Nonnull Scope scope, @Nonnull ExtensionContext context) throws Exception {
         synchronized (this) {
-            final List<Resource> toClose = resources
+            final List<Resource> toClose = resources()
                 .stream()
                 .filter(candidate -> candidate.scope() == scope)
                 .collect(toList());
             closeAll(toClose);
-            resources.removeAll(toClose);
+            resources().removeAll(toClose);
         }
     }
 
     @Nonnull
     public TemporaryPaths register(@Nonnull AutoCloseable closeable, @Nonnull Scope scope) {
         synchronized (this) {
-            resources.add(new Resource(closeable, scope));
+            resources().add(new Resource(closeable, scope));
         }
         return this;
     }
 
     @Nonnull
-    public List<Resource> resources() {
-        synchronized (this) {
-            return unmodifiableList(new ArrayList<>(resources));
-        }
+    @GuardedBy("this")
+    protected List<Resource> resources() {
+        return resources;
     }
 
     public static class Resource implements AutoCloseable {
@@ -205,14 +213,14 @@ public class TemporaryPaths implements ParameterResolver, BeforeAllCallback, Bef
             return delegate;
         }
 
-        @Override
-        public void close() throws Exception {
-            delegate.close();
-        }
-
         @Nonnull
         public Scope scope() {
             return scope;
+        }
+
+        @Override
+        public void close() throws Exception {
+            delegate().close();
         }
 
     }

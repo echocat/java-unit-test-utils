@@ -373,7 +373,7 @@ public class WrappedFileSystemProviderUnitTest {
 
     @Nonnull
     private static WrappedFileSystemProvider<WrappedPath> givenInstanceFor(FileSystemProvider mockFileSystemProvider) {
-        return new WrappedFileSystemProvider<>(WrappedPath.class, mockFileSystemProvider);
+        return new WrappedFileSystemProvider<>(WrappedPath.class, mockFileSystemProvider, null);
     }
 
     @Nonnull

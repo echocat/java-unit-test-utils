@@ -13,10 +13,18 @@ import static org.echocat.unittest.utils.nio.Relation.classRelationFor;
 
 public class TestDirectory extends TemporaryDirectoryBasedRuleSupport<TestDirectory> {
 
-    @Nullable
+    @Nonnull
+    protected static final ContentProducer<Path> NOOP_CONTENT_PRODUCER = (relation, to) -> {
+    };
+
+    @Nonnull
     private final ContentProducer<Path> contentProducer;
     @Nonnull
     private final String name;
+
+    public TestDirectory() {
+        this("test.directory");
+    }
 
     public TestDirectory(@Nonnull String name) {
         this(name, null);
@@ -24,15 +32,7 @@ public class TestDirectory extends TemporaryDirectoryBasedRuleSupport<TestDirect
 
     public TestDirectory(@Nonnull String name, @Nullable ContentProducer<Path> contentProducer) {
         this.name = name;
-        this.contentProducer = contentProducer;
-    }
-
-    /**
-     * @deprecated Use {@link #TestDirectory(String)} instead.
-     */
-    @Deprecated
-    public TestDirectory() {
-        this("test", null);
+        this.contentProducer = contentProducer != null ? contentProducer : NOOP_CONTENT_PRODUCER;
     }
 
     /**
@@ -45,7 +45,17 @@ public class TestDirectory extends TemporaryDirectoryBasedRuleSupport<TestDirect
 
     @Override
     protected Path evaluatePath(@Nonnull Statement base, @Nonnull Description description, @Nonnull TemporaryPathBroker broker) throws Throwable {
-        return broker.newDirectory(name, classRelationFor(description.getTestClass()), contentProducer);
+        return broker.newDirectory(name(), classRelationFor(description.getTestClass()), contentProducer());
+    }
+
+    @Nonnull
+    protected String name() {
+        return name;
+    }
+
+    @Nonnull
+    protected ContentProducer<Path> contentProducer() {
+        return contentProducer;
     }
 
 }

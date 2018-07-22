@@ -23,18 +23,25 @@ public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> {
 
     @Nonnull
     private static final Random RANDOM = new Random();
+    @Nonnull
+    protected static final ContentProducer<OutputStream> NOOP_CONTENT_PRODUCER = (r, t) -> {
+    };
 
     @Nonnull
     private final String name;
-    @Nullable
+    @Nonnull
     private final ContentProducer<OutputStream> contentProducer;
+
+    public TestFile() {
+        this("test.file");
+    }
 
     public TestFile(@Nonnull String name) {
         this(name, (ContentProducer<OutputStream>) null);
     }
 
     /**
-     * @deprecated Use {{@link #TestFile(String, ContentProducer)}} with {{@link #withContent(String)}} instead.
+     * @deprecated Use {@link #TestFile(String, ContentProducer)} with {@link #withContent(String)} instead.
      */
     @Deprecated
     public TestFile(@Nonnull String name, @Nullable String content) {
@@ -42,7 +49,7 @@ public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> {
     }
 
     /**
-     * @deprecated Use {{@link #TestFile(String, ContentProducer)}} with {{@link #withContent(String)}} instead.
+     * @deprecated Use {@link #TestFile(String, ContentProducer)} with {@link #withContent(String)} instead.
      */
     @Deprecated
     public TestFile(@Nonnull String name, @Nullable byte[] content) {
@@ -51,12 +58,22 @@ public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> {
 
     public TestFile(@Nonnull String name, @Nullable ContentProducer<OutputStream> contentProducer) {
         this.name = requireNonNull(name);
-        this.contentProducer = contentProducer;
+        this.contentProducer = contentProducer != null ? contentProducer : NOOP_CONTENT_PRODUCER;
     }
 
     @Override
     protected Path evaluatePath(@Nonnull Statement base, @Nonnull Description description, @Nonnull TemporaryPathBroker broker) throws Throwable {
-        return broker.newFile(name, classRelationFor(description.getTestClass()), contentProducer);
+        return broker.newFile(name(), classRelationFor(description.getTestClass()), contentProducer());
+    }
+
+    @Nonnull
+    protected String name() {
+        return name;
+    }
+
+    @Nonnull
+    protected ContentProducer<OutputStream> contentProducer() {
+        return contentProducer;
     }
 
     @Nonnull

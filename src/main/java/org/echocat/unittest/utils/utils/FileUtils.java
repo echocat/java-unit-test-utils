@@ -25,7 +25,6 @@ public final class FileUtils {
                 || c == '_'
                 || c == '-'
                 || c == '@'
-                || c == '%'
                 || c == '~'
                 || c == '('
                 || c == ')'
@@ -88,7 +87,7 @@ public final class FileUtils {
         }
     }
 
-    protected static void handleExceptionIfRequired(@Nonnull IOException e, boolean respectExceptions) {
+    static void handleExceptionIfRequired(@Nonnull IOException e, boolean respectExceptions) {
         if (e instanceof NoSuchFileException) {
             return;
         }

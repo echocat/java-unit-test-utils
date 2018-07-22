@@ -1,14 +1,15 @@
 package org.echocat.unittest.utils.nio;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
-import static java.nio.file.Files.*;
+import static java.nio.file.Files.createDirectories;
+import static java.nio.file.Files.createTempDirectory;
+import static java.nio.file.Files.newOutputStream;
 import static java.util.Objects.requireNonNull;
 import static org.echocat.unittest.utils.utils.FileUtils.deleteRecursively;
 import static org.echocat.unittest.utils.utils.FileUtils.normalizeName;
@@ -41,19 +42,12 @@ public class TemporaryPathBroker implements AutoCloseable {
     }
 
     @Nonnull
-    public Path newFile(@Nonnull String name, @Nonnull Relation<?> relation) {
-        return newFile(name, relation, null);
-    }
-
-    @Nonnull
-    public Path newFile(@Nonnull String name, @Nonnull Relation<?> relation, @Nullable ContentProducer<OutputStream> producer) {
+    public Path newFile(@Nonnull String name, @Nonnull Relation<?> relation, @Nonnull ContentProducer<OutputStream> producer) {
         final Path result = root().resolve(name);
         try {
-            createFile(result);
-            if (producer != null) {
-                try (final OutputStream os = newOutputStream(result)) {
-                    producer.produce(relation, os);
-                }
+            createDirectories(result.getParent());
+            try (final OutputStream os = newOutputStream(result)) {
+                producer.produce(relation, os);
             }
         } catch (final RuntimeException e) {
             throw e;
@@ -66,18 +60,11 @@ public class TemporaryPathBroker implements AutoCloseable {
     }
 
     @Nonnull
-    public Path newDirectory(@Nonnull String name, @Nonnull Relation<?> relation) {
-        return newDirectory(name, relation, null);
-    }
-
-    @Nonnull
-    public Path newDirectory(@Nonnull String name, @Nonnull Relation<?> relation, @Nullable ContentProducer<Path> producer) {
+    public Path newDirectory(@Nonnull String name, @Nonnull Relation<?> relation, @Nonnull ContentProducer<Path> producer) {
         final Path result = root().resolve(name);
         try {
-            createDirectory(result);
-            if (producer != null) {
-                producer.produce(relation, result);
-            }
+            createDirectories(result);
+            producer.produce(relation, result);
         } catch (final RuntimeException e) {
             throw e;
         } catch (final IOException e) {

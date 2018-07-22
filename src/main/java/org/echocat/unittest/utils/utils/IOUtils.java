@@ -5,7 +5,6 @@ import org.echocat.unittest.utils.utils.ExceptionUtils.Execution;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.WillNotClose;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

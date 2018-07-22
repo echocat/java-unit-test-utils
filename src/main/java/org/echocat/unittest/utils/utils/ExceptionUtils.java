@@ -3,12 +3,17 @@ package org.echocat.unittest.utils.utils;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
 public final class ExceptionUtils {
 
-    public static <E extends Exception> void executeSafe(@Nonnull Class<E> baseExceptionType, @Nonnull Stream<Execution<? extends E>> executions) throws E {
+    public static <E extends Exception> void executeSafe(Class<E> baseExceptionType, Collection<Execution<? extends E>> executions) throws E {
+        executeSafe(baseExceptionType, executions.stream());
+    }
+
+    public static <E extends Exception> void executeSafe(Class<E> baseExceptionType, Stream<Execution<? extends E>> executions) throws E {
         executeSafe(baseExceptionType, executions.iterator());
     }
 
@@ -36,7 +41,7 @@ public final class ExceptionUtils {
                 throw baseExceptionType.cast(throwable);
             }
             if (throwable instanceof IOException) {
-                throw new UncheckedIOException((IOException) throwable);
+                throw new UncheckedIOException(throwable.getMessage(), (IOException) throwable);
             }
             if (throwable instanceof RuntimeException) {
                 throw (RuntimeException) throwable;
@@ -45,7 +50,8 @@ public final class ExceptionUtils {
         }
     }
 
-    public interface Execution<E extends Exception> {
+    @FunctionalInterface
+    public interface Execution<E extends Throwable> {
         void execute() throws E;
     }
 

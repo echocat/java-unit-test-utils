@@ -3,7 +3,6 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.echocat/java-unit-test-utils/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.echocat/java-unit-test-utils)
 [![Build Status](https://travis-ci.org/echocat/java-unit-test-utils.svg?branch=master)](https://travis-ci.org/echocat/java-unit-test-utils)
 [![codecov](https://codecov.io/gh/echocat/java-unit-test-utils/branch/master/graph/badge.svg)](https://codecov.io/gh/echocat/java-unit-test-utils)
-[![Dependency Status](https://www.versioneye.com/user/projects/58cecc7ccef50000242b6e67/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/58cecc7ccef50000242b6e67)
 
 **This project is still under heavy development.**
 

@@ -88,7 +88,7 @@ public @interface TemporaryDirectory {
             if (input.usingGeneratorMethod().isEmpty()) {
                 return empty();
             }
-            return of(methodBasedContentProducerFor(input, input.usingGeneratorMethod(), Path.class));
+            return of(methodBasedContentProducerFor(input.annotationType(), input.usingGeneratorMethod(), Path.class));
         }
 
     }

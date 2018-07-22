@@ -229,7 +229,7 @@ public @interface TemporaryFile {
             if (input.usingGeneratorMethod().isEmpty()) {
                 return empty();
             }
-            return of(methodBasedContentProducerFor(input, input.usingGeneratorMethod(), OutputStream.class));
+            return of(methodBasedContentProducerFor(input.annotationType(), input.usingGeneratorMethod(), OutputStream.class));
         }
 
 
