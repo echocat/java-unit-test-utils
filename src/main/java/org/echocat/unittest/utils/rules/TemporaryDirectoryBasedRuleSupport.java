@@ -1,7 +1,7 @@
 package org.echocat.unittest.utils.rules;
 
 import org.echocat.unittest.utils.nio.TemporaryPathBroker;
-import org.echocat.unittest.utils.nio.WrappedEvent.Interceptor;
+import org.echocat.unittest.utils.nio.Interceptor;
 import org.echocat.unittest.utils.nio.WrappedPath;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;

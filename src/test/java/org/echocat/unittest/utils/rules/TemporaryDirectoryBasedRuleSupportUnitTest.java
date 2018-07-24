@@ -4,8 +4,8 @@ import org.echocat.unittest.utils.extensions.TemporaryDirectory;
 import org.echocat.unittest.utils.extensions.TemporaryPaths;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker;
 import org.echocat.unittest.utils.nio.TemporaryPathBroker.ContentProducer;
-import org.echocat.unittest.utils.nio.WrappedEvent.Interceptor;
-import org.echocat.unittest.utils.nio.WrappedEvent.Type;
+import org.echocat.unittest.utils.nio.Interceptor;
+import org.echocat.unittest.utils.nio.EventType;
 import org.echocat.unittest.utils.nio.WrappedPath;
 import org.echocat.unittest.utils.utils.ExceptionUtils.Execution;
 import org.junit.jupiter.api.Test;
@@ -30,8 +30,8 @@ import static org.echocat.unittest.utils.matchers.IsEqualTo.isEqualTo;
 import static org.echocat.unittest.utils.matchers.ThrowsException.throwsException;
 import static org.echocat.unittest.utils.nio.Relation.classRelationFor;
 import static org.echocat.unittest.utils.nio.TemporaryPathBrokerTestUtils.temporaryPathBrokerFor;
-import static org.echocat.unittest.utils.nio.WrappedFileSystemProvider.ET_delete;
-import static org.echocat.unittest.utils.nio.WrappedPath.wrap;
+import static org.echocat.unittest.utils.nio.EventType.FileSystemProviders.delete;
+import static org.echocat.unittest.utils.nio.WrappedPath.create;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @SuppressWarnings({"rawtypes", "AccessingNonPublicFieldOfAnotherObject", "EqualsWithItself"})
@@ -60,7 +60,7 @@ public class TemporaryDirectoryBasedRuleSupportUnitTest {
         final TestStatement statement = givenStatement(() -> {
             assertThat(instance.equals(instance), isEqualTo(true));
             assertThat(instance.equals(instance.wrapped()), isEqualTo(true));
-            assertThat(instance.equals(wrap(instance.wrapped())), isEqualTo(true));
+            assertThat(instance.equals(create(instance.wrapped())), isEqualTo(true));
             assertThat(instance.equals(new Object()), isEqualTo(false));
         });
         final Description description = givenDescription();
@@ -76,7 +76,7 @@ public class TemporaryDirectoryBasedRuleSupportUnitTest {
         final TestStatement statement = givenStatement(() -> {
             assertThat(instance.compareTo(instance), isEqualTo(0));
             assertThat(instance.compareTo(instance.wrapped()), isEqualTo(0));
-            assertThat(instance.compareTo(wrap(instance.wrapped())), isEqualTo(0));
+            assertThat(instance.compareTo(create(instance.wrapped())), isEqualTo(0));
         });
         final Description description = givenDescription();
 
@@ -113,7 +113,7 @@ public class TemporaryDirectoryBasedRuleSupportUnitTest {
 
     @Test
     void apply_respects_errors_on_cleanup(@TemporaryDirectory Path root) throws Throwable {
-        final WrappedPath path = wrap(root, givenInterceptor());
+        final WrappedPath path = WrappedPath.create(root, givenInterceptor());
         final TemporaryDirectoryBasedRuleSupport instance = givenInstanceFor(path);
         final TestStatement statement = givenStatement();
         final Description description = givenDescription();
@@ -126,7 +126,7 @@ public class TemporaryDirectoryBasedRuleSupportUnitTest {
 
     @Test
     void apply_ignores_errors_on_cleanup(@TemporaryDirectory Path root) throws Throwable {
-        final WrappedPath path = wrap(root, givenInterceptor());
+        final WrappedPath path = WrappedPath.create(root, givenInterceptor());
         final TemporaryDirectoryBasedRuleSupport instance = givenInstanceFor(path)
             .setFailOnProblemsWhileCleanup(false);
         final TestStatement statement = givenStatement();
@@ -141,8 +141,8 @@ public class TemporaryDirectoryBasedRuleSupportUnitTest {
     void apply_works_interceptor() throws Throwable {
         final TemporaryDirectoryBasedRuleSupport instance = givenInstance()
             .setInterceptor((event, result) -> {
-                final Type type = event.type();
-                if (type.equals(ET_delete)) {
+                final EventType type = event.type();
+                if (type.equals(delete)) {
                     throw new IOException("TEST");
                 }
                 return empty();
@@ -187,7 +187,7 @@ public class TemporaryDirectoryBasedRuleSupportUnitTest {
     @Nonnull
     private static Interceptor givenInterceptor() {
         return (event, result) -> {
-            if (ET_delete.equals(event.type())) {
+            if (delete.equals(event.type())) {
                 throw new IOException("TEST");
             }
             return empty();

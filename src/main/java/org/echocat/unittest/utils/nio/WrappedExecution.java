@@ -1,7 +1,7 @@
 package org.echocat.unittest.utils.nio;
 
-import org.echocat.unittest.utils.nio.WrappedEvent.Interceptor;
-import org.echocat.unittest.utils.nio.WrappedEvent.InterceptorEnabled;
+import org.echocat.unittest.utils.nio.Interceptor.InterceptorEnabled;
+import org.echocat.unittest.utils.utils.Wrapping;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -9,13 +9,13 @@ import java.io.UncheckedIOException;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
-import static org.echocat.unittest.utils.nio.WrappedEvent.eventOf;
+import static org.echocat.unittest.utils.nio.Event.eventOf;
 
 public class WrappedExecution {
 
     public static <T, W extends Wrapping<T>, R> R withResult(
         @Nonnull W wrapping,
-        @Nonnull WrappedEvent.Type eventType,
+        @Nonnull EventType eventType,
         @Nonnull ExecutionWithResult<T, R, RuntimeException> execution,
         @Nonnull Object... arguments
     ) {
@@ -24,7 +24,7 @@ public class WrappedExecution {
 
     public static <T, W extends Wrapping<T>, R, E extends Throwable> R withResult(
         @Nonnull W wrapping,
-        @Nonnull WrappedEvent.Type eventType,
+        @Nonnull EventType eventType,
         @Nonnull Class<E> throwing,
         @Nonnull ExecutionWithResult<T, R, E> execution,
         @Nonnull Object... arguments
@@ -40,7 +40,7 @@ public class WrappedExecution {
 
     public static <T, W extends Wrapping<T>> void withoutResult(
         @Nonnull W wrapping,
-        @Nonnull WrappedEvent.Type eventType,
+        @Nonnull EventType eventType,
         @Nonnull ExecutionWithoutResult<T, RuntimeException> execution,
         @Nonnull Object... arguments
     ) {
@@ -49,7 +49,7 @@ public class WrappedExecution {
 
     public static <T, W extends Wrapping<T>, E extends Throwable> void withoutResult(
         @Nonnull W wrapping,
-        @Nonnull WrappedEvent.Type eventType,
+        @Nonnull EventType eventType,
         @Nonnull Class<E> throwing,
         @Nonnull ExecutionWithoutResult<T, E> execution,
         @Nonnull Object... arguments
@@ -66,13 +66,13 @@ public class WrappedExecution {
 
     private static <T, R, E extends Throwable> R execute(
         @Nonnull Interceptor interceptor,
-        @Nonnull WrappedEvent.Type eventType,
+        @Nonnull EventType eventType,
         @Nonnull T target,
         @Nonnull Class<E> throwing,
         @Nonnull ExecutionWithResult<T, R, E> execution,
         @Nonnull Object... arguments
     ) throws E {
-        final WrappedEvent event = eventOf(eventType, arguments);
+        final Event event = eventOf(eventType, arguments);
         final Optional<Object> before = executeSafe(() -> interceptor.before(event), throwing);
         if (before.isPresent()) {
             //noinspection unchecked
@@ -89,13 +89,13 @@ public class WrappedExecution {
 
     private static <T, E extends Throwable, W> void execute(
         @Nonnull Interceptor interceptor,
-        @Nonnull WrappedEvent.Type eventType,
+        @Nonnull EventType eventType,
         @Nonnull T target,
         @Nonnull Class<E> throwing,
         @Nonnull ExecutionWithoutResult<T, E> execution,
         @Nonnull Object... arguments
     ) throws E {
-        final WrappedEvent event = eventOf(eventType, arguments);
+        final Event event = eventOf(eventType, arguments);
         final Optional<Object> before = executeSafe(() -> interceptor.before(event), throwing);
         if (before.isPresent()) {
             return;

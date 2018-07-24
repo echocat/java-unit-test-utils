@@ -1,8 +1,7 @@
 package org.echocat.unittest.utils.nio;
 
-import org.echocat.unittest.utils.nio.WrappedEvent.Interceptor;
-import org.echocat.unittest.utils.nio.WrappedEvent.InterceptorEnabled;
-import org.echocat.unittest.utils.nio.WrappedEvent.Type;
+import org.echocat.unittest.utils.nio.Interceptor.InterceptorEnabled;
+import org.echocat.unittest.utils.utils.Wrapping;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,11 +17,21 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Optional.ofNullable;
-import static org.echocat.unittest.utils.nio.WrappedEvent.eventTypeOf;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.close;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.getFileStores;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.getPath;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.getPathMatcher;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.getRootDirectories;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.getSeparator;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.getUserPrincipalLookupService;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.isOpen;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.isReadOnly;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.newWatchService;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.provider;
+import static org.echocat.unittest.utils.nio.EventType.FileSystems.supportedFileAttributeViews;
 import static org.echocat.unittest.utils.nio.WrappedExecution.withResult;
 import static org.echocat.unittest.utils.nio.WrappedExecution.withoutResult;
 
-@SuppressWarnings("FieldNamingConvention")
 public class WrappedFileSystem<T extends WrappedPath> extends FileSystem implements Wrapping<FileSystem>, InterceptorEnabled {
 
     @Nonnull
@@ -54,110 +63,94 @@ public class WrappedFileSystem<T extends WrappedPath> extends FileSystem impleme
         return wrapped;
     }
 
-    public static final Type ET_provider = eventTypeOf(WrappedFileSystem.class, "provider");
+    @Nonnull
+    protected WrappedPath wrap(@Nonnull Path original) {
+        if (original instanceof WrappedPath) {
+            return (WrappedPath) original;
+        }
+        return WrappedPath.create(original, interceptor().orElse(null));
+    }
 
     @Override
     public FileSystemProvider provider() {
-        return withResult(this, ET_provider, wrapped ->
+        return withResult(this, provider, wrapped ->
             new WrappedFileSystemProvider<>(wrappedPathType, wrapped().provider(), interceptor().orElse(null))
         );
     }
 
-    public static final Type ET_close = eventTypeOf(WrappedFileSystem.class, "close");
-
     @Override
     public void close() throws IOException {
-        withoutResult(this, ET_close, IOException.class,
+        withoutResult(this, close, IOException.class,
             FileSystem::close
         );
     }
 
-    public static final Type ET_isOpen = eventTypeOf(WrappedFileSystem.class, "isOpen");
-
     @Override
     public boolean isOpen() {
-        return withResult(this, ET_isOpen,
+        return withResult(this, isOpen,
             FileSystem::isOpen
         );
     }
 
-    public static final Type ET_isReadOnly = eventTypeOf(WrappedFileSystem.class, "isReadOnly");
-
     @Override
     public boolean isReadOnly() {
-        return withResult(this, ET_isReadOnly,
+        return withResult(this, isReadOnly,
             FileSystem::isReadOnly
         );
     }
 
-    public static final Type ET_getSeparator = eventTypeOf(WrappedFileSystem.class, "getSeparator");
-
     @Override
     public String getSeparator() {
-        return withResult(this, ET_getSeparator,
+        return withResult(this, getSeparator,
             FileSystem::getSeparator
         );
     }
 
-    public static final Type ET_getRootDirectories = eventTypeOf(WrappedFileSystem.class, "getRootDirectories");
-
     @Override
     public Iterable<Path> getRootDirectories() {
-        return withResult(this, ET_getRootDirectories,
+        return withResult(this, getRootDirectories,
             FileSystem::getRootDirectories
         );
     }
 
-    public static final Type ET_getFileStores = eventTypeOf(WrappedFileSystem.class, "getFileStores");
-
     @Override
     public Iterable<FileStore> getFileStores() {
-        return withResult(this, ET_getFileStores,
+        return withResult(this, getFileStores,
             FileSystem::getFileStores
         );
     }
 
-    public static final Type ET_supportedFileAttributeViews = eventTypeOf(WrappedFileSystem.class, "supportedFileAttributeViews");
-
     @Override
     public Set<String> supportedFileAttributeViews() {
-        return withResult(this, ET_supportedFileAttributeViews,
+        return withResult(this, supportedFileAttributeViews,
             FileSystem::supportedFileAttributeViews
         );
     }
 
-    public static final Type ET_getPath = eventTypeOf(WrappedFileSystem.class, "getPath", String.class, String[].class);
-
     @Override
     public Path getPath(String first, String... more) {
-        return withResult(this, ET_getPath,
+        return wrap(withResult(this, getPath,
             wrapped -> wrapped.getPath(first, more)
-            , first, more);
+            , first, more));
     }
-
-    public static final Type ET_getPathMatcher = eventTypeOf(WrappedFileSystem.class, "getPathMatcher", String.class);
 
     @Override
     public PathMatcher getPathMatcher(String syntaxAndPattern) {
-        return withResult(this, ET_getPathMatcher,
+        return withResult(this, getPathMatcher,
             wrapped -> wrapped.getPathMatcher(syntaxAndPattern)
             , syntaxAndPattern);
     }
 
-    public static final Type ET_getUserPrincipalLookupService = eventTypeOf(WrappedFileSystem.class, "getUserPrincipalLookupService");
-
     @Override
     public UserPrincipalLookupService getUserPrincipalLookupService() {
-        return withResult(this, ET_getUserPrincipalLookupService,
+        return withResult(this, getUserPrincipalLookupService,
             FileSystem::getUserPrincipalLookupService
         );
     }
 
-    public static final Type ET_newWatchService = eventTypeOf(WrappedFileSystem.class, "newWatchService");
-
     @Override
     public WatchService newWatchService() throws IOException {
-        return withResult(this, ET_newWatchService, IOException.class,
+        return withResult(this, newWatchService, IOException.class,
             FileSystem::newWatchService
         );
     }
