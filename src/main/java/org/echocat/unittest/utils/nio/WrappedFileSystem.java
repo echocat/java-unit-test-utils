@@ -31,6 +31,7 @@ import static org.echocat.unittest.utils.nio.EventType.FileSystems.provider;
 import static org.echocat.unittest.utils.nio.EventType.FileSystems.supportedFileAttributeViews;
 import static org.echocat.unittest.utils.nio.WrappedExecution.withResult;
 import static org.echocat.unittest.utils.nio.WrappedExecution.withoutResult;
+import static org.echocat.unittest.utils.nio.WrappedPath.wrap;
 
 public class WrappedFileSystem<T extends WrappedPath> extends FileSystem implements Wrapping<FileSystem>, InterceptorEnabled {
 
@@ -64,11 +65,8 @@ public class WrappedFileSystem<T extends WrappedPath> extends FileSystem impleme
     }
 
     @Nonnull
-    protected WrappedPath wrap(@Nonnull Path original) {
-        if (original instanceof WrappedPath) {
-            return (WrappedPath) original;
-        }
-        return WrappedPath.create(original, interceptor().orElse(null));
+    protected WrappedPath rewrap(@Nonnull Path original) {
+        return wrap(original, interceptor().orElse(null));
     }
 
     @Override
@@ -129,7 +127,7 @@ public class WrappedFileSystem<T extends WrappedPath> extends FileSystem impleme
 
     @Override
     public Path getPath(String first, String... more) {
-        return wrap(withResult(this, getPath,
+        return rewrap(withResult(this, getPath,
             wrapped -> wrapped.getPath(first, more)
             , first, more));
     }

@@ -61,6 +61,7 @@ import static org.echocat.unittest.utils.nio.EventType.FileSystemProviders.readS
 import static org.echocat.unittest.utils.nio.EventType.FileSystemProviders.setAttribute;
 import static org.echocat.unittest.utils.nio.WrappedExecution.withResult;
 import static org.echocat.unittest.utils.nio.WrappedExecution.withoutResult;
+import static org.echocat.unittest.utils.nio.WrappedPath.wrap;
 
 public class WrappedFileSystemProvider<T extends WrappedPath> extends FileSystemProvider implements Wrapping<FileSystemProvider>, InterceptorEnabled {
 
@@ -107,11 +108,8 @@ public class WrappedFileSystemProvider<T extends WrappedPath> extends FileSystem
     }
 
     @Nonnull
-    protected WrappedPath wrap(@Nonnull Path original) {
-        if (original instanceof WrappedPath) {
-            return (WrappedPath) original;
-        }
-        return WrappedPath.create(original, interceptor().orElse(null));
+    protected WrappedPath rewrap(@Nonnull Path original) {
+        return wrap(original, interceptor().orElse(null));
     }
 
     @Override
@@ -145,7 +143,7 @@ public class WrappedFileSystemProvider<T extends WrappedPath> extends FileSystem
 
     @Override
     public Path getPath(final URI uri) {
-        return wrap(withResult(this, getPath,
+        return rewrap(withResult(this, getPath,
             wrapped -> wrapped.getPath(uri)
             , uri));
     }
@@ -251,7 +249,7 @@ public class WrappedFileSystemProvider<T extends WrappedPath> extends FileSystem
     @Override
     public Path readSymbolicLink(final Path link) throws IOException {
         final Path unwrapped = unwrap(link);
-        return wrap(withResult(this, readSymbolicLink, IOException.class,
+        return rewrap(withResult(this, readSymbolicLink, IOException.class,
             wrapped -> wrapped.readSymbolicLink(unwrapped)
             , unwrapped));
     }
@@ -359,7 +357,7 @@ public class WrappedFileSystemProvider<T extends WrappedPath> extends FileSystem
 
                 @Override
                 public Path next() {
-                    return wrap(delegate.next());
+                    return rewrap(delegate.next());
                 }
             };
         }

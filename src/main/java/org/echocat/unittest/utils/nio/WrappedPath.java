@@ -17,6 +17,7 @@ import java.nio.file.WatchEvent.Modifier;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -52,13 +53,18 @@ import static org.echocat.unittest.utils.nio.WrappedExecution.withResult;
 public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
 
     @Nonnull
-    static WrappedPath create(@Nonnull Path original, @Nullable Interceptor interceptor) {
+    static WrappedPath wrap(@Nonnull Path original, @Nullable Interceptor interceptor) {
+        if (original instanceof WrappedPath
+            && Objects.equals(interceptor, ((WrappedPath) original).interceptor().orElse(null))
+        ) {
+            return (WrappedPath) original;
+        }
         return new Default(original, interceptor);
     }
 
     @Nonnull
-    static WrappedPath create(@Nonnull Path original) {
-        return create(original, null);
+    static WrappedPath wrap(@Nonnull Path original) {
+        return wrap(original, null);
     }
 
     @Nonnull
@@ -72,11 +78,8 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
     Path wrapped();
 
     @Nonnull
-    default WrappedPath wrap(@Nonnull Path original) {
-        if (original instanceof WrappedPath) {
-            return (WrappedPath) original;
-        }
-        return create(original, interceptor().orElse(null));
+    default WrappedPath rewrap(@Nonnull Path original) {
+        return wrap(original, interceptor().orElse(null));
     }
 
     @Override
@@ -99,21 +102,21 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
 
     @Override
     default Path getRoot() {
-        return wrap(withResult(this, getRoot,
+        return rewrap(withResult(this, getRoot,
             Path::getRoot
         ));
     }
 
     @Override
     default Path getFileName() {
-        return wrap(withResult(this, getFileName,
+        return rewrap(withResult(this, getFileName,
             Path::getFileName
         ));
     }
 
     @Override
     default Path getParent() {
-        return wrap(withResult(this, getParent,
+        return rewrap(withResult(this, getParent,
             Path::getParent
         ));
     }
@@ -127,14 +130,14 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
 
     @Override
     default Path getName(final int index) {
-        return wrap(withResult(this, getName,
+        return rewrap(withResult(this, getName,
             wrapped -> wrapped.getName(index)
             , index));
     }
 
     @Override
     default Path subpath(final int beginIndex, final int endIndex) {
-        return wrap(withResult(this, subpath,
+        return rewrap(withResult(this, subpath,
             wrapped -> wrapped.subpath(beginIndex, endIndex)
             , beginIndex, endIndex));
     }
@@ -169,42 +172,42 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
 
     @Override
     default Path normalize() {
-        return wrap(withResult(this, normalize,
+        return rewrap(withResult(this, normalize,
             Path::normalize
         ));
     }
 
     @Override
     default Path resolve(final Path other) {
-        return wrap(withResult(this, resolve,
+        return rewrap(withResult(this, resolve,
             wrapped -> wrapped.resolve(other)
             , other));
     }
 
     @Override
     default Path resolve(final String other) {
-        return wrap(withResult(this, resolve_String,
+        return rewrap(withResult(this, resolve_String,
             wrapped -> wrapped.resolve(other)
             , other));
     }
 
     @Override
     default Path resolveSibling(final Path other) {
-        return wrap(withResult(this, resolveSibling,
+        return rewrap(withResult(this, resolveSibling,
             wrapped -> wrapped.resolveSibling(other)
             , other));
     }
 
     @Override
     default Path resolveSibling(final String other) {
-        return wrap(withResult(this, resolveSibling_String,
+        return rewrap(withResult(this, resolveSibling_String,
             wrapped -> wrapped.resolveSibling(other)
             , other));
     }
 
     @Override
     default Path relativize(final Path other) {
-        return wrap(withResult(this, relativize,
+        return rewrap(withResult(this, relativize,
             wrapped -> wrapped.relativize(other)
             , other));
     }
@@ -218,14 +221,14 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
 
     @Override
     default Path toAbsolutePath() {
-        return wrap(withResult(this, toAbsolutePath,
+        return rewrap(withResult(this, toAbsolutePath,
             Path::toAbsolutePath
         ));
     }
 
     @Override
     default Path toRealPath(final LinkOption... options) throws IOException {
-        return wrap(withResult(this, toRealPath, IOException.class,
+        return rewrap(withResult(this, toRealPath, IOException.class,
             wrapped -> wrapped.toRealPath(options)
             , (Object) options));
     }
