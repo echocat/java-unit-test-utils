@@ -42,10 +42,6 @@ public class WrappedFileSystem<T extends WrappedPath> extends FileSystem impleme
     @Nonnull
     private final Optional<Interceptor> interceptor;
 
-    public WrappedFileSystem(@Nonnull Class<T> wrappedPathType, @Nonnull FileSystem wrapped) {
-        this(wrappedPathType, wrapped, null);
-    }
-
     public WrappedFileSystem(@Nonnull Class<T> wrappedPathType, @Nonnull FileSystem wrapped, @Nullable Interceptor interceptor) {
         this.wrappedPathType = wrappedPathType;
         this.wrapped = wrapped;
@@ -72,7 +68,7 @@ public class WrappedFileSystem<T extends WrappedPath> extends FileSystem impleme
     @Override
     public FileSystemProvider provider() {
         return withResult(this, provider, wrapped ->
-            new WrappedFileSystemProvider<>(wrappedPathType, wrapped().provider(), interceptor().orElse(null))
+            new WrappedFileSystemProvider<>(wrappedPathType, wrapped.provider(), interceptor().orElse(null))
         );
     }
 
@@ -125,6 +121,7 @@ public class WrappedFileSystem<T extends WrappedPath> extends FileSystem impleme
         );
     }
 
+    @Nonnull
     @Override
     public Path getPath(String first, String... more) {
         return rewrap(withResult(this, getPath,

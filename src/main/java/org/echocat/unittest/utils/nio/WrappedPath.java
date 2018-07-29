@@ -48,6 +48,7 @@ import static org.echocat.unittest.utils.nio.EventType.Paths.toFile;
 import static org.echocat.unittest.utils.nio.EventType.Paths.toRealPath;
 import static org.echocat.unittest.utils.nio.EventType.Paths.toUri;
 import static org.echocat.unittest.utils.nio.WrappedExecution.withResult;
+import static org.echocat.unittest.utils.utils.Wrapping.deepUnwrap;
 
 @FunctionalInterface
 public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
@@ -145,7 +146,7 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
     @Override
     default boolean startsWith(final Path other) {
         return withResult(this, startsWith,
-            wrapped -> wrapped.startsWith(other)
+            wrapped -> wrapped.startsWith(deepUnwrap(Path.class, other))
             , other);
     }
 
@@ -159,7 +160,7 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
     @Override
     default boolean endsWith(final Path other) {
         return withResult(this, endsWith,
-            wrapped -> wrapped.endsWith(other)
+            wrapped -> wrapped.endsWith(deepUnwrap(Path.class, other))
             , other);
     }
 
@@ -180,10 +181,11 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
     @Override
     default Path resolve(final Path other) {
         return rewrap(withResult(this, resolve,
-            wrapped -> wrapped.resolve(other)
+            wrapped -> wrapped.resolve(deepUnwrap(Path.class, other))
             , other));
     }
 
+    @Nonnull
     @Override
     default Path resolve(final String other) {
         return rewrap(withResult(this, resolve_String,
@@ -194,7 +196,7 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
     @Override
     default Path resolveSibling(final Path other) {
         return rewrap(withResult(this, resolveSibling,
-            wrapped -> wrapped.resolveSibling(other)
+            wrapped -> wrapped.resolveSibling(deepUnwrap(Path.class, other))
             , other));
     }
 
@@ -208,7 +210,7 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
     @Override
     default Path relativize(final Path other) {
         return rewrap(withResult(this, relativize,
-            wrapped -> wrapped.relativize(other)
+            wrapped -> wrapped.relativize(deepUnwrap(Path.class, other))
             , other));
     }
 
@@ -265,12 +267,7 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
     @Override
     default int compareTo(final Path other) {
         return withResult(this, compareTo,
-            wrapped -> {
-                if (other instanceof WrappedPath) {
-                    return wrapped().compareTo(((WrappedPath) other).wrapped());
-                }
-                return wrapped().compareTo(other);
-            }
+            wrapped -> wrapped.compareTo(deepUnwrap(Path.class, other))
             , other);
     }
 
@@ -311,11 +308,8 @@ public interface WrappedPath extends Path, Wrapping<Path>, InterceptorEnabled {
             if (this == o) {
                 return true;
             }
-            if (o instanceof WrappedPath) {
-                return wrapped().equals(((WrappedPath) o).wrapped());
-            }
             if (o instanceof Path) {
-                return wrapped().equals(o);
+                return wrapped().equals(deepUnwrap(Path.class, (Path) o));
             }
             return false;
         }
