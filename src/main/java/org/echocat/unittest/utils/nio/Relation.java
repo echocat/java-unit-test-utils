@@ -19,7 +19,7 @@ public interface Relation<T> extends Supplier<T> {
             return relation.get().getClass();
         }
         if (relation instanceof Relation.Class<?>) {
-            return ((Class<?>) relation).get();
+            return ((Relation.Class<?>) relation).get();
         }
         throw new IllegalArgumentException("Could not handle relation: " + relation);
     }
@@ -29,18 +29,21 @@ public interface Relation<T> extends Supplier<T> {
         if (relation instanceof Relation.Object<?>) {
             return requireNonNull(relation.get());
         }
-        return null;
+        if (relation instanceof Relation.Class<?>) {
+            return null;
+        }
+        throw new IllegalArgumentException("Could not handle relation: " + relation);
     }
 
     @Nonnull
-    static <T> Class<T> classRelationFor(@Nonnull java.lang.Class<T> type) {
+    static <T> Relation.Class<T> classRelationFor(@Nonnull java.lang.Class<T> type) {
         return () -> type;
     }
 
     @Nonnull
-    static <T> Class<T> classRelationFor(@Nonnull T instance) {
+    static <T> Relation.Class<T> classRelationFor(@Nonnull T instance) {
         //noinspection unchecked
-        return (Class<T>) classRelationFor(instance.getClass());
+        return (Relation.Class<T>) classRelationFor(instance.getClass());
     }
 
     @Nonnull

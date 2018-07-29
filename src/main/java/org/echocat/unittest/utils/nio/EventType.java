@@ -162,9 +162,48 @@ public interface EventType extends Comparable<EventType> {
         ) {
             this.sourceType = sourceType;
             this.name = name;
-            this.argumentTypes = unmodifiableList(new ArrayList<>(argumentTypes));
-            this.returnType = returnType;
+            this.argumentTypes = unmodifiableList(normalize(argumentTypes));
+            this.returnType = normalize(returnType);
             this.allowedThrowableTypes = unmodifiableSet(new HashSet<>(allowedThrowableTypes));
+        }
+
+        protected List<Class<?>> normalize(@Nonnull Collection<Class<?>> input) {
+            final List<Class<?>> result = new ArrayList<>(input.size());
+            for (final Class<?> candidate : input) {
+                result.add(normalize(candidate));
+            }
+            return result;
+        }
+
+        protected Class<?> normalize(Class<?> input) {
+            if (Boolean.TYPE.equals(input)) {
+                return Boolean.class;
+            }
+            if (Character.TYPE.equals(input)) {
+                return Character.class;
+            }
+            if (Byte.TYPE.equals(input)) {
+                return Byte.class;
+            }
+            if (Short.TYPE.equals(input)) {
+                return Short.class;
+            }
+            if (Integer.TYPE.equals(input)) {
+                return Integer.class;
+            }
+            if (Long.TYPE.equals(input)) {
+                return Long.class;
+            }
+            if (Float.TYPE.equals(input)) {
+                return Float.class;
+            }
+            if (Double.TYPE.equals(input)) {
+                return Double.class;
+            }
+            if (Void.TYPE.equals(input)) {
+                return Void.class;
+            }
+            return input;
         }
 
         @Override
@@ -234,7 +273,7 @@ public interface EventType extends Comparable<EventType> {
 
         @Override
         public String toString() {
-            return sourceType().getSimpleName() + "#" + name()
+            return returnType().getSimpleName() + ": " + sourceType().getSimpleName() + "#" + name()
                 + argumentTypes().stream().map(Class::getSimpleName).collect(joining(", ", "(", ")"));
         }
 
