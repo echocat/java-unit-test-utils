@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -16,11 +16,11 @@ import static org.junit.Assert.assertThat;
 
 public class WhereValueOfUnitTest {
 
-    protected static final Matcher<String> IS_EQUAL_TO_BERT = isEqualTo("Bert");
-    protected static final java.util.function.Function<Person, String> GET_NAME_OF_PERSON = Person::getName;
+    private static final Matcher<String> IS_EQUAL_TO_BERT = isEqualTo("Bert");
+    private static final java.util.function.Function<Person, String> GET_NAME_OF_PERSON = Person::getName;
 
     @Test
-    public void factoryMethodWhereValueOf() throws Exception {
+    void factoryMethodWhereValueOf() throws Exception {
         final Matcher<Person> instance = whereValueOf(GET_NAME_OF_PERSON, "name", IS_EQUAL_TO_BERT);
 
         assertThat(instance, instanceOf(WhereValueOf.class));
@@ -30,7 +30,7 @@ public class WhereValueOfUnitTest {
     }
 
     @Test
-    public void factoryMethodElement() throws Exception {
+    void factoryMethodElement() throws Exception {
         final Matcher<Person> instance = element(GET_NAME_OF_PERSON, "name", IS_EQUAL_TO_BERT);
 
         assertThat(instance, instanceOf(WhereValueOf.class));
@@ -40,7 +40,7 @@ public class WhereValueOfUnitTest {
     }
 
     @Test
-    public void factoryMethodElementMatches() throws Exception {
+    void factoryMethodElementMatches() throws Exception {
         final Matcher<Person> instance = elementMatches(GET_NAME_OF_PERSON, "name", IS_EQUAL_TO_BERT);
 
         assertThat(instance, instanceOf(WhereValueOf.class));
@@ -50,7 +50,7 @@ public class WhereValueOfUnitTest {
     }
 
     @Test
-    public void factoryMethodValueOfMatches() throws Exception {
+    void factoryMethodValueOfMatches() throws Exception {
         final Matcher<Person> instance = valueOfMatches(GET_NAME_OF_PERSON, "name", IS_EQUAL_TO_BERT);
 
         assertThat(instance, instanceOf(WhereValueOf.class));
@@ -60,7 +60,7 @@ public class WhereValueOfUnitTest {
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final WhereValueOf<Person, String> instance = new WhereValueOf<>(GET_NAME_OF_PERSON, "name", IS_EQUAL_TO_BERT);
 
         assertThat(instance, instanceOf(WhereValueOf.class));
@@ -70,7 +70,7 @@ public class WhereValueOfUnitTest {
     }
 
     @Test
-    public void matches() throws Exception {
+    void matches() throws Exception {
         final WhereValueOf<Person, String> instance = givenEqualsNameWithBertInstance();
 
         assertThat(instance.matches(person("Bert", 35)), equalTo(true));
@@ -79,7 +79,7 @@ public class WhereValueOfUnitTest {
     }
 
     @Test
-    public void describeTo() throws Exception {
+    void describeTo() throws Exception {
         final Description description = givenDescription();
         final WhereValueOf<Person, String> instance = givenEqualsNameWithBertInstance();
 
@@ -89,7 +89,7 @@ public class WhereValueOfUnitTest {
     }
 
     @Test
-    public void describeMismatch() throws Exception {
+    void describeMismatch() throws Exception {
         final Description description = givenDescription();
         final WhereValueOf<Person, String> instance = givenEqualsNameWithBertInstance();
 
@@ -99,7 +99,7 @@ public class WhereValueOfUnitTest {
     }
 
     @Test
-    public void describeMismatchWithUnexpectedType() throws Exception {
+    void describeMismatchWithUnexpectedType() throws Exception {
         final Description description = givenDescription();
         final WhereValueOf<Person, String> instance = givenEqualsNameWithBertInstance();
 
@@ -109,11 +109,11 @@ public class WhereValueOfUnitTest {
     }
 
     @Nonnull
-    protected static WhereValueOf<Person, String> givenEqualsNameWithBertInstance() {
+    private static WhereValueOf<Person, String> givenEqualsNameWithBertInstance() {
         return new WhereValueOf<>(GET_NAME_OF_PERSON, "name", IS_EQUAL_TO_BERT);
     }
 
-    protected static class Person {
+    static class Person {
 
         @Nonnull
         public static Person person(@Nonnull String name, @Nonnegative int ageInYears) {

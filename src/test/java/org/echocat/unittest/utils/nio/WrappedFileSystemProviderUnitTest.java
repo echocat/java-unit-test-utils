@@ -1,6 +1,6 @@
 package org.echocat.unittest.utils.nio;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 public class WrappedFileSystemProviderUnitTest {
 
     @Test
-    public void wrapped() throws Exception {
+    void wrapped() throws Exception {
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
 
@@ -35,7 +35,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void wrappedPathType() throws Exception {
+    void wrappedPathType() throws Exception {
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
 
@@ -43,7 +43,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void unwrap() throws Exception {
+    void unwrap() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -55,7 +55,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void getScheme() throws Exception {
+    void getScheme() throws Exception {
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
 
@@ -65,7 +65,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void newFileSystem() throws Exception {
+    void newFileSystem() throws Exception {
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
         final URI uri = URI.create("foo:bar");
@@ -79,7 +79,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void getFileSystem() throws Exception {
+    void getFileSystem() throws Exception {
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
         final URI uri = URI.create("foo:bar");
@@ -90,7 +90,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void getPath() throws Exception {
+    void getPath() throws Exception {
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
         final URI uri = URI.create("foo:bar");
@@ -101,7 +101,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void newFileSystem1() throws Exception {
+    void newFileSystem1() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -115,7 +115,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void newInputStream() throws Exception {
+    void newInputStream() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -126,7 +126,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void newOutputStream() throws Exception {
+    void newOutputStream() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -137,7 +137,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void newFileChannel() throws Exception {
+    void newFileChannel() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -150,7 +150,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void newAsynchronousFileChannel() throws Exception {
+    void newAsynchronousFileChannel() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -164,7 +164,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void newByteChannel() throws Exception {
+    void newByteChannel() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -177,7 +177,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void newDirectoryStream() throws Exception {
+    void newDirectoryStream() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -189,7 +189,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void createDirectory() throws Exception {
+    void createDirectory() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -201,7 +201,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void createSymbolicLink() throws Exception {
+    void createSymbolicLink() throws Exception {
         final WrappedPath path1 = givenMockWrappedPath();
         final WrappedPath path2 = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
@@ -214,7 +214,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void createLink() throws Exception {
+    void createLink() throws Exception {
         final WrappedPath path1 = givenMockWrappedPath();
         final WrappedPath path2 = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
@@ -226,7 +226,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void delete() throws Exception {
+    void delete() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -237,7 +237,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void deleteIfExists() throws Exception {
+    void deleteIfExists() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -248,7 +248,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void readSymbolicLink() throws Exception {
+    void readSymbolicLink() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -259,7 +259,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void copy() throws Exception {
+    void copy() throws Exception {
         final WrappedPath path1 = givenMockWrappedPath();
         final WrappedPath path2 = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
@@ -271,7 +271,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void move() throws Exception {
+    void move() throws Exception {
         final WrappedPath path1 = givenMockWrappedPath();
         final WrappedPath path2 = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
@@ -283,7 +283,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void isSameFile() throws Exception {
+    void isSameFile() throws Exception {
         final WrappedPath path1 = givenMockWrappedPath();
         final WrappedPath path2 = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
@@ -295,7 +295,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void isHidden() throws Exception {
+    void isHidden() throws Exception {
         final WrappedPath path1 = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -306,7 +306,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void getFileStore() throws Exception {
+    void getFileStore() throws Exception {
         final WrappedPath path1 = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -317,7 +317,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void checkAccess() throws Exception {
+    void checkAccess() throws Exception {
         final WrappedPath path1 = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -328,7 +328,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void getFileAttributeView() throws Exception {
+    void getFileAttributeView() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -339,7 +339,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void readAttributes() throws Exception {
+    void readAttributes() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -350,7 +350,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void readAttributes1() throws Exception {
+    void readAttributes1() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -361,7 +361,7 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Test
-    public void setAttribute() throws Exception {
+    void setAttribute() throws Exception {
         final WrappedPath path = givenMockWrappedPath();
         final FileSystemProvider mockFileSystemProvider = givenMockFileSystemProvider();
         final WrappedFileSystemProvider<WrappedPath> instance = givenInstanceFor(mockFileSystemProvider);
@@ -372,38 +372,39 @@ public class WrappedFileSystemProviderUnitTest {
     }
 
     @Nonnull
-    protected static WrappedFileSystemProvider<WrappedPath> givenInstanceFor(FileSystemProvider mockFileSystemProvider) {
-        return new WrappedFileSystemProvider<>(WrappedPath.class, mockFileSystemProvider);
+    private static WrappedFileSystemProvider<WrappedPath> givenInstanceFor(FileSystemProvider mockFileSystemProvider) {
+        return new WrappedFileSystemProvider<>(WrappedPath.class, mockFileSystemProvider, null);
     }
 
     @Nonnull
-    protected static FileSystemProvider givenMockFileSystemProvider() {
+    private static FileSystemProvider givenMockFileSystemProvider() {
         return mock(FileSystemProvider.class);
     }
 
     @Nonnull
-    protected static WrappedPath givenMockWrappedPath() {
+    private static WrappedPath givenMockWrappedPath() {
         final WrappedPath mock = mock(WrappedPath.class);
         doReturn(mock(Path.class)).when(mock).wrapped();
         return mock;
     }
 
     @Nonnull
-    protected static ExecutorService givenMockExecutorService() {
+    private static ExecutorService givenMockExecutorService() {
         return mock(ExecutorService.class);
     }
 
     @Nonnull
-    protected static Filter<? super Path> givenFilter() {
+    private static Filter<? super Path> givenFilter() {
         //noinspection unchecked
         return mock(Filter.class);
     }
 
     @Nonnull
-    protected static FileAttribute<?>[] givenFileAttributes() {
+    private static FileAttribute<?>[] givenFileAttributes() {
         return new FileAttribute<?>[]{};
     }
 
-    public static interface TestFileAttributes extends BasicFileAttributes {}
+    @SuppressWarnings("InterfaceNeverImplemented")
+    static interface TestFileAttributes extends BasicFileAttributes {}
 
 }

@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 
@@ -15,28 +15,28 @@ import static org.junit.Assert.assertThat;
 public class IsEmptyUnitTest {
 
     @Test
-    public void factoryMethodIsEmpty() throws Exception {
+    void factoryMethodIsEmpty() throws Exception {
         final Matcher<Object> instance = isEmpty();
 
         assertThat(instance, instanceOf(IsEmpty.class));
     }
 
     @Test
-    public void factoryMethodEmpty() throws Exception {
+    void factoryMethodEmpty() throws Exception {
         final Matcher<Object> instance = empty();
 
         assertThat(instance, instanceOf(IsEmpty.class));
     }
 
     @Test
-    public void factoryMethodHasNoItems() throws Exception {
+    void factoryMethodHasNoItems() throws Exception {
         final Matcher<Object> instance = hasNoItems();
 
         assertThat(instance, instanceOf(IsEmpty.class));
     }
 
     @Test
-    public void matches() throws Exception {
+    void matches() throws Exception {
         final IsEmpty instance = givenInstance();
 
         assertThat(instance.matches(""), equalTo(true));
@@ -44,7 +44,7 @@ public class IsEmptyUnitTest {
     }
 
     @Test
-    public void describeTo() throws Exception {
+    void describeTo() throws Exception {
         final Description description = givenDescription();
         final IsEmpty instance = givenInstance();
 
@@ -54,7 +54,7 @@ public class IsEmptyUnitTest {
     }
 
     @Test
-    public void describeMismatch() throws Exception {
+    void describeMismatch() throws Exception {
         final Description description = givenDescription();
         final IsEmpty instance = givenInstance();
 
@@ -64,7 +64,7 @@ public class IsEmptyUnitTest {
     }
 
     @Nonnull
-    protected static IsEmpty givenInstance() {
+    private static IsEmpty givenInstance() {
         return new IsEmpty();
     }
 

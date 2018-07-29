@@ -3,15 +3,20 @@ package org.echocat.unittest.utils;
 import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toSet;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -221,6 +226,30 @@ public final class TestUtils {
     @Nonnull
     public static URI givenExceptionThrowingURI() throws URISyntaxException {
         return new URI("notExisting://abc");
+    }
+
+    @Nonnegative
+    public static Set<String> childrenOf(@Nonnull Path path) throws Exception {
+        try (final Stream<Path> stream = Files.list(path)) {
+            return stream
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .collect(toSet());
+        }
+    }
+
+    @Nonnegative
+    public static long numberOfChildrenOf(@Nonnull Path path) throws Exception {
+        return numberOfChildrenOf(path, candidate -> true);
+    }
+
+    @Nonnegative
+    public static long numberOfChildrenOf(@Nonnull Path path, @Nonnull Predicate<Path> matches) throws Exception {
+        try (final Stream<Path> stream = Files.list(path)) {
+            return stream
+                .filter(matches)
+                .count();
+        }
     }
 
 }

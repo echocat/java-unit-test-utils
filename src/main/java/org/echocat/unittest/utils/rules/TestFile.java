@@ -1,6 +1,7 @@
 package org.echocat.unittest.utils.rules;
 
-import org.echocat.unittest.utils.nio.WrappedPath;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker;
+import org.echocat.unittest.utils.nio.TemporaryPathBroker.ContentProducer;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
@@ -9,85 +10,85 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
 
 import static java.lang.Thread.currentThread;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
+import static org.echocat.unittest.utils.nio.Relation.classRelationFor;
 import static org.echocat.unittest.utils.utils.IOUtils.copy;
 
-public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> implements WrappedPath {
+public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> {
 
     @Nonnull
     private static final Random RANDOM = new Random();
     @Nonnull
-    private static final Charset UTF8 = Charset.forName("UTF-8");
+    protected static final ContentProducer<OutputStream> NOOP_CONTENT_PRODUCER = (r, t) -> {
+    };
 
     @Nonnull
     private final String name;
-    @Nullable
-    private final ContentProducer contentProducer;
+    @Nonnull
+    private final ContentProducer<OutputStream> contentProducer;
 
-    @Nullable
-    private Path wrapped;
+    public TestFile() {
+        this("test.file");
+    }
 
     public TestFile(@Nonnull String name) {
-        this(name, (ContentProducer) null);
+        this(name, (ContentProducer<OutputStream>) null);
     }
 
+    /**
+     * @deprecated Use {@link #TestFile(String, ContentProducer)} with {@link #withContent(String)} instead.
+     */
+    @Deprecated
     public TestFile(@Nonnull String name, @Nullable String content) {
-        this(name, content != null ? content.getBytes(UTF8) : null);
+        this(name, content != null ? withContent(content) : null);
     }
 
+    /**
+     * @deprecated Use {@link #TestFile(String, ContentProducer)} with {@link #withContent(String)} instead.
+     */
+    @Deprecated
     public TestFile(@Nonnull String name, @Nullable byte[] content) {
-        this(name, content != null ? (outputStream -> outputStream.write(content)) : null);
+        this(name, content != null ? withContent(content) : null);
     }
 
-    public TestFile(@Nonnull String name, @Nullable ContentProducer contentProducer) {
+    public TestFile(@Nonnull String name, @Nullable ContentProducer<OutputStream> contentProducer) {
         this.name = requireNonNull(name);
-        this.contentProducer = contentProducer;
+        this.contentProducer = contentProducer != null ? contentProducer : NOOP_CONTENT_PRODUCER;
     }
 
     @Override
-    protected void evaluate(@Nonnull Statement base, @Nonnull Description description, @Nonnull Path baseDirectory) throws Throwable {
-        this.wrapped = generateFileFor(baseDirectory);
-        try {
-            base.evaluate();
-        } finally {
-            this.wrapped = null;
-        }
-    }
-
-    @Override
-    @Nonnull
-    public Path wrapped() {
-        return requireNonNull(wrapped, "Method was not called within test evaluation or @Rule/@ClassRule was missing at field.");
+    protected Path evaluatePath(@Nonnull Statement base, @Nonnull Description description, @Nonnull TemporaryPathBroker broker) throws Throwable {
+        return broker.newFile(name(), classRelationFor(description.getTestClass()), contentProducer());
     }
 
     @Nonnull
-    protected Path generateFileFor(@Nonnull Path baseDirectory) throws Exception {
-        final Path result = baseDirectory.resolve(name);
-        try (final OutputStream os = Files.newOutputStream(result)) {
-            if (contentProducer != null) {
-                contentProducer.produce(os);
-            }
-        }
-        return result;
+    protected String name() {
+        return name;
     }
-
-    @FunctionalInterface
-    public static interface ContentProducer {
-        public void produce(@Nonnull OutputStream os) throws Exception;
-    }
-
-    @Override
-    public String toString() {return wrapped().toString();}
 
     @Nonnull
-    public static ContentProducer withGeneratedContent(@Nonnegative long numberOfBytes) {
-        return os -> {
+    protected ContentProducer<OutputStream> contentProducer() {
+        return contentProducer;
+    }
+
+    @Nonnull
+    public static ContentProducer<OutputStream> withContent(@Nonnull byte[] content) {
+        return (relation, os) -> os.write(content);
+    }
+
+    @Nonnull
+    public static ContentProducer<OutputStream> withContent(@Nonnull String content) {
+        return withContent(content.getBytes(UTF_8));
+    }
+
+    @Nonnull
+    public static ContentProducer<OutputStream> withGeneratedContent(@Nonnegative long numberOfBytes) {
+        return (relation, os) -> {
             final byte[] buf = new byte[4096];
             long written = 0L;
             while (written < numberOfBytes) {
@@ -101,8 +102,8 @@ public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> imple
     }
 
     @Nonnull
-    public static ContentProducer fromClasspath(@Nonnull String name, @Nonnull Class<?> ofClass) {
-        return os -> {
+    public static ContentProducer<OutputStream> fromClasspath(@Nonnull String name, @Nonnull Class<?> ofClass) {
+        return (relation, os) -> {
             try (final InputStream is = ofClass.getResourceAsStream(name)) {
                 copy(is, os);
             }
@@ -110,8 +111,8 @@ public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> imple
     }
 
     @Nonnull
-    public static ContentProducer fromClasspath(@Nonnull String path, @Nonnull ClassLoader ofClassLoader) {
-        return os -> {
+    public static ContentProducer<OutputStream> fromClasspath(@Nonnull String path, @Nonnull ClassLoader ofClassLoader) {
+        return (relation, os) -> {
             try (final InputStream is = ofClassLoader.getResourceAsStream(path)) {
                 copy(is, os);
             }
@@ -119,7 +120,7 @@ public class TestFile extends TemporaryDirectoryBasedRuleSupport<TestFile> imple
     }
 
     @Nonnull
-    public static ContentProducer fromClasspath(@Nonnull String path) {
+    public static ContentProducer<OutputStream> fromClasspath(@Nonnull String path) {
         return fromClasspath(path, currentThread().getContextClassLoader());
     }
 

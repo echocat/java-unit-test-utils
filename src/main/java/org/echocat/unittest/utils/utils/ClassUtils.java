@@ -1,6 +1,8 @@
 package org.echocat.unittest.utils.utils;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Method;
+import java.util.NoSuchElementException;
 
 public final class ClassUtils {
 
@@ -15,6 +17,19 @@ public final class ClassUtils {
         }
         // noinspection unchecked
         return (Class<? extends T>) object.getClass();
+    }
+
+    @Nonnull
+    public static Method methodBy(@Nonnull Class<?> source, @Nonnull String name, @Nonnull Class<?>... argumentTypes) {
+        try {
+            final Method result = source.getDeclaredMethod(name, argumentTypes);
+            result.setAccessible(true);
+            return result;
+        } catch (final NoSuchMethodException e) {
+            final NoSuchElementException ex = new NoSuchElementException(e.getMessage());
+            ex.initCause(e);
+            throw ex;
+        }
     }
 
 }

@@ -3,7 +3,7 @@ package org.echocat.unittest.utils.matchers;
 import org.echocat.unittest.utils.matchers.OptionalBasedMatcher.BaseChecker;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 public class OptionalBasedMatcherUnitTest {
 
     @Test
-    public void factoryMethodIsPresentBaseChecker() throws Exception {
+    void factoryMethodIsPresentBaseChecker() throws Exception {
         final BaseChecker<Integer> instance = isPresentBaseChecker();
 
         assertThat(instance.check(of(666)), equalTo(true));
@@ -30,7 +30,7 @@ public class OptionalBasedMatcherUnitTest {
     }
 
     @Test
-    public void factoryMethodIsAbsentBaseChecker() throws Exception {
+    void factoryMethodIsAbsentBaseChecker() throws Exception {
         final BaseChecker<Integer> instance = isAbsentBaseChecker();
 
         assertThat(instance.check(of(666)), equalTo(false));
@@ -38,7 +38,7 @@ public class OptionalBasedMatcherUnitTest {
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final BaseChecker<Integer> baseChecker = isPresentBaseChecker();
         final Matcher<Integer> contentMatcher = equalTo(666);
         final OptionalBasedMatcher<Integer> instance = new OptionalBasedMatcher<>("description", baseChecker, contentMatcher);
@@ -50,7 +50,7 @@ public class OptionalBasedMatcherUnitTest {
     }
 
     @Test
-    public void matchesContentEqualsTo() throws Exception {
+    void matchesContentEqualsTo() throws Exception {
         final Matcher<Optional<Integer>> instance = givenContentEqualsTo666Instance();
 
         assertThat(instance.matches(of(666)), equalTo(true));
@@ -61,7 +61,7 @@ public class OptionalBasedMatcherUnitTest {
     }
 
     @Test
-    public void matchesOnlyIsPresent() throws Exception {
+    void matchesOnlyIsPresent() throws Exception {
         final Matcher<Optional<Integer>> instance = givenIsPresentOnlyInstance();
 
         assertThat(instance.matches(of(666)), equalTo(true));
@@ -72,7 +72,7 @@ public class OptionalBasedMatcherUnitTest {
     }
 
     @Test
-    public void matchesOnlyIsAbsent() throws Exception {
+    void matchesOnlyIsAbsent() throws Exception {
         final Matcher<Optional<Integer>> instance = givenIsAbsentOnlyInstance();
 
         assertThat(instance.matches(of(666)), equalTo(false));
@@ -83,14 +83,14 @@ public class OptionalBasedMatcherUnitTest {
     }
 
     @Test
-    public void matchesIsAbsentWithContentChecker() throws Exception {
+    void matchesIsAbsentWithContentChecker() throws Exception {
         final Matcher<Optional<Integer>> instance = givenIsAbsentWithContentChecker();
 
         assertThat(() -> instance.matches(empty()), throwsException(IllegalStateException.class, "The base checker should cover presence of optional value before."));
     }
 
     @Test
-    public void describeToWithContentCheck() throws Exception {
+    void describeToWithContentCheck() throws Exception {
         final Description description = givenDescription();
         final Matcher<Optional<Integer>> instance = givenContentEqualsTo666Instance();
 
@@ -100,7 +100,7 @@ public class OptionalBasedMatcherUnitTest {
     }
 
     @Test
-    public void describeToWithoutContentCheck() throws Exception {
+    void describeToWithoutContentCheck() throws Exception {
         final Description description = givenDescription();
         final Matcher<Optional<Integer>> instance = givenIsPresentOnlyInstance();
 
@@ -110,26 +110,26 @@ public class OptionalBasedMatcherUnitTest {
     }
 
     @Nonnull
-    protected static Matcher<Optional<Integer>> givenContentEqualsTo666Instance() {
+    private static Matcher<Optional<Integer>> givenContentEqualsTo666Instance() {
         final BaseChecker<Integer> baseChecker = isPresentBaseChecker();
         final Matcher<Integer> contentMatcher = equalTo(666);
         return new OptionalBasedMatcher<>("is present and ", baseChecker, contentMatcher);
     }
 
     @Nonnull
-    protected static Matcher<Optional<Integer>> givenIsPresentOnlyInstance() {
+    private static Matcher<Optional<Integer>> givenIsPresentOnlyInstance() {
         final BaseChecker<Integer> baseChecker = isPresentBaseChecker();
         return new OptionalBasedMatcher<>("is present", baseChecker, null);
     }
 
     @Nonnull
-    protected static Matcher<Optional<Integer>> givenIsAbsentOnlyInstance() {
+    private static Matcher<Optional<Integer>> givenIsAbsentOnlyInstance() {
         final BaseChecker<Integer> baseChecker = isAbsentBaseChecker();
         return new OptionalBasedMatcher<>("is absent", baseChecker, null);
     }
 
     @Nonnull
-    protected static Matcher<Optional<Integer>> givenIsAbsentWithContentChecker() {
+    private static Matcher<Optional<Integer>> givenIsAbsentWithContentChecker() {
         final BaseChecker<Integer> baseChecker = isAbsentBaseChecker();
         final Matcher<Integer> contentMatcher = equalTo(666);
         return new OptionalBasedMatcher<>("is absent and ", baseChecker, contentMatcher);

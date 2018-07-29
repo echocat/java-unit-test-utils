@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertThat;
 public class StringBasedMatcherUnitTest {
 
     @Test
-    public void factoryMethodStartsWithComparator() throws Exception {
+    void factoryMethodStartsWithComparator() throws Exception {
         final Comparator instance = startsWithComparator();
 
         assertThat(instance.check("666 hello world", "666"), equalTo(true));
@@ -25,7 +25,7 @@ public class StringBasedMatcherUnitTest {
     }
 
     @Test
-    public void factoryMethodEndsWithComparator() throws Exception {
+    void factoryMethodEndsWithComparator() throws Exception {
         final Comparator instance = endsWithComparator();
 
         assertThat(instance.check("666 hello world", "666"), equalTo(false));
@@ -34,7 +34,7 @@ public class StringBasedMatcherUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsComparator() throws Exception {
+    void factoryMethodContainsComparator() throws Exception {
         final Comparator instance = containsComparator();
 
         assertThat(instance.check("66 hello world", "666"), equalTo(false));
@@ -44,7 +44,7 @@ public class StringBasedMatcherUnitTest {
     }
 
     @Test
-    public void factoryMethodMatchesComparator() throws Exception {
+    void factoryMethodMatchesComparator() throws Exception {
         final Comparator instance = matchesComparator();
 
         assertThat(instance.check("66 hello world", ".*666.*"), equalTo(false));
@@ -54,7 +54,7 @@ public class StringBasedMatcherUnitTest {
     }
 
     @Test
-    public void factoryMethodEqualsIgnoreCaseComparator() throws Exception {
+    void factoryMethodEqualsIgnoreCaseComparator() throws Exception {
         final Comparator instance = equalsIgnoreCaseComparator();
 
         assertThat(instance.check("hello world", "hello world"), equalTo(true));
@@ -63,7 +63,7 @@ public class StringBasedMatcherUnitTest {
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final StringBasedMatcher<String> instance = new StringBasedMatcher<>("test", startsWithComparator(), "666");
 
         assertThat(instance.comparator(), sameInstance(startsWithComparator()));
@@ -72,7 +72,7 @@ public class StringBasedMatcherUnitTest {
     }
 
     @Test
-    public void matches() throws Exception {
+    void matches() throws Exception {
         final Matcher<String> instance = givenStartsWith666Instance();
 
         assertThat(instance.matches("666 hello"), equalTo(true));
@@ -81,7 +81,7 @@ public class StringBasedMatcherUnitTest {
     }
 
     @Test
-    public void describeTo() throws Exception {
+    void describeTo() throws Exception {
         final Description description = givenDescription();
         final Matcher<String> instance = givenStartsWith666Instance();
 
@@ -91,7 +91,7 @@ public class StringBasedMatcherUnitTest {
     }
 
     @Nonnull
-    protected static Matcher<String> givenStartsWith666Instance() {
+    private static Matcher<String> givenStartsWith666Instance() {
         return new StringBasedMatcher<>("starts with", startsWithComparator(), "666");
     }
 

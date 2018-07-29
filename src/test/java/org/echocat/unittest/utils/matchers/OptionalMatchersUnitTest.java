@@ -1,7 +1,7 @@
 package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThat;
 public class OptionalMatchersUnitTest {
 
     @Test
-    public void factoryMethodIsPresent() throws Exception {
+    void factoryMethodIsPresent() throws Exception {
         final Matcher<Optional<Integer>> instance = isPresent();
 
         assertThat(instance, instanceOf(OptionalBasedMatcher.class));
@@ -25,7 +25,7 @@ public class OptionalMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodIsAbsent() throws Exception {
+    void factoryMethodIsAbsent() throws Exception {
         final Matcher<Optional<Integer>> instance = isAbsent();
 
         assertThat(instance, instanceOf(OptionalBasedMatcher.class));
@@ -35,7 +35,7 @@ public class OptionalMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodWhereContentMatches() throws Exception {
+    void factoryMethodWhereContentMatches() throws Exception {
         final Matcher<Integer> contentMatcher = equalTo(666);
         final Matcher<Optional<Integer>> instance = OptionalMatchers.whereContentMatches(contentMatcher);
 
@@ -47,7 +47,7 @@ public class OptionalMatchersUnitTest {
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         new OptionalMatchers();
     }
 

@@ -4,7 +4,7 @@ import org.echocat.unittest.utils.matchers.CombinedMappingMatcher.StreamMatcher;
 import org.echocat.unittest.utils.utils.StreamUtils;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -49,13 +49,13 @@ public class CombinedMappingMatcherUnitTest {
     };
 
     @Test
-    public void factoryMethodCollectMatchers() throws Exception {
+    void factoryMethodCollectMatchers() throws Exception {
         assertThat(collectMatchers(MATCHER_1), equalTo(singletonList(MATCHER_1)));
         assertThat(collectMatchers(MATCHER_1, MATCHER_2), equalTo(asList(MATCHER_1, MATCHER_2)));
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = new CombinedMappingMatcher<>(MAPPER, MATCHERS, STREAM_MATCHER, "first item");
 
         assertThat(instance.mapper(), sameInstance(MAPPER));
@@ -65,7 +65,7 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Test
-    public void matches() throws Exception {
+    void matches() throws Exception {
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
 
         assertThat(instance.matches(singleton(0)), equalTo(true));
@@ -80,7 +80,7 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Test
-    public void describeMismatchForNull() throws Exception {
+    void describeMismatchForNull() throws Exception {
         final Description description = givenDescription();
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
 
@@ -90,7 +90,7 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Test
-    public void describeMismatchForIllegalType() throws Exception {
+    void describeMismatchForIllegalType() throws Exception {
         final Description description = givenDescription();
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
 
@@ -100,7 +100,7 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Test
-    public void describeMismatchFor2MatchersAndOneMismatch() throws Exception {
+    void describeMismatchFor2MatchersAndOneMismatch() throws Exception {
         final Description description = givenDescription();
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
 
@@ -110,7 +110,7 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Test
-    public void describeMismatchFor2MatchersAndTwoMismatches() throws Exception {
+    void describeMismatchFor2MatchersAndTwoMismatches() throws Exception {
         final Description description = givenDescription();
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstanceFor2FailingMatchers();
 
@@ -121,7 +121,7 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Test
-    public void describeMismatchForMoreThan11Mismatches() throws Exception {
+    void describeMismatchForMoreThan11Mismatches() throws Exception {
         final Description description = givenDescription();
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
 
@@ -140,7 +140,7 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Test
-    public void describeMismatchForMoreThan10Mismatches() throws Exception {
+    void describeMismatchForMoreThan10Mismatches() throws Exception {
         final Description description = givenDescription();
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
 
@@ -160,7 +160,7 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Test
-    public void describeToFor2MatchersAndOneFails() throws Exception {
+    void describeToFor2MatchersAndOneFails() throws Exception {
         final Description description = givenDescription();
         final CombinedMappingMatcher<Iterable<Integer>, Integer> instance = givenInstance();
 
@@ -171,12 +171,12 @@ public class CombinedMappingMatcherUnitTest {
     }
 
     @Nonnull
-    protected static CombinedMappingMatcher<Iterable<Integer>, Integer> givenInstance() {
+    private static CombinedMappingMatcher<Iterable<Integer>, Integer> givenInstance() {
         return new CombinedMappingMatcher<>(MAPPER, MATCHERS, STREAM_MATCHER, "first item");
     }
 
     @Nonnull
-    protected static CombinedMappingMatcher<Iterable<Integer>, Integer> givenInstanceFor2FailingMatchers() {
+    private static CombinedMappingMatcher<Iterable<Integer>, Integer> givenInstanceFor2FailingMatchers() {
         return new CombinedMappingMatcher<>(MAPPER, asList(isGreaterThanOrEqualTo(5), isEqualTo(10)), STREAM_MATCHER, "first item");
     }
 

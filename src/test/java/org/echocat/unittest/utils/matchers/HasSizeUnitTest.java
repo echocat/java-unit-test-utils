@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
 public class HasSizeUnitTest {
 
     @Test
-    public void factoryMethodHasSize() throws Exception {
+    void factoryMethodHasSize() throws Exception {
         final Matcher<Object> matcher = hasSize(666);
 
         assertThat(matcher, instanceOf(HasSize.class));
@@ -26,7 +26,7 @@ public class HasSizeUnitTest {
     }
 
     @Test
-    public void factoryMethodHasSizeOf() throws Exception {
+    void factoryMethodHasSizeOf() throws Exception {
         final Matcher<Object> matcher = hasSizeOf(666);
 
         assertThat(matcher, instanceOf(HasSize.class));
@@ -34,7 +34,7 @@ public class HasSizeUnitTest {
     }
 
     @Test
-    public void factoryMethodHasLength() throws Exception {
+    void factoryMethodHasLength() throws Exception {
         final Matcher<Object> matcher = hasLength(666);
 
         assertThat(matcher, instanceOf(HasSize.class));
@@ -42,7 +42,7 @@ public class HasSizeUnitTest {
     }
 
     @Test
-    public void factoryMethodHasLengthOf() throws Exception {
+    void factoryMethodHasLengthOf() throws Exception {
         final Matcher<Object> matcher = hasLengthOf(666);
 
         assertThat(matcher, instanceOf(HasSize.class));
@@ -50,14 +50,14 @@ public class HasSizeUnitTest {
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final Matcher<Object> matcher = new HasSize<>(666);
 
         assertThat(((HasSize<?>) matcher).expectedSize(), equalTo(666L));
     }
 
     @Test
-    public void matches() throws Exception {
+    void matches() throws Exception {
         final HasSize<Object> instance = givenInstance();
 
         assertThat(instance.matches("0123"), equalTo(true));
@@ -68,7 +68,7 @@ public class HasSizeUnitTest {
     }
 
     @Test
-    public void describeTo() throws Exception {
+    void describeTo() throws Exception {
         final HasSize<Object> instance = givenInstance();
         final Description description = givenDescription();
 
@@ -78,7 +78,7 @@ public class HasSizeUnitTest {
     }
 
     @Test
-    public void describeMismatch() throws Exception {
+    void describeMismatch() throws Exception {
         final Object[] toTest = givenArrayWithLength3();
         final HasSize<Object> instance = givenInstance();
         final Description description = givenDescription();
@@ -90,7 +90,7 @@ public class HasSizeUnitTest {
     }
 
     @Nonnull
-    protected static HasSize<Object> givenInstance() {
+    private static HasSize<Object> givenInstance() {
         return new HasSize<>(4);
     }
 

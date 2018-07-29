@@ -1,7 +1,7 @@
 package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.echocat.unittest.utils.matchers.StringMatchers.endsWith;
 import static org.echocat.unittest.utils.matchers.StringMatchers.startsWith;
@@ -11,7 +11,7 @@ import static org.junit.Assert.assertThat;
 public class StringMatchersUnitTest {
 
     @Test
-    public void factoryMethodStartsWith() throws Exception {
+    void factoryMethodStartsWith() throws Exception {
         final Matcher<String> instance = startsWith("666");
 
         assertThat(instance, instanceOf(StringBasedMatcher.class));
@@ -21,7 +21,7 @@ public class StringMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodEndsWith() throws Exception {
+    void factoryMethodEndsWith() throws Exception {
         final Matcher<String> instance = endsWith("666");
 
         assertThat(instance, instanceOf(StringBasedMatcher.class));
@@ -31,7 +31,7 @@ public class StringMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContains() throws Exception {
+    void factoryMethodContains() throws Exception {
         final Matcher<String> instance = StringMatchers.contains("666");
 
         assertThat(instance, instanceOf(StringBasedMatcher.class));
@@ -41,7 +41,7 @@ public class StringMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodMatches() throws Exception {
+    void factoryMethodMatches() throws Exception {
         final Matcher<String> instance = StringMatchers.matches("666");
 
         assertThat(instance, instanceOf(StringBasedMatcher.class));
@@ -51,7 +51,7 @@ public class StringMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodEqualsIgnoreCase() throws Exception {
+    void factoryMethodEqualsIgnoreCase() throws Exception {
         //noinspection LiteralAsArgToStringEquals
         final Matcher<String> instance = StringMatchers.equalsIgnoreCase("666");
 
@@ -62,7 +62,7 @@ public class StringMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodIsEqualsIgnoreCase() throws Exception {
+    void factoryMethodIsEqualsIgnoreCase() throws Exception {
         final Matcher<String> instance = StringMatchers.isEqualIgnoreCase("666");
 
         assertThat(instance, instanceOf(StringBasedMatcher.class));
@@ -72,7 +72,7 @@ public class StringMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodIsEqualToIgnoreCase() throws Exception {
+    void factoryMethodIsEqualToIgnoreCase() throws Exception {
         final Matcher<String> instance = StringMatchers.isEqualToIgnoreCase("666");
 
         assertThat(instance, instanceOf(StringBasedMatcher.class));
@@ -82,7 +82,7 @@ public class StringMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodEqualsToIgnoreCase() throws Exception {
+    void factoryMethodEqualsToIgnoreCase() throws Exception {
         final Matcher<String> instance = StringMatchers.equalsToIgnoreCase("666");
 
         assertThat(instance, instanceOf(StringBasedMatcher.class));
@@ -92,7 +92,7 @@ public class StringMatchersUnitTest {
     }
 
     @Test
-    public void constructor() {
+    void constructor() {
         new StringMatchers();
     }
 

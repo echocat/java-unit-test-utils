@@ -1,12 +1,12 @@
 package org.echocat.unittest.utils.utils;
 
-import org.echocat.unittest.utils.rules.TestDirectory;
-import org.echocat.unittest.utils.rules.TestFile;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.echocat.unittest.utils.extensions.TemporaryDirectory;
+import org.echocat.unittest.utils.extensions.TemporaryFile;
+import org.echocat.unittest.utils.extensions.TemporaryPaths;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
@@ -16,564 +16,524 @@ import static org.echocat.unittest.utils.utils.SizeUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+@ExtendWith(TemporaryPaths.class)
 public class SizeUtilsUnitTest {
 
-    @ClassRule
-    public static final TestFile FILE_OF_LENGTH_4 = new TestFile("fileOfLength4.txt", "0123");
-    @ClassRule
-    public static final TestFile EMPTY_FILE = new TestFile("emptyFile.txt", "");
-    @ClassRule
-    public static final TestDirectory EMPTY_DIRECTORY = new TestDirectory();
-
     @Test
-    public void constructur() throws Exception {
+    void constructur() throws Exception {
         new SizeUtils();
     }
 
     @Test
-    public void sizeOfNull() throws Exception {
+    void sizeOfNull() throws Exception {
         assertThat(sizeOf(null), equalTo(0L));
     }
 
     @Test
-    public void sizeOfStreamWithLength4() throws Exception {
+    void sizeOfStreamWithLength4() throws Exception {
         final Object toTest = givenStreamWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyStream() throws Exception {
+    void sizeOfEmptyStream() throws Exception {
         final Object toTest = givenEmptyStream();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfCollectionWithLength4() throws Exception {
+    void sizeOfCollectionWithLength4() throws Exception {
         final Object toTest = givenCollectionOfLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyCollection() throws Exception {
+    void sizeOfEmptyCollection() throws Exception {
         final Object toTest = givenEmptyCollection();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfIterableWithLength4() throws Exception {
+    void sizeOfIterableWithLength4() throws Exception {
         final Object toTest = givenIterableOfLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfIterableCollection() throws Exception {
+    void sizeOfIterableCollection() throws Exception {
         final Object toTest = givenEmptyIterable();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfIteratorWithLength4() throws Exception {
+    void sizeOfIteratorWithLength4() throws Exception {
         final Object toTest = givenIteratorOfLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyIterator() throws Exception {
+    void sizeOfEmptyIterator() throws Exception {
         final Object toTest = givenEmptyIterator();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfMapWithLength4() throws Exception {
+    void sizeOfMapWithLength4() throws Exception {
         final Object toTest = givenMapWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyMap() throws Exception {
+    void sizeOfEmptyMap() throws Exception {
         final Object toTest = givenEmptyMap();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfArrayWithLength4() throws Exception {
+    void sizeOfArrayWithLength4() throws Exception {
         final Object toTest = givenArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfBooleanArrayWithLength4() throws Exception {
+    void sizeOfBooleanArrayWithLength4() throws Exception {
         final Object toTest = givenBooleanArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfByteArrayWithLength4() throws Exception {
+    void sizeOfByteArrayWithLength4() throws Exception {
         final Object toTest = givenByteArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfCharArrayWithLength4() throws Exception {
+    void sizeOfCharArrayWithLength4() throws Exception {
         final Object toTest = givenCharArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfShortArrayWithLength4() throws Exception {
+    void sizeOfShortArrayWithLength4() throws Exception {
         final Object toTest = givenShortArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfIntArrayWithLength4() throws Exception {
+    void sizeOfIntArrayWithLength4() throws Exception {
         final Object toTest = givenIntArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfLongArrayWithLength4() throws Exception {
+    void sizeOfLongArrayWithLength4() throws Exception {
         final Object toTest = givenLongArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfFloatArrayWithLength4() throws Exception {
+    void sizeOfFloatArrayWithLength4() throws Exception {
         final Object toTest = givenFloatArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfDoubleArrayWithLength4() throws Exception {
+    void sizeOfDoubleArrayWithLength4() throws Exception {
         final Object toTest = givenDoubleArrayWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyArray() throws Exception {
+    void sizeOfEmptyArray() throws Exception {
         final Object toTest = givenEmptyArray();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfCharSequenceWithLength4() throws Exception {
+    void sizeOfCharSequenceWithLength4() throws Exception {
         final Object toTest = givenCharSequenceWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyCharSequence() throws Exception {
+    void sizeOfEmptyCharSequence() throws Exception {
         final Object toTest = givenEmptyCharSequence();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfPathWithLength4() throws Exception {
-        final Object toTest = givenPathWithLength4();
-
-        assertThat(sizeOf(toTest), equalTo(4L));
+    void sizeOfPathWithLength4(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        assertThat(sizeOf(pathWithLengthOf4), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyPath() throws Exception {
-        final Object toTest = givenEmptyPath();
-
-        assertThat(sizeOf(toTest), equalTo(0L));
+    void sizeOfEmptyPath(@TemporaryFile Path emptyPath) throws Exception {
+        assertThat(sizeOf(emptyPath), equalTo(0L));
     }
 
     @Test
-    public void sizeOfNotExistingPathFails() throws Exception {
-        final Object toTest = givenNotExistingPath();
+    void sizeOfNotExistingPathFails(@TemporaryDirectory Path root) throws Exception {
+        final Object toTest = givenNotExistingPath(root);
 
         assertThat(() -> sizeOf(toTest), throwsException(UncheckedIOException.class, "java.nio.file.NoSuchFileException: .*doesNotExist"));
     }
 
     @Test
-    public void sizeOfFileWithLength4() throws Exception {
-        final Object toTest = givenFileWithLength4();
+    void sizeOfFileWithLength4(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        final Object toTest = pathWithLengthOf4.toFile();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyFile() throws Exception {
-        final Object toTest = givenEmptyFile();
+    void sizeOfEmptyFile(@TemporaryFile Path emptyPath) throws Exception {
+        final Object toTest = emptyPath.toFile();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfNotExistingFileFails() throws Exception {
-        final Object toTest = givenNotExistingFile();
+    void sizeOfNotExistingFileFails(@TemporaryDirectory Path root) throws Exception {
+        final Object toTest = givenNotExistingPath(root).toFile();
 
         assertThat(() -> sizeOf(toTest), throwsException(UncheckedIOException.class, "java.nio.file.NoSuchFileException: .*doesNotExist"));
     }
 
     @Test
-    public void sizeOfInputStreamWithLength4() throws Exception {
+    void sizeOfInputStreamWithLength4() throws Exception {
         final Object toTest = givenInputStreamWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyInputStream() throws Exception {
+    void sizeOfEmptyInputStream() throws Exception {
         final Object toTest = givenEmptyInputStream();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfThrowsExceptionWhenProblemWhileReadFromInputStream() throws Exception {
+    void sizeOfThrowsExceptionWhenProblemWhileReadFromInputStream() throws Exception {
         final Object toTest = givenExceptionThrowingInputStream();
 
         assertThat(() -> sizeOf(toTest), throwsException(UncheckedIOException.class, "java.io.IOException: test"));
     }
 
     @Test
-    public void sizeOfReaderWithLength4() throws Exception {
+    void sizeOfReaderWithLength4() throws Exception {
         final Object toTest = givenReaderWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyReader() throws Exception {
+    void sizeOfEmptyReader() throws Exception {
         final Object toTest = givenEmptyReader();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfThrowsExceptionWhenProblemWhileReadFromReader() throws Exception {
+    void sizeOfThrowsExceptionWhenProblemWhileReadFromReader() throws Exception {
         final Object toTest = givenExceptionThrowingReader();
 
         assertThat(() -> sizeOf(toTest), throwsException(UncheckedIOException.class, "java.io.IOException: test"));
     }
 
     @Test
-    public void sizeOfURLWithLength4() throws Exception {
+    void sizeOfURLWithLength4() throws Exception {
         final Object toTest = givenURLWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyURL() throws Exception {
+    void sizeOfEmptyURL() throws Exception {
         final Object toTest = givenEmptyURL();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfThrowsExceptionWhenProblemWhileReadFromURL() throws Exception {
+    void sizeOfThrowsExceptionWhenProblemWhileReadFromURL() throws Exception {
         final Object toTest = givenExceptionThrowingURL();
 
         assertThat(() -> sizeOf(toTest), throwsException(UncheckedIOException.class, "java.io.FileNotFoundException: notExisting.*"));
     }
 
     @Test
-    public void sizeOfURIWithLength4() throws Exception {
+    void sizeOfURIWithLength4() throws Exception {
         final Object toTest = givenURIWithLength4();
 
         assertThat(sizeOf(toTest), equalTo(4L));
     }
 
     @Test
-    public void sizeOfEmptyURI() throws Exception {
+    void sizeOfEmptyURI() throws Exception {
         final Object toTest = givenEmptyURI();
 
         assertThat(sizeOf(toTest), equalTo(0L));
     }
 
     @Test
-    public void sizeOfThrowsExceptionWhenProblemWhileReadFromURI() throws Exception {
+    void sizeOfThrowsExceptionWhenProblemWhileReadFromURI() throws Exception {
         final Object toTest = givenExceptionThrowingURI();
 
         assertThat(() -> sizeOf(toTest), throwsException(UncheckedIOException.class, "java.net.MalformedURLException: unknown protocol: notexisting"));
     }
 
     @Test
-    public void sizeOfUnknownTypeThrowsException() throws Exception {
+    void sizeOfUnknownTypeThrowsException() throws Exception {
         assertThat(() -> sizeOf(1), throwsException(IllegalArgumentException.class, "Could not get size of java.lang.Integer."));
     }
 
     @Test
-    public void isEmptyOfNull() throws Exception {
+    void isEmptyOfNull() throws Exception {
         assertThat(isEmpty(null), equalTo(true));
     }
 
     @Test
-    public void isEmptyOfStreamWithLength4() throws Exception {
+    void isEmptyOfStreamWithLength4() throws Exception {
         final Object toTest = givenStreamWithLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfEmptyStream() throws Exception {
+    void isEmptyOfEmptyStream() throws Exception {
         final Object toTest = givenEmptyStream();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyOfCollectionWithLength4() throws Exception {
+    void isEmptyOfCollectionWithLength4() throws Exception {
         final Object toTest = givenCollectionOfLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfEmptyCollection() throws Exception {
+    void isEmptyOfEmptyCollection() throws Exception {
         final Object toTest = givenEmptyCollection();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyOfIterableWithLength4() throws Exception {
+    void isEmptyOfIterableWithLength4() throws Exception {
         final Object toTest = givenIterableOfLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfIterableCollection() throws Exception {
+    void isEmptyOfIterableCollection() throws Exception {
         final Object toTest = givenEmptyIterable();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyOfIteratorWithLength4() throws Exception {
+    void isEmptyOfIteratorWithLength4() throws Exception {
         final Object toTest = givenIteratorOfLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfEmptyIterator() throws Exception {
+    void isEmptyOfEmptyIterator() throws Exception {
         final Object toTest = givenEmptyIterator();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyOfMapWithLength4() throws Exception {
+    void isEmptyOfMapWithLength4() throws Exception {
         final Object toTest = givenMapWithLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfEmptyMap() throws Exception {
+    void isEmptyOfEmptyMap() throws Exception {
         final Object toTest = givenEmptyMap();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyOfArrayWithLength4() throws Exception {
+    void isEmptyOfArrayWithLength4() throws Exception {
         final Object toTest = givenArrayWithLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfEmptyArray() throws Exception {
+    void isEmptyOfEmptyArray() throws Exception {
         final Object toTest = givenEmptyArray();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyOfCharSequenceWithLength4() throws Exception {
+    void isEmptyOfCharSequenceWithLength4() throws Exception {
         final Object toTest = givenCharSequenceWithLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfEmptyCharSequence() throws Exception {
+    void isEmptyOfEmptyCharSequence() throws Exception {
         final Object toTest = givenEmptyCharSequence();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyOfPathWithLength4() throws Exception {
-        final Object toTest = givenPathWithLength4();
-
-        assertThat(isEmpty(toTest), equalTo(false));
+    void isEmptyOfPathWithLength4(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        assertThat(isEmpty(pathWithLengthOf4), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfEmptyPath() throws Exception {
-        final Object toTest = givenEmptyPath();
-
-        assertThat(isEmpty(toTest), equalTo(true));
+    void isEmptyOfEmptyPath(@TemporaryFile Path empty) throws Exception {
+        assertThat(isEmpty(empty), equalTo(true));
     }
 
     @Test
-    public void isEmptyOfUnknownPathThrowsException() throws Exception {
-        final Object toTest = givenNotExistingPath();
+    void isEmptyOfUnknownPathThrowsException(@TemporaryDirectory Path root) throws Exception {
+        final Object toTest = givenNotExistingPath(root);
 
         assertThat(() -> isEmpty(toTest), throwsException(UncheckedIOException.class, "java.nio.file.NoSuchFileException: .*doesNotExist"));
     }
 
     @Test
-    public void isEmptyOfFileWithLength4() throws Exception {
-        final Object toTest = givenFileWithLength4();
+    void isEmptyOfFileWithLength4(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        final Object toTest = pathWithLengthOf4.toFile();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfEmptyFile() throws Exception {
-        final Object toTest = givenFileWithLength4();
+    void isEmptyOfEmptyFile(@TemporaryFile(withRandomContentOfLength = 4) Path pathWithLengthOf4) throws Exception {
+        final Object toTest = pathWithLengthOf4.toFile();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyOfUnknownFileThrowsException() throws Exception {
-        final Object toTest = givenNotExistingFile();
+    void isEmptyOfUnknownFileThrowsException(@TemporaryDirectory Path root) throws Exception {
+        final Object toTest = givenNotExistingPath(root).toFile();
 
         assertThat(() -> isEmpty(toTest), throwsException(UncheckedIOException.class, "java.nio.file.NoSuchFileException: .*doesNotExist"));
     }
 
     @Test
-    public void isEmptyOfUnknownTypeThrowsException() throws Exception {
+    void isEmptyOfUnknownTypeThrowsException() throws Exception {
         assertThat(() -> isEmpty(1), throwsException(IllegalArgumentException.class, "Could not get size of java.lang.Integer."));
     }
 
     @Test
-    public void isEmptyInputStreamWithLength4() throws Exception {
+    void isEmptyInputStreamWithLength4() throws Exception {
         final Object toTest = givenInputStreamWithLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyEmptyInputStream() throws Exception {
+    void isEmptyEmptyInputStream() throws Exception {
         final Object toTest = givenEmptyInputStream();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyReaderWithLength4() throws Exception {
+    void isEmptyReaderWithLength4() throws Exception {
         final Object toTest = givenReaderWithLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyEmptyReader() throws Exception {
+    void isEmptyEmptyReader() throws Exception {
         final Object toTest = givenEmptyReader();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyURLWithLength4() throws Exception {
+    void isEmptyURLWithLength4() throws Exception {
         final Object toTest = givenURLWithLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyEmptyURL() throws Exception {
+    void isEmptyEmptyURL() throws Exception {
         final Object toTest = givenEmptyURL();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isEmptyURIWithLength4() throws Exception {
+    void isEmptyURIWithLength4() throws Exception {
         final Object toTest = givenURIWithLength4();
 
         assertThat(isEmpty(toTest), equalTo(false));
     }
 
     @Test
-    public void isEmptyEmptyURI() throws Exception {
+    void isEmptyEmptyURI() throws Exception {
         final Object toTest = givenEmptyURI();
 
         assertThat(isEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isNotEmptyOfNull() throws Exception {
+    void isNotEmptyOfNull() throws Exception {
         assertThat(isNotEmpty(null), equalTo(false));
     }
 
     @Test
-    public void isNotEmptyOfCharSequenceWithLength4() throws Exception {
+    void isNotEmptyOfCharSequenceWithLength4() throws Exception {
         final Object toTest = givenCharSequenceWithLength4();
 
         assertThat(isNotEmpty(toTest), equalTo(true));
     }
 
     @Test
-    public void isNotEmptyOfEmptyCharSequence() throws Exception {
+    void isNotEmptyOfEmptyCharSequence() throws Exception {
         final Object toTest = givenEmptyCharSequence();
 
         assertThat(isNotEmpty(toTest), equalTo(false));
     }
 
     @Nonnull
-    protected static Path givenPathWithLength4() {
-        return FILE_OF_LENGTH_4;
+    private static Path givenNotExistingPath(@Nonnull Path root) {
+        return root.resolve("doesNotExist");
     }
-
-    @Nonnull
-    protected static Path givenEmptyPath() {
-        return EMPTY_FILE;
-    }
-
-    @Nonnull
-    protected static Path givenNotExistingPath() {
-        return EMPTY_DIRECTORY.resolve("doesNotExist");
-    }
-
-    @Nonnull
-    protected static File givenFileWithLength4() {
-        return givenPathWithLength4().toFile();
-    }
-
-    @Nonnull
-    protected static File givenEmptyFile() {
-        return givenEmptyPath().toFile();
-    }
-
-    @Nonnull
-    protected static File givenNotExistingFile() {
-        return givenNotExistingPath().toFile();
-    }
-
 
 }

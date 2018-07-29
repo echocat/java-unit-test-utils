@@ -1,11 +1,16 @@
 package org.echocat.unittest.utils.utils;
 
+import org.echocat.unittest.utils.utils.ExceptionUtils.Execution;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.WillNotClose;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
+
+import static org.echocat.unittest.utils.utils.ExceptionUtils.executeSafe;
 
 public final class IOUtils {
 
@@ -21,6 +26,17 @@ public final class IOUtils {
             nread += n;
         }
         return nread;
+    }
+
+    @Nonnull
+    public static Execution<?extends Exception> toCloseExecution(@Nonnull AutoCloseable closeable) {
+        return closeable::close;
+    }
+
+    public static void closeAll(@Nonnull Collection<? extends AutoCloseable> closeables) throws Exception {
+        executeSafe(Exception.class, closeables.stream()
+            .map(IOUtils::toCloseExecution)
+        );
     }
 
 }

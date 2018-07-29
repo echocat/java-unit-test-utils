@@ -3,7 +3,7 @@ package org.echocat.unittest.utils.matchers;
 import org.echocat.unittest.utils.matchers.ThrowsException.Execution;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -19,7 +19,7 @@ import static org.junit.Assert.fail;
 public class ThrowsExceptionUnitTest {
 
     @Test
-    public void factoryMethodThrowsException() throws Exception {
+    void factoryMethodThrowsException() throws Exception {
         final Matcher<Execution> instance = throwsException(TestException.class, ".*test");
 
         assertThat(instance, instanceOf(ThrowsException.class));
@@ -29,7 +29,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void factoryMethodThrowsExceptionProvidingNullMessage() throws Exception {
+    void factoryMethodThrowsExceptionProvidingNullMessage() throws Exception {
         final Matcher<Execution> instance = throwsException(TestException.class, (String) null);
 
         assertThat(instance, instanceOf(ThrowsException.class));
@@ -38,7 +38,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void factoryMethodThrowsExceptionWithoutPattern() throws Exception {
+    void factoryMethodThrowsExceptionWithoutPattern() throws Exception {
         final Matcher<Execution> instance = throwsException(TestException.class);
 
         assertThat(instance, instanceOf(ThrowsException.class));
@@ -47,7 +47,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void factoryMethodThrowsExceptionWithMessage() throws Exception {
+    void factoryMethodThrowsExceptionWithMessage() throws Exception {
         final Matcher<Execution> instance = throwsExceptionWithMessage(TestException.class, ".*test");
 
         assertThat(instance, instanceOf(ThrowsException.class));
@@ -57,7 +57,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void factoryMethodThrowsExceptionWithMessageProvidingNullMessage() throws Exception {
+    void factoryMethodThrowsExceptionWithMessageProvidingNullMessage() throws Exception {
         final Matcher<Execution> instance = throwsExceptionWithMessage(TestException.class, (String) null);
 
         assertThat(instance, instanceOf(ThrowsException.class));
@@ -66,7 +66,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final Matcher<Execution> instance = new ThrowsException<>(TestException.class, compile(".*test"));
 
         assertThat(instance, instanceOf(ThrowsException.class));
@@ -76,7 +76,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void matchesProducesNoException() throws Exception {
+    void matchesProducesNoException() throws Exception {
         final Execution execution = givenNoopExecution();
         final Matcher<Execution> instance = givenMessageIgnoringInstance();
 
@@ -84,7 +84,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void matchesProducesExpectedExceptionIgnoringMessage() throws Exception {
+    void matchesProducesExpectedExceptionIgnoringMessage() throws Exception {
         final Execution execution = givenExpectedExceptionThrowingExecution();
         final Matcher<Execution> instance = givenMessageIgnoringInstance();
 
@@ -92,7 +92,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void matchesProducesExpectedExceptionRespectingMessage() throws Exception {
+    void matchesProducesExpectedExceptionRespectingMessage() throws Exception {
         final Execution execution = givenExpectedExceptionThrowingExecution();
         final Matcher<Execution> instance = givenMessageRespectingInstance();
 
@@ -100,7 +100,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void matchesProducesUnexpectedError() throws Exception {
+    void matchesProducesUnexpectedError() throws Exception {
         final Execution execution = givenUnexpectedErrorThrowingExecution();
         final Matcher<Execution> instance = givenMessageIgnoringInstance();
 
@@ -113,7 +113,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void matchesProducesUnexpectedRuntimeException() throws Exception {
+    void matchesProducesUnexpectedRuntimeException() throws Exception {
         final Execution execution = givenUnexpectedRuntimeExceptionThrowingExecution();
         final Matcher<Execution> instance = givenMessageIgnoringInstance();
 
@@ -126,7 +126,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void matchesProducesUnexpectedThrowable() throws Exception {
+    void matchesProducesUnexpectedThrowable() throws Exception {
         final Execution execution = givenUnexpectedThrowableThrowingExecution();
         final Matcher<Execution> instance = givenMessageIgnoringInstance();
 
@@ -139,7 +139,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void describeToWhichIgnoresMessage() throws Exception {
+    void describeToWhichIgnoresMessage() throws Exception {
         final Description description = givenDescription();
         final Matcher<Execution> instance = givenMessageIgnoringInstance();
 
@@ -149,7 +149,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void describeToWhichRespectsMessage() throws Exception {
+    void describeToWhichRespectsMessage() throws Exception {
         final Description description = givenDescription();
         final Matcher<Execution> instance = givenMessageRespectingInstance();
 
@@ -159,7 +159,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void describeMismatchForProducesNoException() throws Exception {
+    void describeMismatchForProducesNoException() throws Exception {
         final Description description = givenDescription();
         final Execution execution = givenNoopExecution();
         final Matcher<Execution> instance = givenMessageIgnoringInstance();
@@ -170,7 +170,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void describeMismatchForMessageIgnoring() throws Exception {
+    void describeMismatchForMessageIgnoring() throws Exception {
         final Description description = givenDescription();
         final Execution execution = givenExpectedExceptionThrowingExecution();
         final Matcher<Execution> instance = givenMessageIgnoringInstance();
@@ -181,7 +181,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void describeMismatchForNullMessage() throws Exception {
+    void describeMismatchForNullMessage() throws Exception {
         final Description description = givenDescription();
         final Execution execution = givenExpectedExceptionWithNullMessageThrowingExecution();
         final Matcher<Execution> instance = givenMessageRespectingInstance();
@@ -192,7 +192,7 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Test
-    public void describeMismatchForOtherMessage() throws Exception {
+    void describeMismatchForOtherMessage() throws Exception {
         final Description description = givenDescription();
         final Execution execution = givenExpectedExceptionWithOtherMessageThrowingExecution();
         final Matcher<Execution> instance = givenMessageRespectingInstance();
@@ -203,64 +203,64 @@ public class ThrowsExceptionUnitTest {
     }
 
     @Nonnull
-    protected static Matcher<Execution> givenMessageIgnoringInstance() {
+    private static Matcher<Execution> givenMessageIgnoringInstance() {
         return throwsException(TestException.class);
     }
 
     @Nonnull
-    protected static Matcher<Execution> givenMessageRespectingInstance() {
+    private static Matcher<Execution> givenMessageRespectingInstance() {
         return throwsException(TestException.class, "test");
     }
 
     @Nonnull
-    protected static Execution givenNoopExecution() {
+    private static Execution givenNoopExecution() {
         return () -> {
         };
     }
 
     @Nonnull
-    protected static Execution givenExpectedExceptionThrowingExecution() {
+    private static Execution givenExpectedExceptionThrowingExecution() {
         return () -> {
             throw new TestException("test");
         };
     }
 
     @Nonnull
-    protected static Execution givenExpectedExceptionWithNullMessageThrowingExecution() {
+    private static Execution givenExpectedExceptionWithNullMessageThrowingExecution() {
         return () -> {
             throw new TestException(null);
         };
     }
 
     @Nonnull
-    protected static Execution givenExpectedExceptionWithOtherMessageThrowingExecution() {
+    private static Execution givenExpectedExceptionWithOtherMessageThrowingExecution() {
         return () -> {
             throw new TestException("other");
         };
     }
 
     @Nonnull
-    protected static Execution givenUnexpectedErrorThrowingExecution() {
+    private static Execution givenUnexpectedErrorThrowingExecution() {
         return () -> {
             throw new UnexpectedTestError();
         };
     }
 
     @Nonnull
-    protected static Execution givenUnexpectedRuntimeExceptionThrowingExecution() {
+    private static Execution givenUnexpectedRuntimeExceptionThrowingExecution() {
         return () -> {
             throw new UnexpectedTestRuntimeException();
         };
     }
 
     @Nonnull
-    protected static Execution givenUnexpectedThrowableThrowingExecution() {
+    private static Execution givenUnexpectedThrowableThrowingExecution() {
         return () -> {
             throw new UnexpectedTestThrowable();
         };
     }
 
-    public static class TestException extends RuntimeException {
+    private static class TestException extends RuntimeException {
 
         public TestException() {
         }
@@ -270,13 +270,13 @@ public class ThrowsExceptionUnitTest {
         }
     }
 
-    public static class UnexpectedTestError extends Error {
+    private static class UnexpectedTestError extends Error {
     }
 
-    public static class UnexpectedTestRuntimeException extends RuntimeException {
+    private static class UnexpectedTestRuntimeException extends RuntimeException {
     }
 
-    public static class UnexpectedTestThrowable extends Throwable {
+    private static class UnexpectedTestThrowable extends Throwable {
     }
 
 }

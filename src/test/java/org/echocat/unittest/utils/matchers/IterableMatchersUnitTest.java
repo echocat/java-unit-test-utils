@@ -1,7 +1,7 @@
 package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -17,11 +17,11 @@ import static org.junit.Assert.assertThat;
 
 public class IterableMatchersUnitTest {
 
-    protected static final Matcher<Integer> MATCHER1 = isGreaterThanOrEqualTo(0);
-    protected static final Matcher<Integer> MATCHER2 = isLessThanOrEqualTo(10);
+    private static final Matcher<Integer> MATCHER1 = isGreaterThanOrEqualTo(0);
+    private static final Matcher<Integer> MATCHER2 = isLessThanOrEqualTo(10);
 
     @Test
-    public void factoryMethodContainsOnlyElementsThat() throws Exception {
+    void factoryMethodContainsOnlyElementsThat() throws Exception {
         final Matcher<Iterable<Integer>> instance = containsOnlyElementsThat(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsOnlyElementsThat.class));
@@ -29,7 +29,7 @@ public class IterableMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsOnlyElements() throws Exception {
+    void factoryMethodContainsOnlyElements() throws Exception {
         final Matcher<Iterable<Integer>> instance = containsOnlyElements(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsOnlyElementsThat.class));
@@ -37,7 +37,7 @@ public class IterableMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsAtLeastOneElementThat() throws Exception {
+    void factoryMethodContainsAtLeastOneElementThat() throws Exception {
         final Matcher<Iterable<Integer>> instance = containsAtLeastOneElementThat(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsAtLeastOneElementThat.class));
@@ -45,7 +45,7 @@ public class IterableMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContainsAtLeastOneElement() throws Exception {
+    void factoryMethodContainsAtLeastOneElement() throws Exception {
         final Matcher<Iterable<Integer>> instance = containsAtLeastOneElement(MATCHER1, MATCHER2);
 
         assertThat(instance, instanceOf(ContainsAtLeastOneElementThat.class));
@@ -54,7 +54,7 @@ public class IterableMatchersUnitTest {
 
 
     @Test
-    public void factoryMethodStartsWith() throws Exception {
+    void factoryMethodStartsWith() throws Exception {
         final Matcher<List<String>> instance = startsWith("a", "b", "c");
 
         assertThat(instance, instanceOf(IterableBasedMatcher.class));
@@ -64,7 +64,7 @@ public class IterableMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodEndsWith() throws Exception {
+    void factoryMethodEndsWith() throws Exception {
         final Matcher<List<String>> instance = endsWith("a", "b", "c");
 
         assertThat(instance, instanceOf(IterableBasedMatcher.class));
@@ -74,7 +74,7 @@ public class IterableMatchersUnitTest {
     }
 
     @Test
-    public void factoryMethodContains() throws Exception {
+    void factoryMethodContains() throws Exception {
         final Matcher<List<String>> instance = IterableMatchers.contains("a", "b", "c");
 
         assertThat(instance, instanceOf(IterableBasedMatcher.class));
@@ -83,15 +83,15 @@ public class IterableMatchersUnitTest {
         assertThat(((IterableBasedMatcher<?, ?>) instance).expected(), equalTo(iterableOf("a", "b", "c")));
     }
 
-    @SafeVarargs
-    @Nonnull
-    protected static <T> Iterable<T> iterableOf(@Nonnull T... values) {
-        return asList(values);
+    @Test
+    void constructor() {
+        new IterableMatchers();
     }
 
-    @Test
-    public void constructor() {
-        new IterableMatchers();
+    @SafeVarargs
+    @Nonnull
+    private static <T> Iterable<T> iterableOf(@Nonnull T... values) {
+        return asList(values);
     }
 
 }

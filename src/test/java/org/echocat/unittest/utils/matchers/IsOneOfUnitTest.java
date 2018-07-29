@@ -2,7 +2,7 @@ package org.echocat.unittest.utils.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertThat;
 public class IsOneOfUnitTest {
 
     @Test
-    public void factoryMethodIsOneOf() throws Exception {
+    void factoryMethodIsOneOf() throws Exception {
         final Matcher<Object> matcher = isOneOf(0L, 1L, 2L);
 
         assertThat(matcher, instanceOf(IsOneOf.class));
@@ -25,7 +25,7 @@ public class IsOneOfUnitTest {
     }
 
     @Test
-    public void factoryMethodIsAnyOf() throws Exception {
+    void factoryMethodIsAnyOf() throws Exception {
         final Matcher<Object> matcher = isAnyOf(0L, 1L, 2L);
 
         assertThat(matcher, instanceOf(IsOneOf.class));
@@ -33,14 +33,14 @@ public class IsOneOfUnitTest {
     }
 
     @Test
-    public void constructor() throws Exception {
+    void constructor() throws Exception {
         final IsOneOf<Long> matcher = new IsOneOf<>(asList(0L, 1L, 2L));
 
         assertThat(matcher.expected(), equalTo(asList(0L, 1L, 2L)));
     }
 
     @Test
-    public void matches() throws Exception {
+    void matches() throws Exception {
         final IsOneOf<Long> instance = givenInstanceWith012();
 
         assertThat(instance.matches(0L), equalTo(true));
@@ -54,7 +54,7 @@ public class IsOneOfUnitTest {
     }
 
     @Test
-    public void describeTo() throws Exception {
+    void describeTo() throws Exception {
         final Description description = givenDescription();
         final Matcher<Long> instance = givenInstanceWith012();
 
@@ -64,7 +64,7 @@ public class IsOneOfUnitTest {
     }
 
     @Nonnull
-    protected static IsOneOf<Long> givenInstanceWith012() {
+    private static IsOneOf<Long> givenInstanceWith012() {
         return new IsOneOf<>(asList(0L, 1L, 2L));
     }
 
