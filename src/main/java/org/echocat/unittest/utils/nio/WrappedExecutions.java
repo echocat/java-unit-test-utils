@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 
 import static org.echocat.unittest.utils.nio.Event.eventOf;
 
-public class WrappedExecution {
+public final class WrappedExecutions {
 
     public static <T, W extends Wrapping<T>, R> R withResult(
         @Nonnull W wrapping,

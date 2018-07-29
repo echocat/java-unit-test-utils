@@ -29,8 +29,8 @@ import static org.echocat.unittest.utils.nio.EventType.FileSystems.isReadOnly;
 import static org.echocat.unittest.utils.nio.EventType.FileSystems.newWatchService;
 import static org.echocat.unittest.utils.nio.EventType.FileSystems.provider;
 import static org.echocat.unittest.utils.nio.EventType.FileSystems.supportedFileAttributeViews;
-import static org.echocat.unittest.utils.nio.WrappedExecution.withResult;
-import static org.echocat.unittest.utils.nio.WrappedExecution.withoutResult;
+import static org.echocat.unittest.utils.nio.WrappedExecutions.withResult;
+import static org.echocat.unittest.utils.nio.WrappedExecutions.withoutResult;
 import static org.echocat.unittest.utils.nio.WrappedPath.wrap;
 
 public class WrappedFileSystem<T extends WrappedPath> extends FileSystem implements Wrapping<FileSystem>, InterceptorEnabled {

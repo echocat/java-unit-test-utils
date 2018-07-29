@@ -59,8 +59,8 @@ import static org.echocat.unittest.utils.nio.EventType.FileSystemProviders.readA
 import static org.echocat.unittest.utils.nio.EventType.FileSystemProviders.readAttributes_checked;
 import static org.echocat.unittest.utils.nio.EventType.FileSystemProviders.readSymbolicLink;
 import static org.echocat.unittest.utils.nio.EventType.FileSystemProviders.setAttribute;
-import static org.echocat.unittest.utils.nio.WrappedExecution.withResult;
-import static org.echocat.unittest.utils.nio.WrappedExecution.withoutResult;
+import static org.echocat.unittest.utils.nio.WrappedExecutions.withResult;
+import static org.echocat.unittest.utils.nio.WrappedExecutions.withoutResult;
 import static org.echocat.unittest.utils.nio.WrappedPath.wrap;
 
 public class WrappedFileSystemProvider<T extends WrappedPath> extends FileSystemProvider implements Wrapping<FileSystemProvider>, InterceptorEnabled {

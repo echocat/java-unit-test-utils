@@ -47,7 +47,7 @@ import static org.echocat.unittest.utils.nio.EventType.Paths.toAbsolutePath;
 import static org.echocat.unittest.utils.nio.EventType.Paths.toFile;
 import static org.echocat.unittest.utils.nio.EventType.Paths.toRealPath;
 import static org.echocat.unittest.utils.nio.EventType.Paths.toUri;
-import static org.echocat.unittest.utils.nio.WrappedExecution.withResult;
+import static org.echocat.unittest.utils.nio.WrappedExecutions.withResult;
 import static org.echocat.unittest.utils.utils.Wrapping.deepUnwrap;
 
 @FunctionalInterface
